@@ -17,3 +17,6 @@ target/
 # Added by cargo
 
 /target
+
+# Added by Xqahre
+*.vim
