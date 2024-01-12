@@ -1,3 +1,7 @@
+use gui::start_nyx;
+
+mod gui;
+
 fn main() {
-    println!("Hello, world!");
+    start_nyx();
 }
