@@ -12,3 +12,5 @@ eframe = "0.25.0"
 libdrm_amdgpu_sys = "0.4.1"
 sysinfo = "0.30.5"
 neith = { path = "../neith" }
+signal-hook = "0.3.17"
+egui_plot = "0.25.0"

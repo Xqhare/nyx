@@ -940,6 +940,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "egui_plot"
+version = "0.25.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6a159fffebf052f79d1fd26d48e68906a21fec2fce808f7c0a982ec14ed506be"
+dependencies = [
+ "egui",
+]
+
+[[package]]
 name = "either"
 version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1740,8 +1749,10 @@ dependencies = [
  "chrono",
  "dirs",
  "eframe",
+ "egui_plot",
  "libdrm_amdgpu_sys",
  "neith",
+ "signal-hook",
  "sysinfo",
 ]
 
@@ -2248,6 +2259,16 @@ dependencies = [
  "cfg-if",
  "cpufeatures",
  "digest",
+]
+
+[[package]]
+name = "signal-hook"
+version = "0.3.17"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8621587d4798caf8eb44879d42e56b9a93ea5dcd315a6487c357130095b62801"
+dependencies = [
+ "libc",
+ "signal-hook-registry",
 ]
 
 [[package]]
