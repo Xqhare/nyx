@@ -35,6 +35,13 @@ Nyx is not merely a force of darkness; she is also associated with wisdom and fo
 
 In the same way, a system monitor can help you understand the reasons of your system's behavior.
 
+### Nyx, a recurxive acronym?
+Yes, Nyx is, as all good names, a recursice acronym:
+	- Nyx
+ 	- Ystem
+  	- Xplorer
+As Nyx truly is, one of the sYstem eXplorer's ever made!
+
 ## Acknowledgments
 Thanks to the open-source community for providing invaluable tools and libraries.
 Used in this project:
