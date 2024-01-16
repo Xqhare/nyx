@@ -46,8 +46,10 @@ UIb1: Do I need a "settings" place?
 
 Ref UIc (Data to display)
 UIc1: CPU needs a histogram for each core and overall, as well as a histogram for the temperature sensors.
+		- Temp data should be its own entry on the landing page
 
 UIc2: GPU needs a histogram of temperature,
+		- Temp data should be its own entry on the landing page
 
 UIc3: Networks need incoming, total incoming, outcome, total outcome, total erros in, total erros out, total packets income, total packets outcome
 
