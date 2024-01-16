@@ -44,3 +44,15 @@ UIb1: Do I need a "settings" place?
 			- could be split up by system component as its own subservice, with readout and visualiation
 			- Or be its own subpage with overview in landing page
 
+Ref UIc (Data to display)
+UIc1: CPU needs a histogram for each core and overall, as well as a histogram for the temperature sensors.
+
+UIc2: GPU needs a histogram of temperature,
+
+UIc3: Networks need incoming, total incoming, outcome, total outcome, total erros in, total erros out, total packets income, total packets outcome
+
+UIc4: Disks need name, filesystem, type, removable, mounted on, used bytes, free bytes
+
+UIc5: RAM needs total mem, used mem, available mem, total swap, used swap. Used mem and swap as histograms.
+
+UIc6: System could include OS name, kernel ver, OS ver, host name, number of cpus
