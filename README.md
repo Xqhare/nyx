@@ -1,4 +1,4 @@
-# nyx
+# nyx: Nyx Ystem Xplorer
 Nyx is a lightweight and efficient system monitor written in Rust. It provides real-time monitoring of CPU usage, memory consumption, disk I/O, network traffic, and other essential system metrics.
 
 ## Features / Roadmap
@@ -37,9 +37,11 @@ In the same way, a system monitor can help you understand the reasons of your sy
 
 ### Nyx, a recurxive acronym?
 Yes, Nyx is, as all good names, a recursice acronym:
-	- Nyx
- 	- Ystem
-  	- Xplorer
+
+- Nyx
+- Ystem
+- Xplorer
+
 As Nyx truly is, one of the sYstem eXplorer's ever made!
 
 ## Acknowledgments
