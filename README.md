@@ -8,8 +8,8 @@ Nyx is a lightweight and efficient system monitor written in Rust. It provides r
 	- Write important statisitcs to disc and query them.
 - Support for various system architectures / gpu vendors
 	- Currently AMD on Linux x86-64 only.
-	- Nvidia support planned if / when I have one for testing.
-	- ARM / AArch64 if / when I have a system for testing.
+	- Nvidia support maybe should I have one for testing.
+	- ARM / AArch64 maybe should I have one for testing.
 
 ## Why Use Nyx?
 
