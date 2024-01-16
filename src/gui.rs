@@ -8,6 +8,7 @@ struct Nyx {
     test_data: Vec<f64>,
     num_cores: u8,
     show_help: bool,
+    display_size: Vec2,
 }
 
 impl Default for Nyx {
@@ -16,7 +17,9 @@ impl Default for Nyx {
         let test_data = vec![10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.3, 1.0, 2.2, 4.3, 2.6, 3.8, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.3, 1.0, 2.2, 4.3, 2.6, 3.8, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54,];
         let num_cores: u8 = 12;
         let show_help = false;
-        Nyx { test_data, num_cores, show_help }
+        // TODO Put display_size into settings
+        let display_size: Vec2 = Vec2 { x: 1200.0, y: 900.0 };
+        Nyx { test_data, num_cores, show_help, display_size }
     }
 
 }
@@ -75,19 +78,19 @@ impl Nyx {
         });
     }
 
-    fn cpu_clicked(&self) {
-        todo!()
-    }
-
     fn draw_landing_page(&mut self, ui: &mut Ui) {
         self.grid_cpu_landing_page(ui);
+        self.grid_gpu_landing_page();
+        self.grid_ram_landing_page(ui);
+        self.grid_discs_landing_page();
+        self.gird_networks_landing_page();
     }
 
     fn grid_cpu_landing_page(&mut self, ui: &mut Ui) {
         ScrollArea::vertical()
             .hscroll(true)
             .show(ui, |ui: &mut Ui| {
-            Grid::new("Main Menu").striped(true).num_columns(self.num_cores as usize + 1).show(ui, |ui: &mut Ui| {
+            Grid::new("landing page cpu").striped(true).num_columns(self.num_cores as usize + 1).show(ui, |ui: &mut Ui| {
                 let labels = {
                     let mut out: Vec<String> = Default::default();
                     for n in 1..=self.num_cores {
@@ -132,7 +135,6 @@ impl Nyx {
                 .show(ui, |plot_ui| plot_ui.bar_chart(chart));
             // If code below is changed, change it to the same in `draw_cpu_avg_load`
             if cpu_avg.response.clicked(){
-                println!("CLICK");
                 self.cpu_clicked();
             }
         });
@@ -156,10 +158,83 @@ impl Nyx {
                 .show(ui, |plot_ui| plot_ui.bar_chart(chart));
             // If code below is changed, change it to the same in `draw_cpu_avg_load`
             if cpu_plot.response.clicked(){
-                println!("CLICK");
                 self.cpu_clicked();
             }
         });
+    }
+
+    fn cpu_clicked(&self) {
+        println!("CPU MENU CLICKED")
+    }
+
+    fn grid_ram_landing_page(&self, ui: &mut Ui) {
+        ui.add(|ui: &mut Ui| {
+            Grid::new("RAM").striped(true).min_col_width((self.display_size.x / 2.0) - 50.0).num_columns(2).show(ui, |ui: &mut Ui| {
+                ui.label("Swap:");
+                ui.label("Memory:");
+                ui.end_row();
+                self.draw_swap_usage(ui);
+                self.draw_ram_usage(ui);
+            }).response
+        });
+    }
+
+    fn draw_swap_usage(&self, ui: &mut Ui) {
+        ui.vertical_centered_justified(|ui: &mut Ui| {
+            let chart = BarChart::new(self.test_data.iter().enumerate().map(|x| {
+                (x.1, x.0 as f64)
+            }).map(|(x, y)| Bar::new(y, *x).width(1.0)).collect()
+            ).color(Color32::GOLD);
+
+            let swap_plot = Plot::new("Swap Usage")
+                .show_axes(false)
+                .y_axis_width(3)
+                .allow_zoom(false)
+                .allow_drag(false)
+                .allow_scroll(false)
+                .allow_boxed_zoom(false)
+                .set_margin_fraction(Vec2 { x: 0.0, y: 0.0 })
+                .show(ui, |plot_ui| plot_ui.bar_chart(chart));
+            // If code below is changed, change it to the same in `draw_cpu_avg_load`
+            if swap_plot.response.clicked(){
+                println!("Swap CLICKED")
+            }
+        });
+    }
+
+    fn draw_ram_usage(&self, ui: &mut Ui) {
+        ui.vertical_centered_justified(|ui: &mut Ui| {
+            let chart = BarChart::new(self.test_data.iter().enumerate().map(|x| {
+                (x.1, x.0 as f64)
+            }).map(|(x, y)| Bar::new(y, *x).width(1.0)).collect()
+            ).color(Color32::GOLD);
+
+            let ram_plot = Plot::new("Memory Usage")
+                .show_axes(false)
+                .y_axis_width(3)
+                .allow_zoom(false)
+                .allow_drag(false)
+                .allow_scroll(false)
+                .allow_boxed_zoom(false)
+                .set_margin_fraction(Vec2 { x: 0.0, y: 0.0 })
+                .show(ui, |plot_ui| plot_ui.bar_chart(chart));
+            // If code below is changed, change it to the same in `draw_cpu_avg_load`
+            if ram_plot.response.clicked(){
+                println!("RAM CLICKED")
+            }
+        });
+    }
+
+    fn grid_discs_landing_page(&self) {
+        // WIP
+    }
+
+    fn gird_networks_landing_page(&self) {
+        // WIP
+    }
+
+    fn grid_gpu_landing_page(&self) {
+        // WIP
     }
 }
 
