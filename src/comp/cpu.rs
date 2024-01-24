@@ -1,16 +1,21 @@
-use chrono::{self, Utc, SecondsFormat};
+use std::collections::VecDeque;
 
-struct CPU {
-    // Reasoning for u8 in design doc. Ref C1.
-    core_number: u8,
-    core_load: f64,
-    time: String,
+pub struct CpuData {
+    pub core_data: Vec<VecDeque<f64>>,
+    pub avg_load: VecDeque<f64>,
 }
 
-impl CPU {
-    fn new(core_number: u8, core_load: f64) -> CPU {
-        // Reasoning for time format in design doc. Ref D1.
-        let time = Utc::now().to_rfc3339_opts(SecondsFormat::Secs, true);
-        CPU { core_number, core_load, time }
+impl CpuData {
+    pub fn new(data: Vec<f64>) -> Self {
+        let core_data = {
+            let mut out: Vec<VecDeque<f64>> = Default::default();
+            for _n in 1..=12 {
+                let queue = VecDeque::from(data.clone());
+                out.push(queue);
+            }
+            out
+        };
+        let avg_load = VecDeque::from(data);
+        CpuData { core_data, avg_load }
     }
 }
