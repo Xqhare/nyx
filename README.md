@@ -53,3 +53,4 @@ Used in this project:
 - [libdrm_amdgpu_sys](https://crates.io/crates/libdrm_amdgpu_sys)
 - [dirs](https://crates.io/crates/dirs)
 - [signal-hook](https://crates.io/crates/signal-hook)
+

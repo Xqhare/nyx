@@ -69,3 +69,4 @@ UIc4: Disks need name, filesystem, type, removable, mounted on, used bytes, free
 UIc5: RAM needs total mem, used mem, available mem, total swap, used swap. Used mem and swap as histograms.
 
 UIc6: System could include OS name, kernel ver, OS ver, host name, number of cpus
+
