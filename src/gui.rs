@@ -1,3 +1,5 @@
+use std::collections::VecDeque;
+
 use chrono::{Utc, Duration, SecondsFormat};
 use eframe::{*, epaint::{Vec2, Color32}, egui::{CentralPanel, Ui, ScrollArea, Grid}};
 use egui_plot::{BarChart, Bar, Plot};
@@ -42,7 +44,7 @@ impl Default for Nyx {
         // TODO Put display_size into settings
         let display_size: Vec2 = Vec2 { x: 1200.0, y: 900.0 };
         let next_data_update = next_update_time();
-        let cpu_data = CpuData::new(test_data.clone());
+        let cpu_data = CpuData::new(test_data.clone(), num_cores);
         Nyx { 
             test_data, num_cores,  display_size, networks, disks, next_data_update, cpu_data,
             // default true
@@ -176,8 +178,18 @@ impl Nyx {
                 for core in labels {
                     ui.label(core.as_str());
                 }
+                // the two for loops above can be integrated later!    
                 ui.label("Average CPU load");
                 ui.end_row();
+                // I really dislike the cloning of the needed for data readout from appstate here, so I think a index based approach may be adviseable
+                // Done so, clone just moved lower into the function stack. VecDeque seems to be
+                // the culprit.
+                // After consulting with google and bard, I have come to the conclusion that a
+                // singly linked list seemst to be the best move for a copyable list perfect
+                // for my needs.
+                    // f64 can be copyied, I checked
+                    // singly linked lists seem to not be a part of the std library -> Something to implement myself, nice!
+                    // a doublely linked list is, using it, however, seems boring.
                 for core in 1..=self.num_cores {
                     self.draw_cpu_core(ui, core, "cpu core");
                 }
@@ -192,9 +204,17 @@ impl Nyx {
     fn draw_cpu_core(&mut self, ui: &mut Ui, core_nr: u8, avg_core: &str) {
         // This horizontal puts the Plots nicely close together, without it you need two monitors.
         ui.vertical_centered_justified(|ui: &mut Ui| {
+            let index = {
+                let index = core_nr.checked_sub(1);
+                if index.is_some() {
+                    index.unwrap() as usize
+                } else {
+                    0 as usize
+                }
+            };
             let (data, name) = match avg_core {
-                "avg" => (self.test_data.clone(), "avg load".to_string()),
-                _ => (self.test_data.clone(), format!("CPU {core_nr}")),
+                "avg" => (self.cpu_data.avg_load.clone(), "avg load".to_string()),
+                _ => (self.cpu_data.core_data[index].clone(), format!("CPU {core_nr}")),
             };
             let chart = BarChart::new(data.iter()
                 .enumerate()
