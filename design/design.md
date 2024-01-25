@@ -23,6 +23,18 @@ D1: Saving of timestamps
 		Nyx queries data once per second (This could be done in a seperate thread)
 			Timestamps for systemdata only need seconds to be unique. Especially since other computation time could impact the polling rate.
 
+Ref F (Appstate):
+
+F1: Using Vec or VecDeque create the need to clone data, which isn't desirable. 
+	After consulting with google and bard, I have come to the conclusion that a singly linked list seemst to be the best move for a copyable list perfect for my needs.
+		f64 can be copyied, I checked.
+		singly linked lists seem to not be a part of the std library -> Something to implement myself, nice!
+		a doublely linked list is, using it, however, seems boring.
+			They are not copyable!
+		After further research, it seems to be not the best option to go for. However avoiding cloning seems to be a good idea.
+	Box is not copyable, so linked lists are no real help either.
+		I'll stay with VecDeque's for now, however a cursor or using a db with caching built in are some options to consider.
+
 ## UI
 
 Ref UIa (Unix):
