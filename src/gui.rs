@@ -261,9 +261,17 @@ impl Nyx {
                 .collect()
             )
             .color(Color32::GOLD);
+            let x_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Time".to_string()};
+            let y_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Usage".to_string()};
+            // the :.2 in the {} means that the supplied values are cut of 2 digits after the . seperator
+            let label_fmt = |_s: &str, val: &PlotPoint| {format!("{:.2}s\n{:.2}%", val.x, val.y)};
+
             let cpu_plot = Plot::new(name)
                 .show_axes(false)
                 .y_axis_width(3)
+                .custom_x_axes(vec![AxisHints::default().label("Time").formatter(x_fmt).max_digits(4)])
+                .custom_y_axes(vec![AxisHints::default().label("Usage").formatter(y_fmt).max_digits(4)])
+                .label_formatter(label_fmt)
                 .allow_zoom(false)
                 .allow_drag(false)
                 .allow_scroll(false)
@@ -310,12 +318,14 @@ impl Nyx {
 
             let x_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Time".to_string()};
             let y_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Usage".to_string()};
-            let label_fmt = |_s: &str, val: &PlotPoint| {format!("- {:.2}s\n{:.2}%", val.x, val.y)};
+            // the :.2 in the {} means that the supplied values are cut of 2 digits after the . seperator
+            let label_fmt = |_s: &str, val: &PlotPoint| {format!("{:.2}s\n{:.2}%", val.x, val.y)};
 
             let ram_plot = Plot::new(format!("{mem_swap} Usage").as_str())
                 .show_axes(false)
                 .custom_x_axes(vec![AxisHints::default().label("Time").formatter(x_fmt).max_digits(4)])
                 .custom_y_axes(vec![AxisHints::default().label("Usage").formatter(y_fmt).max_digits(4)])
+                .label_formatter(label_fmt)                
                 .y_axis_width(3)
                 .allow_zoom(false)
                 .allow_drag(false)
@@ -323,7 +333,6 @@ impl Nyx {
                 .allow_boxed_zoom(false)
                 .include_y(100.0)
                 .set_margin_fraction(Vec2 { x: 0.0, y: 0.0 })
-                .label_formatter(label_fmt)
                 .show(ui, |plot_ui| plot_ui.bar_chart(chart));
             if ram_plot.response.clicked(){
                 self.ram_clicked();
@@ -357,9 +366,18 @@ impl Nyx {
             }).map(|(x, y)| Bar::new(y, *x).width(1.0)).collect()
             ).color(Color32::GOLD);
 
+            let x_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Time".to_string()};
+            let y_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Usage".to_string()};
+            // the :.2 in the {} means that the supplied values are cut of 2 digits after the . seperator
+            let label_fmt = |_s: &str, val: &PlotPoint| {format!("{:.2}s\n{:.2}%", val.x, val.y)};
+
+
             let disk_plot = Plot::new(format!("{} Usage", disk.name).as_str())
                 .show_axes(false)
                 .y_axis_width(3)
+                .custom_x_axes(vec![AxisHints::default().label("Time").formatter(x_fmt).max_digits(4)])
+                .custom_y_axes(vec![AxisHints::default().label("Usage").formatter(y_fmt).max_digits(4)])
+                .label_formatter(label_fmt) 
                 .allow_zoom(false)
                 .allow_drag(false)
                 .allow_scroll(false)
@@ -399,9 +417,17 @@ impl Nyx {
             }).map(|(x, y)| Bar::new(y, *x).width(1.0)).collect()
             ).color(Color32::GOLD);
 
+            let x_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Time".to_string()};
+            let y_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Usage".to_string()};
+            // the :.2 in the {} means that the supplied values are cut of 2 digits after the . seperator
+            let label_fmt = |_s: &str, val: &PlotPoint| {format!("{:.2}s\n{:.2}%", val.x, val.y)};
+
             let network_plot = Plot::new(format!("{} Usage", network.name).as_str())
                 .show_axes(false)
                 .y_axis_width(3)
+                .custom_x_axes(vec![AxisHints::default().label("Time").formatter(x_fmt).max_digits(4)])
+                .custom_y_axes(vec![AxisHints::default().label("Usage").formatter(y_fmt).max_digits(4)])
+                .label_formatter(label_fmt) 
                 .allow_zoom(false)
                 .allow_drag(false)
                 .allow_scroll(false)
