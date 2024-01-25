@@ -1,8 +1,8 @@
-use std::collections::VecDeque;
+use std::{collections::VecDeque, ops::RangeInclusive};
 
 use chrono::{Utc, Duration, SecondsFormat};
 use eframe::{*, epaint::{Vec2, Color32}, egui::{CentralPanel, Ui, ScrollArea, Grid}};
-use egui_plot::{BarChart, Bar, Plot};
+use egui_plot::{BarChart, Bar, Plot, AxisHints, PlotPoint};
 
 use crate::time_now_rfc3339zulu;
 
@@ -28,7 +28,11 @@ struct Nyx {
     show_ram_page: bool,
     show_gpu_page: bool,
     show_disk_page: bool,
+    show_network_page: bool,
     show_temperature_page: bool,
+    show_settings_page: bool,
+    show_about_page: bool,
+    show_eris_page: bool,
     
     // Settings
     display_size: Vec2,
@@ -50,7 +54,8 @@ impl Default for Nyx {
             // default true
             show_landing_page: true,
             // default false
-            show_cpu_page: false, show_ram_page: false, show_help: false, show_gpu_page: false, show_disk_page: false, show_temperature_page: false,
+            show_cpu_page: false, show_ram_page: false, show_help: false, show_gpu_page: false, show_disk_page: false, show_temperature_page: false, show_network_page: false,
+            show_settings_page: false, show_about_page: false, show_eris_page: false,
         }
     }
 
@@ -65,20 +70,43 @@ impl App for Nyx {
                     self.next_data_update = next_update_time();
                 }
                 self.draw_main_menu(ui);
-                if self.show_help {
-                }
                 ui.separator();
+                if self.show_help {
+                    ui.label("help");
+                }
                 if self.show_landing_page {
                     self.draw_landing_page(ui);
                 }
                 if self.show_cpu_page {
+                    ui.label("cpu");
                 }
                 if self.show_ram_page {
+                    ui.label("ram");
                 }
                 
+                if self.show_gpu_page {
+                    ui.label("gpu");
+                }
+                if self.show_disk_page {
+                    ui.label("disk");
+                }
+                if self.show_network_page {
+                    ui.label("network");
+                }
+                if self.show_temperature_page {
+                    ui.label("temperature");
+                }
+                if self.show_settings_page {
+                    ui.label("settings");
+                }
+                if self.show_about_page {
+                    ui.label("about");
+                }
+                if self.show_eris_page {
+                    ui.label("eris");
+                }
             });
     }
-
 }
 
 impl Nyx {
@@ -95,7 +123,11 @@ impl Nyx {
         self.show_ram_page = false;
         self.show_gpu_page = false;
         self.show_disk_page = false;
+        self.show_network_page = false;
         self.show_temperature_page = false;
+        self.show_settings_page = false;
+        self.show_about_page = false;
+        self.show_eris_page = false;
     }
 
     fn draw_main_menu(&mut self, ui: &mut Ui) {
@@ -103,31 +135,54 @@ impl Nyx {
             ui.menu_button("Nyx", |ui: &mut Ui| {
                 if ui.button("Settings").clicked() {
                     println!("Settings click");
+                    self.clear_screen();
+                    self.show_settings_page = true;
                 }
                 if ui.button("Help").clicked() {
                     println!("Help click");
+                    self.clear_screen();
+                    self.show_help = true;
                 }
                 if ui.button("About").clicked() {
                     println!("About click");
-                }
-                if ui.button("Eris").clicked() {
-                    println!("Eris click");
+                    self.clear_screen();
+                    self.show_about_page = true;
                 }
             });
             if ui.button("CPU").clicked() {
                 println!("CPU");
+                self.clear_screen();
+                self.show_cpu_page = true;
             }
             if ui.button("GPU").clicked() {
                 println!("GPU");
+                self.clear_screen();
+                self.show_gpu_page = true;
             }
             if ui.button("RAM").clicked() {
                 println!("RAM");
+                self.clear_screen();
+                self.show_ram_page = true;
             }
             if ui.button("DISC").clicked() {
                 println!("DISC");
+                self.clear_screen();
+                self.show_disk_page = true;
             }
             if ui.button("NETWORKS").clicked() {
                 println!("NETWORKS");
+                self.clear_screen();
+                self.show_network_page = true;
+            }
+            if ui.button("TEMPERATURE").clicked() {
+                println!("TEMPERATURE");
+                self.clear_screen();
+                self.show_temperature_page = true;
+            }
+            if ui.button("Eris").clicked() {
+                println!("Eris click");
+                self.clear_screen();
+                self.show_eris_page = true;
             }
             if !self.show_landing_page {
                 if ui.button("Back to main page").clicked() {
@@ -167,29 +222,11 @@ impl Nyx {
             .hscroll(true)
             .show(ui, |ui: &mut Ui| {
             Grid::new("landing page cpu").striped(true).num_columns(self.num_cores as usize + 1).show(ui, |ui: &mut Ui| {
-                let labels = {
-                    let mut out: Vec<String> = Default::default();
-                    for n in 1..=self.num_cores {
-                        let label = format!("CPU - Core {n}");
-                        out.push(label);
-                    }
-                    out
-                };
-                for core in labels {
-                    ui.label(core.as_str());
+                for n in 1..=self.num_cores {
+                    ui.label(format!("CPU - Core {n}").as_str());
                 }
-                // the two for loops above can be integrated later!    
                 ui.label("Average CPU load");
                 ui.end_row();
-                // I really dislike the cloning of the needed for data readout from appstate here, so I think a index based approach may be adviseable
-                // Done so, clone just moved lower into the function stack. VecDeque seems to be
-                // the culprit.
-                // After consulting with google and bard, I have come to the conclusion that a
-                // singly linked list seemst to be the best move for a copyable list perfect
-                // for my needs.
-                    // f64 can be copyied, I checked
-                    // singly linked lists seem to not be a part of the std library -> Something to implement myself, nice!
-                    // a doublely linked list is, using it, however, seems boring.
                 for core in 1..=self.num_cores {
                     self.draw_cpu_core(ui, core, "cpu core");
                 }
@@ -213,6 +250,7 @@ impl Nyx {
                 }
             };
             let (data, name) = match avg_core {
+                // I really dislike the cloning of the needed for data readout from appstate here: Ref F1
                 "avg" => (self.cpu_data.avg_load.clone(), "avg load".to_string()),
                 _ => (self.cpu_data.core_data[index].clone(), format!("CPU {core_nr}")),
             };
@@ -247,11 +285,13 @@ impl Nyx {
 
     fn grid_ram_landing_page(&mut self, ui: &mut Ui) {
         ui.add(|ui: &mut Ui| {
-            Grid::new("RAM").striped(true).min_col_width((self.display_size.x / 2.0) - 50.0).num_columns(2).show(ui, |ui: &mut Ui| {
+            Grid::new("RAM").striped(true).min_col_width((self.display_size.x / 1.0) - 50.0).num_columns(1).show(ui, |ui: &mut Ui| {
                 ui.label("Swap:");
-                ui.label("Memory:");
                 ui.end_row();
                 self.draw_ram_usage(ui, "swap");
+                ui.end_row();
+                ui.label("Memory:");
+                ui.end_row();
                 self.draw_ram_usage(ui, "ram");
             }).response
         });
@@ -268,8 +308,14 @@ impl Nyx {
             }).map(|(x, y)| Bar::new(y, *x).width(1.0)).collect()
             ).color(Color32::GOLD);
 
+            let x_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Time".to_string()};
+            let y_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Usage".to_string()};
+            let label_fmt = |_s: &str, val: &PlotPoint| {format!("- {:.2}s\n{:.2}%", val.x, val.y)};
+
             let ram_plot = Plot::new(format!("{mem_swap} Usage").as_str())
                 .show_axes(false)
+                .custom_x_axes(vec![AxisHints::default().label("Time").formatter(x_fmt).max_digits(4)])
+                .custom_y_axes(vec![AxisHints::default().label("Usage").formatter(y_fmt).max_digits(4)])
                 .y_axis_width(3)
                 .allow_zoom(false)
                 .allow_drag(false)
@@ -277,8 +323,8 @@ impl Nyx {
                 .allow_boxed_zoom(false)
                 .include_y(100.0)
                 .set_margin_fraction(Vec2 { x: 0.0, y: 0.0 })
+                .label_formatter(label_fmt)
                 .show(ui, |plot_ui| plot_ui.bar_chart(chart));
-            // If code below is changed, change it to the same in `draw_cpu_avg_load`
             if ram_plot.response.clicked(){
                 self.ram_clicked();
             }
@@ -293,13 +339,12 @@ impl Nyx {
 
     fn grid_discs_landing_page(&mut self, ui: &mut Ui) {
         ui.add(|ui: &mut Ui| {
-            Grid::new("Disks").striped(true).min_col_width((self.display_size.x / 2.0) - 50.0).num_columns(self.disks.len()).show(ui, |ui: &mut Ui| {
-                for disk in &self.disks {
+            Grid::new("Disks").striped(true).min_col_width((self.display_size.x / 1.0) - 50.0).num_columns(1).show(ui, |ui: &mut Ui| {
+                for disk in self.disks.clone() {
                     ui.label(disk.name.clone());
-                }
-                ui.end_row();
-                for desk in self.disks.clone() {
-                    self.draw_disk_usage(ui, desk.clone());
+                    ui.end_row();
+                    self.draw_disk_usage(ui, disk.clone());
+                    ui.end_row();
                 }
             }).response
         });    
@@ -312,7 +357,7 @@ impl Nyx {
             }).map(|(x, y)| Bar::new(y, *x).width(1.0)).collect()
             ).color(Color32::GOLD);
 
-            let ram_plot = Plot::new(format!("{} Usage", disk.name).as_str())
+            let disk_plot = Plot::new(format!("{} Usage", disk.name).as_str())
                 .show_axes(false)
                 .y_axis_width(3)
                 .allow_zoom(false)
@@ -322,21 +367,26 @@ impl Nyx {
                 .include_y(100.0)
                 .set_margin_fraction(Vec2 { x: 0.0, y: 0.0 })
                 .show(ui, |plot_ui| plot_ui.bar_chart(chart));
-            if ram_plot.response.clicked(){
-                self.ram_clicked();
+            if disk_plot.response.clicked(){
+                self.disk_clicked();
             }
         });
     }
 
+    fn disk_clicked(&mut self) {
+            println!("DISK MENU CLICKED");
+            self.clear_screen();
+            self.show_disk_page = true;
+    }
+
     fn gird_networks_landing_page(&mut self, ui: &mut Ui) {
         ui.add(|ui: &mut Ui| {
-            Grid::new("Networks").striped(true).min_col_width((self.display_size.x / 2.0) - 50.0).num_columns(self.networks.len()).show(ui, |ui: &mut Ui| {
-                for network in &self.networks {
-                    ui.label(network.name.clone());
-                }
-                ui.end_row();
+            Grid::new("Networks").striped(true).min_col_width((self.display_size.x / 1.0) - 50.0).num_columns(1).show(ui, |ui: &mut Ui| {
                 for network in self.networks.clone() {
+                    ui.label(network.name.clone());
+                    ui.end_row();
                     self.draw_network_usage(ui, network.clone());
+                    ui.end_row();
                 }
             }).response
         });
@@ -349,7 +399,7 @@ impl Nyx {
             }).map(|(x, y)| Bar::new(y, *x).width(1.0)).collect()
             ).color(Color32::GOLD);
 
-            let ram_plot = Plot::new(format!("{} Usage", network.name).as_str())
+            let network_plot = Plot::new(format!("{} Usage", network.name).as_str())
                 .show_axes(false)
                 .y_axis_width(3)
                 .allow_zoom(false)
@@ -359,10 +409,16 @@ impl Nyx {
                 .include_y(100.0)
                 .set_margin_fraction(Vec2 { x: 0.0, y: 0.0 })
                 .show(ui, |plot_ui| plot_ui.bar_chart(chart));
-            if ram_plot.response.clicked(){
-                self.ram_clicked();
+            if network_plot.response.clicked(){
+                self.network_clicked();
             }
         });
+    }
+
+    fn network_clicked(&mut self) {
+            println!("NETWORK MENU CLICKED");
+            self.clear_screen();
+            self.show_network_page = true;
     }
 
     fn grid_gpu_landing_page(&self) {
@@ -382,7 +438,7 @@ fn next_update_time() -> String {
 // This will take in startup config later!
 pub fn start_nyx() {
     let app_name = "Nyx";
-    let size: Vec2 = Vec2 { x: 1200.0, y: 900.0 };
+    let size: Vec2 = Vec2 { x: 1165.0, y: 1000.0 };
     let mut native_options = NativeOptions::default();
     native_options.viewport.inner_size = Option::from(size);
     run_native(app_name, native_options, Box::new(|_cc| { Box::<Nyx>::default()})).expect("E 01");
