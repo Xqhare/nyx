@@ -1,10 +1,10 @@
-use std::{collections::VecDeque, ops::RangeInclusive};
+use std::ops::RangeInclusive;
 
-use chrono::{Utc, Duration, SecondsFormat};
+use chrono::{Duration, SecondsFormat};
 use eframe::{*, epaint::{Vec2, Color32}, egui::{CentralPanel, Ui, ScrollArea, Grid}};
 use egui_plot::{BarChart, Bar, Plot, AxisHints, PlotPoint};
 
-use crate::time_now_rfc3339zulu;
+use crate::utils;
 
 use crate::{APPNAME, APPVERSION, APPAUTHORS, comp::{network::Network, disc::Disk, cpu::CpuData}};
 
@@ -47,7 +47,7 @@ impl Default for Nyx {
         let disks = vec![Disk::new("One".to_string()), Disk::new("Two".to_string())];
         // TODO Put display_size into settings
         let display_size: Vec2 = Vec2 { x: 1200.0, y: 900.0 };
-        let next_data_update = next_update_time();
+        let next_data_update = utils::next_update_time(Duration::seconds(DATAUPDATEINTERVAL));
         let cpu_data = CpuData::new(test_data.clone(), num_cores);
         Nyx { 
             test_data, num_cores,  display_size, networks, disks, next_data_update, cpu_data,
@@ -63,11 +63,11 @@ impl Default for Nyx {
 
 impl App for Nyx {
 
-    fn update(&mut self, ctx: &egui::Context, frame: &mut Frame) {
+    fn update(&mut self, ctx: &egui::Context, _frame: &mut Frame) {
         CentralPanel::default()
             .show(ctx, |ui: &mut Ui| {
-                if time_now_rfc3339zulu(SecondsFormat::Secs) >= self.next_data_update {
-                    self.next_data_update = next_update_time();
+                if utils::time_now_rfc3339zulu(SecondsFormat::Secs) >= self.next_data_update {
+                    self.next_data_update = utils::next_update_time(Duration::seconds(DATAUPDATEINTERVAL));
                 }
                 self.draw_main_menu(ui);
                 ui.separator();
@@ -449,15 +449,6 @@ impl Nyx {
 
     fn grid_gpu_landing_page(&self) {
         // WIP
-    }
-}
-
-fn next_update_time() -> String {
-    let now = Utc::now().checked_add_signed(Duration::seconds(DATAUPDATEINTERVAL));
-    if now.is_some() {
-        return now.unwrap().to_rfc3339_opts(chrono::SecondsFormat::Secs, true);
-    } else {
-        return Utc::now().to_rfc3339_opts(SecondsFormat::Secs, true);
     }
 }
 
