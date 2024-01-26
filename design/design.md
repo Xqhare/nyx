@@ -34,6 +34,16 @@ F1: Using Vec or VecDeque create the need to clone data, which isn't desirable.
 		After further research, it seems to be not the best option to go for. However avoiding cloning seems to be a good idea.
 	Box is not copyable, so linked lists are no real help either.
 		I'll stay with VecDeque's for now, however a cursor or using a db with caching built in are some options to consider.
+	This rabbithole was a lot deeper than expected. After 3 days of reading I realized I was going at this backwards:
+		I only need a pointer to the data held as Appstate to draw it to screen, no mutability needed here.
+		Once every polling rate interval I need to mutate it.
+			- The mutation will have significant overhead (with new data fetching and all)
+		With this in mind, I now believe Rc<VecDeque> or Arc<VecDeque> to be the better way of doing this.
+	To help with Ref F2, I believe Arc<Mutex<VecDeque>> to be the thing to go for.
+
+F2: Mutation of Appstate
+	As Appstate will be mutated at least once every polling interval, it seems adviceable to do this in a seperate thread and passing the new appstate back as a Arc.
+	Waiting with a .join() defeats the purpose, as drawing could be interrupted. The graphs need 60fps obviously!
 
 ## UI
 
