@@ -48,7 +48,7 @@ impl Default for Nyx {
         // TODO Put display_size into settings
         let display_size: Vec2 = Vec2 { x: 1200.0, y: 900.0 };
         let next_data_update = utils::next_update_time(Duration::seconds(DATAUPDATEINTERVAL));
-        let cpu_data = CpuData::new(test_data.clone(), num_cores);
+        let cpu_data = CpuData::new();
         Nyx { 
             test_data, num_cores,  display_size, networks, disks, next_data_update, cpu_data,
             // default true
@@ -258,7 +258,7 @@ impl Nyx {
             let (data, name) = match avg_core {
                 // I really dislike the cloning of the needed for data readout from appstate here: Ref F1
                 "avg" => (self.cpu_data.avg_load.clone(), "avg load".to_string()),
-                _ => (self.cpu_data.core_data[index].clone(), format!("CPU {core_nr}")),
+                _ => (self.cpu_data.core_data.lock().unwrap()[index].clone(), format!("CPU {core_nr}")),
             };
             // Locks need an unwrap or similar, keep that in mind!
             let chart = BarChart::new(data.lock().unwrap().iter()
@@ -284,6 +284,7 @@ impl Nyx {
                 .allow_scroll(false)
                 .allow_boxed_zoom(false)
                 .include_y(100.0)
+                .include_x(60)
                 .set_margin_fraction(Vec2 { x: 0.0, y: 0.0 })
                 .show(ui, |plot_ui| plot_ui.bar_chart(chart));
             if cpu_plot.response.clicked(){
