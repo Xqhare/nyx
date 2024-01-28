@@ -64,10 +64,16 @@ impl Default for Nyx {
 impl App for Nyx {
 
     fn update(&mut self, ctx: &egui::Context, _frame: &mut Frame) {
+        ctx.request_repaint_after(std::time::Duration::from_millis(500));
         CentralPanel::default()
             .show(ctx, |ui: &mut Ui| {
+                // Time has come for Data update
+                println!("NOW {}", utils::time_now_rfc3339zulu(SecondsFormat::Millis));
                 if utils::time_now_rfc3339zulu(SecondsFormat::Secs) >= self.next_data_update {
                     self.next_data_update = utils::next_update_time(Duration::seconds(DATAUPDATEINTERVAL));
+                    println!("NEXT UPDATE: {}", self.next_data_update);
+                    self.cpu_data.update();
+                    println!("UPDATE!")
                 }
                 self.draw_main_menu(ui);
                 ui.separator();
@@ -254,10 +260,11 @@ impl Nyx {
                 "avg" => (self.cpu_data.avg_load.clone(), "avg load".to_string()),
                 _ => (self.cpu_data.core_data[index].clone(), format!("CPU {core_nr}")),
             };
-            let chart = BarChart::new(data.iter()
+            // Locks need an unwrap or similar, keep that in mind!
+            let chart = BarChart::new(data.lock().unwrap().iter()
                 .enumerate()
-                .map(|x| (x.1, x.0 as f64))
-                .map(|(x, y)| Bar::new(y, *x).width(1.0))
+                .map(|x| (*x.1, x.0))
+                .map(|(x, y)| Bar::new(y as f64, x).width(1.0))
                 .collect()
             )
             .color(Color32::GOLD);
