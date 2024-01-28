@@ -8,7 +8,7 @@ use crate::utils;
 
 use crate::{APPNAME, APPVERSION, APPAUTHORS, comp::{network::Network, disc::Disk, cpu::CpuData}};
 
-const DATAUPDATEINTERVAL: i64 = 1;
+const DATAUPDATEINTERVAL: i64 = 1000;
 
 
 struct Nyx {
@@ -47,7 +47,7 @@ impl Default for Nyx {
         let disks = vec![Disk::new("One".to_string()), Disk::new("Two".to_string())];
         // TODO Put display_size into settings
         let display_size: Vec2 = Vec2 { x: 1200.0, y: 900.0 };
-        let next_data_update = utils::next_update_time(Duration::seconds(DATAUPDATEINTERVAL));
+        let next_data_update = utils::next_update_time(Duration::milliseconds(DATAUPDATEINTERVAL));
         let cpu_data = CpuData::new();
         Nyx { 
             test_data, num_cores,  display_size, networks, disks, next_data_update, cpu_data,
@@ -64,16 +64,14 @@ impl Default for Nyx {
 impl App for Nyx {
 
     fn update(&mut self, ctx: &egui::Context, _frame: &mut Frame) {
-        ctx.request_repaint_after(std::time::Duration::from_millis(500));
+        // This makes sure that Nyx is run continiously with a maximum wait time in millisecounds.
+        ctx.request_repaint_after(std::time::Duration::from_millis(DATAUPDATEINTERVAL as u64));
         CentralPanel::default()
             .show(ctx, |ui: &mut Ui| {
                 // Time has come for Data update
-                println!("NOW {}", utils::time_now_rfc3339zulu(SecondsFormat::Millis));
                 if utils::time_now_rfc3339zulu(SecondsFormat::Secs) >= self.next_data_update {
-                    self.next_data_update = utils::next_update_time(Duration::seconds(DATAUPDATEINTERVAL));
-                    println!("NEXT UPDATE: {}", self.next_data_update);
+                    self.next_data_update = utils::next_update_time(Duration::milliseconds(DATAUPDATEINTERVAL));
                     self.cpu_data.update();
-                    println!("UPDATE!")
                 }
                 self.draw_main_menu(ui);
                 ui.separator();
