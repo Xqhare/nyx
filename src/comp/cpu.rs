@@ -40,6 +40,9 @@ impl CpuData {
                 let _ = ok_store.pop_back();
                 ok_store.push_front(new_data.1);
                 // core load
+                // using while let Ok(_) = _ ; Nyx chrashes on startup, the for loops are needed!
+                // This doesn't mean this couldn't do with a rework, but still
+                #[allow(for_loops_over_fallibles)]
                 for core in self.core_data.lock() {
                     for entry in new_data.0.iter().enumerate() {
                         let index = entry.0;
@@ -51,6 +54,7 @@ impl CpuData {
             // Until the collection has reached 60 elements, insert one in the front.
             } else if ok_store.len() < 60 {
                 ok_store.push_front(new_data.1);
+                #[allow(for_loops_over_fallibles)]
                 for core in self.core_data.lock() {
                     for entry in new_data.0.iter().enumerate() {
                         let index = entry.0;
@@ -63,6 +67,7 @@ impl CpuData {
             } else {
                 ok_store.truncate(59);
                 ok_store.push_front(new_data.1);
+                #[allow(for_loops_over_fallibles)]
                 for core in self.core_data.lock() {
                     for entry in new_data.0.iter().enumerate() {
                         let index = entry.0;
