@@ -45,6 +45,10 @@ F2: Mutation of Appstate
 	As Appstate will be mutated at least once every polling interval, it seems adviceable to do this in a seperate thread and passing the new appstate back as a Arc.
 	Waiting with a .join() defeats the purpose, as drawing could be interrupted. The graphs need 60fps obviously!
 
+F3: For Dataconsitency updates should be atomic, either they do not update the state at all of a component or all states are updated.
+
+F4: Proccess cpu usage should be displayed as absoulute (more than 100%) and relative (per core calculated %).
+
 Ref D (Average Load):
 
 Ref D1: I have to write my own average load calculation as avg_load available in sysinfo is unsuitable for the current moment, as it only supplies finished avgerages of the last 1, 10 and 15mins, this doesn't work on windows.
