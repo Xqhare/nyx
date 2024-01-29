@@ -3,13 +3,17 @@ use std::{collections::VecDeque, sync::{Arc, Mutex}};
 use crate::utils;
 
 #[derive(Clone)]
+/// Holds core usage data and average system load data for the last 60 update increments
 pub struct CpuData {
+    /// Holds core usage data for the last 60 update increments
     pub core_data: Arc<Mutex<Vec<Arc<Mutex<VecDeque<f64>>>>>>,
+    /// Holds average system load data for the last 60 update increments
     pub avg_load: Arc<Mutex<VecDeque<f64>>>,
 }
 
 impl CpuData {
 
+    /// Creates a new instance of `CpuData` filled with one datapoint for each cpu and average load
     pub fn new() -> Self {
         let tmp = utils::get_cpu_data();
         let core_data: Arc<Mutex<Vec<Arc<Mutex<VecDeque<f64>>>>>>  = {
@@ -22,15 +26,16 @@ impl CpuData {
             Arc::new(Mutex::new(queue))
         };
         let avg_load: Arc<Mutex<VecDeque<f64>>> = Arc::new(Mutex::new(VecDeque::from(vec![tmp.1])));
-        
         CpuData { core_data, avg_load }
     }
 
+    /// Updates the exsisting instance of `CpuData` with one datapoint for each cpu and average load
     pub fn update(&mut self) {
         let new_data = utils::get_cpu_data();
         let data_store = self.avg_load.lock();
         if data_store.is_ok() {
             let mut ok_store = data_store.unwrap();
+            // If lock on core data is bad don't do anything, Ref F3
             // If the collection is at 60 drop the last one and insert on in the front.
             if ok_store.len() == 60 {
                 // avg_load

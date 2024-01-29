@@ -4,6 +4,7 @@ use chrono::{Utc, Duration, SecondsFormat};
 use rand::{prelude::SliceRandom, thread_rng};
 use sysinfo::{System, RefreshKind, CpuRefreshKind, MINIMUM_CPU_UPDATE_INTERVAL};
 
+/// Returns the current time with the supplied `seconds_format`
 pub fn time_now_rfc3339zulu(seconds_format: SecondsFormat) -> String {
     Utc::now().to_rfc3339_opts(seconds_format, true)
 }
@@ -16,6 +17,7 @@ fn ran_small_num() -> u8 {
     return *ran_num; 
 }
 
+/// Computes the timestamp of current time + Duration
 pub fn next_update_time(interval: Duration) -> String {
     let now = Utc::now().checked_add_signed(interval);
     if now.is_some() {
@@ -25,6 +27,7 @@ pub fn next_update_time(interval: Duration) -> String {
     }
 }
 
+/// Reads the cpu usage and returns it for each core, as well as the avg system load.
 pub fn get_cpu_data() -> (Vec<f64>, f64) {
     let mut sys = System::new_with_specifics(RefreshKind::new().with_cpu(CpuRefreshKind::everything().without_frequency()));
     sys.refresh_cpu_usage();
@@ -50,6 +53,8 @@ pub fn get_cpu_data() -> (Vec<f64>, f64) {
     return (tmp_store, avg);
 }
 
+/// Computes the cpu core amount. Hyperthreading is assumed, if more cores than 255 are
+/// encountered, 255 is returned. Should the request for physical cores fail, 1 is returned.
 pub fn get_cpu_core_amount() -> u8 {
     let sys = System::new_with_specifics(RefreshKind::new().with_cpu(CpuRefreshKind::everything().without_frequency()));
     let phy_cores = sys.physical_core_count();
