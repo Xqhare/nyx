@@ -1,5 +1,6 @@
 
 use chrono::{Duration, SecondsFormat};
+use chrono_tz::Tz;
 use eframe::{*, epaint::Vec2, egui::{CentralPanel, Ui}};
 
 use crate::utils;
@@ -33,6 +34,7 @@ struct Nyx {
     
     // Settings
     display_size: Vec2,
+    timezone: Tz,
 }
 
 impl Default for Nyx {
@@ -46,8 +48,9 @@ impl Default for Nyx {
         let display_size: Vec2 = Vec2 { x: 1200.0, y: 900.0 };
         let next_data_update = utils::next_update_time(Duration::milliseconds(DATAUPDATEINTERVAL));
         let cpu_data = CpuData::new();
+        let timezone = chrono_tz::Europe::Berlin;
         Nyx { 
-            test_data, num_cores,  display_size, networks, disks, next_data_update, cpu_data,
+            test_data, num_cores,  display_size, networks, disks, next_data_update, cpu_data, timezone,
             // default true
             show_landing_page: true,
             // default false
