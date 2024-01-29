@@ -42,7 +42,7 @@ impl Default for Nyx {
 
     fn default() -> Self {
         let test_data: Vec<f64> = vec![10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.3, 1.0, 2.2, 4.3, 2.6, 3.8, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.3, 1.0, 2.2, 4.3, 2.6, 3.8, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54,];
-        let num_cores: u8 = 12;
+        let num_cores: u8 = utils::get_cpu_core_amount();
         let networks = vec![Network::new("First".to_string()), Network::new("Second".to_string())];
         let disks = vec![Disk::new("One".to_string()), Disk::new("Two".to_string())];
         // TODO Put display_size into settings
