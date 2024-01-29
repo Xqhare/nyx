@@ -1,12 +1,17 @@
 use std::thread;
 
 use chrono::{Utc, Duration, SecondsFormat};
+use chrono_tz::Tz;
 use rand::{prelude::SliceRandom, thread_rng};
 use sysinfo::{System, RefreshKind, CpuRefreshKind, MINIMUM_CPU_UPDATE_INTERVAL};
 
 /// Returns the current time with the supplied `seconds_format`
 pub fn time_now_rfc3339zulu(seconds_format: SecondsFormat) -> String {
     Utc::now().to_rfc3339_opts(seconds_format, true)
+}
+
+pub fn time_now_rfc3339_with_timezone(seconds_format: SecondsFormat, timezone: Tz) -> String {
+    Utc::now().with_timezone(&timezone).to_rfc3339_opts(seconds_format, false)
 }
 
 #[allow(dead_code)]
