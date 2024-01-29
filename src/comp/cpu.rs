@@ -1,6 +1,5 @@
 use std::{collections::VecDeque, sync::{Arc, Mutex}};
 
-
 use crate::utils;
 
 #[derive(Clone)]
@@ -10,9 +9,9 @@ pub struct CpuData {
 }
 
 impl CpuData {
+
     pub fn new() -> Self {
         let tmp = utils::get_cpu_data();
-        
         let core_data: Arc<Mutex<Vec<Arc<Mutex<VecDeque<f64>>>>>>  = {
             let mut queue: Vec<Arc<Mutex<VecDeque<f64>>>> = Default::default();
             for data in tmp.0 {
@@ -22,10 +21,8 @@ impl CpuData {
             };
             Arc::new(Mutex::new(queue))
         };
-        let avg_load: Arc<Mutex<VecDeque<f64>>> = {
-            let queue: Arc<Mutex<VecDeque<f64>>> = Arc::new(Mutex::new(VecDeque::from(vec![tmp.1])));
-            queue
-        };
+        let avg_load: Arc<Mutex<VecDeque<f64>>> = Arc::new(Mutex::new(VecDeque::from(vec![tmp.1])));
+        
         CpuData { core_data, avg_load }
     }
 
@@ -40,48 +37,47 @@ impl CpuData {
                 let _ = ok_store.pop_back();
                 ok_store.push_front(new_data.1);
                 // core load
-                // using while let Ok(_) = _ ; Nyx chrashes on startup, the for loops are needed!
-                // This doesn't mean this couldn't do with a rework, but still
-                #[allow(for_loops_over_fallibles)]
-                for core in self.core_data.lock() {
+                let core = self.core_data.lock();
+                if core.is_ok() {
+                    let un_core = core.unwrap();
                     for entry in new_data.0.iter().enumerate() {
                         let index = entry.0;
                         let data = entry.1;
-                        let _ = core[index].lock().unwrap().pop_back();
-                        core[index].lock().unwrap().push_front(*data);
+                        let _ = un_core[index].lock().unwrap().pop_back();
+                        un_core[index].lock().unwrap().push_front(*data);
                     }
                 }
             // Until the collection has reached 60 elements, insert one in the front.
             } else if ok_store.len() < 60 {
                 ok_store.push_front(new_data.1);
-                #[allow(for_loops_over_fallibles)]
-                for core in self.core_data.lock() {
+                let core = self.core_data.lock();
+                if core.is_ok() {
+                    let un_core = core.unwrap();
                     for entry in new_data.0.iter().enumerate() {
                         let index = entry.0;
                         let data = entry.1;
-                        core[index].lock().unwrap().push_front(*data);
+                        un_core[index].lock().unwrap().push_front(*data);
                     }
                 }
-
             // Failsave if collection ever grows bejond 60 elements.
             } else {
                 ok_store.truncate(59);
                 ok_store.push_front(new_data.1);
-                #[allow(for_loops_over_fallibles)]
-                for core in self.core_data.lock() {
+                let core = self.core_data.lock();
+                if core.is_ok() {
+                    let un_core = core.unwrap();
                     for entry in new_data.0.iter().enumerate() {
                         let index = entry.0;
                         let data = entry.1;
-                        core[index].lock().unwrap().truncate(59);
-                        core[index].lock().unwrap().push_front(*data);
+                        un_core[index].lock().unwrap().truncate(59);
+                        un_core[index].lock().unwrap().push_front(*data);
                     }
                 }
             }
         } else {
-            // Couldn't get a lock on data! lets abort the operation.
+            // Couldn't get a lock on data! lets abort the operation. Ref F3
             return;
         }
     }
-
     
 }
