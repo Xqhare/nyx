@@ -48,6 +48,7 @@ As Nyx truly is, one of the sYstem eXplorer's ever made!
 Thanks to the open-source community for providing invaluable tools and libraries.
 Used in this project:
 - [chrono](https://crates.io/crates/chrono)
+- [chrono-tz](https://crates.io/crates/chrono-tz)
 - [eframe](https://crates.io/crates/eframe)
 - [sysinfo](https://crates.io/crates/sysinfo)
 - [libdrm_amdgpu_sys](https://crates.io/crates/libdrm_amdgpu_sys)
