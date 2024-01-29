@@ -110,8 +110,18 @@ impl App for Nyx {
     }
 }
 
+// All components of the gui split up into their respective parts
 mod cpu;
 mod gui;
+mod gpu;
+mod ram;
+mod disk;
+mod network;
+mod temperature;
+mod eris;
+mod settings;
+mod help;
+mod about;
 
 // This will take in startup config later!
 pub fn start_nyx() {

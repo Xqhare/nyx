@@ -1,0 +1,65 @@
+use std::ops::RangeInclusive;
+
+use eframe::{egui::{Ui, Grid}, epaint::{Color32, Vec2}};
+use egui_plot::{BarChart, Bar, PlotPoint, Plot, AxisHints};
+use super::Nyx;
+
+impl Nyx {
+
+    pub fn grid_ram_landing_page(&mut self, ui: &mut Ui) {
+        ui.add(|ui: &mut Ui| {
+            Grid::new("RAM").striped(true).min_col_width((self.display_size.x / 1.0) - 50.0).num_columns(1).show(ui, |ui: &mut Ui| {
+                ui.label("Swap:");
+                ui.end_row();
+                self.draw_ram_usage(ui, "swap");
+                ui.end_row();
+                ui.label("Memory:");
+                ui.end_row();
+                self.draw_ram_usage(ui, "ram");
+            }).response
+        });
+    }
+
+    fn draw_ram_usage(&mut self, ui: &mut Ui, mem_swap: &str) {
+        ui.vertical_centered_justified(|ui: &mut Ui| {
+            let data = match mem_swap {
+                "ram" => &self.test_data,
+                _ => &self.test_data,
+            };
+            let chart = BarChart::new(data.iter().enumerate().map(|x| {
+                (x.1, x.0 as f64)
+            }).map(|(x, y)| Bar::new(y, *x).width(1.0)).collect()
+            ).color(Color32::GOLD);
+
+            let x_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Time".to_string()};
+            let y_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Usage".to_string()};
+            // the :.2 in the {} means that the supplied values are cut of 2 digits after the . seperator
+            let label_fmt = |_s: &str, val: &PlotPoint| {format!("{:.2}s\n{:.2}%", val.x, val.y)};
+
+            let ram_plot = Plot::new(format!("{mem_swap} Usage").as_str())
+                .show_axes(false)
+                .custom_x_axes(vec![AxisHints::default().label("Time").formatter(x_fmt).max_digits(4)])
+                .custom_y_axes(vec![AxisHints::default().label("Usage").formatter(y_fmt).max_digits(4)])
+                .label_formatter(label_fmt)                
+                .y_axis_width(3)
+                .allow_zoom(false)
+                .allow_drag(false)
+                .allow_scroll(false)
+                .allow_boxed_zoom(false)
+                .include_y(100.0)
+                .set_margin_fraction(Vec2 { x: 0.0, y: 0.0 })
+                .show(ui, |plot_ui| plot_ui.bar_chart(chart));
+            if ram_plot.response.clicked(){
+                self.ram_clicked();
+            }
+        });
+    }
+
+    fn ram_clicked(&mut self) {
+        println!("RAM MENU CLICKED");
+        self.clear_screen();
+        self.show_ram_page = true;
+    }
+
+
+}
