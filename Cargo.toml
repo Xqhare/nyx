@@ -1,6 +1,6 @@
 [package]
 name = "nyx"
-version = "0.2.9"
+version = "0.2.10"
 edition = "2021"
 authors = ["Xqhare"]
 
@@ -16,4 +16,5 @@ neith = { path = "../neith" }
 signal-hook = "0.3.17"
 egui_plot = "0.25.0"
 rand = "0.8.5"
+chrono-tz = "0.8.5"
 
