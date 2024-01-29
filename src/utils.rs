@@ -26,26 +26,41 @@ pub fn next_update_time(interval: Duration) -> String {
 }
 
 pub fn get_cpu_data() -> (Vec<f64>, f64) {
-        let mut sys = System::new_with_specifics(RefreshKind::new().with_cpu(CpuRefreshKind::everything().without_frequency()));
-        sys.refresh_cpu_usage();
-        // because of some funky shit sysinfo does internally, it is adviced to update twice for consistent data.
-        thread::sleep(MINIMUM_CPU_UPDATE_INTERVAL);
-        sys.refresh_cpu_usage();
-        // Real work
-        let mut tmp_store: Vec<f64> = Default::default();
-        for cpu in sys.cpus() {
-            tmp_store.push(cpu.cpu_usage() as f64);
-        }
-        // reason for own ang_load calc: Ref D1
-        let avg = {
-            let sum = {
-                let mut out: f64 = 0.0;
-                for n in &tmp_store {
-                    out = out + n;
-                }
-                out
-            };
-            sum / tmp_store.len() as f64
-        };
-        return (tmp_store, avg);
+    let mut sys = System::new_with_specifics(RefreshKind::new().with_cpu(CpuRefreshKind::everything().without_frequency()));
+    sys.refresh_cpu_usage();
+    // because of some funky shit sysinfo does internally, it is adviced to update twice for consistent data.
+    thread::sleep(MINIMUM_CPU_UPDATE_INTERVAL);
+    sys.refresh_cpu_usage();
+    // Real work
+    let mut tmp_store: Vec<f64> = Default::default();
+    for cpu in sys.cpus() {
+        tmp_store.push(cpu.cpu_usage() as f64);
     }
+    // reason for own ang_load calc: Ref D1
+    let avg = {
+        let sum = {
+            let mut out: f64 = 0.0;
+            for n in &tmp_store {
+                out = out + n;
+            }
+            out
+        };
+        sum / tmp_store.len() as f64
+    };
+    return (tmp_store, avg);
+}
+
+pub fn get_cpu_core_amount() -> u8 {
+    let sys = System::new_with_specifics(RefreshKind::new().with_cpu(CpuRefreshKind::everything().without_frequency()));
+    let phy_cores = sys.physical_core_count();
+    if phy_cores.is_some() {
+        let out = phy_cores.unwrap().checked_mul(2);
+        if out.is_none() {
+            return 255;
+        } else {
+            return out.unwrap() as u8;
+        }
+    } else {
+        return 1;
+    }
+}
