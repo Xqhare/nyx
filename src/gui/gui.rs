@@ -3,29 +3,27 @@ use super::Nyx;
 
 use eframe::egui::Ui;
 
-use crate::{APPNAME, APPVERSION, APPAUTHORS};
+use crate::{APPNAME, APPVERSION, APPAUTHORS, utils::time_now_rfc3339_with_timezone};
 
 impl Nyx {
 
-    fn reset_to_landing_page(&mut self) {
-        self.clear_screen();
-        self.show_landing_page = true;
+    pub fn draw_landing_page(&mut self, ui: &mut Ui) {
+        ui.heading("CPU");
+        self.grid_cpu_landing_page(ui);
+        ui.separator();
+        ui.heading("GPU");
+        self.grid_gpu_landing_page(ui);
+        ui.separator();
+        ui.heading("RAM");
+        self.grid_ram_landing_page(ui);
+        ui.separator();
+        ui.heading("Disks");
+        self.grid_disks_landing_page(ui);
+        ui.separator();
+        ui.heading("Networks");
+        self.gird_networks_landing_page(ui);
     }
     
-    pub fn clear_screen(&mut self) {
-        self.show_landing_page = false;
-        self.show_help = false;
-        self.show_cpu_page = false;
-        self.show_ram_page = false;
-        self.show_gpu_page = false;
-        self.show_disk_page = false;
-        self.show_network_page = false;
-        self.show_temperature_page = false;
-        self.show_settings_page = false;
-        self.show_about_page = false;
-        self.show_eris_page = false;
-    }
-
     pub fn draw_main_menu(&mut self, ui: &mut Ui) {
         ui.horizontal(|ui: &mut Ui| {
             ui.menu_button("Nyx", |ui: &mut Ui| {
@@ -93,24 +91,31 @@ impl Nyx {
             ui.label(APPVERSION);
             ui.label(" by ");
             ui.label(APPAUTHORS);
+            ui.spacing();
+            ui.separator();
+            ui.spacing();
+            ui.label(format!("{}", time_now_rfc3339_with_timezone(chrono::SecondsFormat::Secs, self.timezone)));
         });
     }
-
-    pub fn draw_landing_page(&mut self, ui: &mut Ui) {
-        ui.heading("CPU");
-        self.grid_cpu_landing_page(ui);
-        ui.separator();
-        ui.heading("GPU");
-        self.grid_gpu_landing_page(ui);
-        ui.separator();
-        ui.heading("RAM");
-        self.grid_ram_landing_page(ui);
-        ui.separator();
-        ui.heading("Disks");
-        self.grid_disks_landing_page(ui);
-        ui.separator();
-        ui.heading("Networks");
-        self.gird_networks_landing_page(ui);
+    
+    pub fn clear_screen(&mut self) {
+        self.show_landing_page = false;
+        self.show_help = false;
+        self.show_cpu_page = false;
+        self.show_ram_page = false;
+        self.show_gpu_page = false;
+        self.show_disk_page = false;
+        self.show_network_page = false;
+        self.show_temperature_page = false;
+        self.show_settings_page = false;
+        self.show_about_page = false;
+        self.show_eris_page = false;
     }
     
+    fn reset_to_landing_page(&mut self) {
+        self.clear_screen();
+        self.show_landing_page = true;
+    }
+
 }
+
