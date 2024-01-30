@@ -61,19 +61,19 @@ pub fn get_cpu_data() -> (Vec<f64>, f64) {
 /// Returns a touple containing two touples;
 /// The first contains the current memory usage and swap usage in percent in that order,
 /// The second contains the total memory and swap in bytes in that order.
-pub fn get_ram_data() -> ((f64, f64), (u64, u64)) {
+pub fn get_ram_data() -> ((f64, f64), (u64, u64), u64) {
     let mut sys = System::new_with_specifics(RefreshKind::new().with_memory(MemoryRefreshKind::everything()));
     sys.refresh_memory();
     thread::sleep(MINIMUM_CPU_UPDATE_INTERVAL);
     sys.refresh_memory();
     // Sysinfo's doc only advices a double update for cpu data.
-    let (mem, total_mem, swap, total_swap) = {
+    let (mem, total_mem, used_mem, swap, total_swap) = {
         let total_mem = sys.total_memory();
-        let mem = {
+        let (mem, used_mem) = {
             let used_mem = sys.used_memory();
             let expr = format!("({} / ({} / 100))", used_mem, total_mem);
             let t = mexprp::eval::<f64>(&expr).unwrap().to_vec();
-            t[0]
+            (t[0], used_mem)
         };
         let total_swap = sys.total_swap();
         let swap = {
@@ -82,9 +82,9 @@ pub fn get_ram_data() -> ((f64, f64), (u64, u64)) {
             let t = mexprp::eval::<f64>(&expr).unwrap().to_vec();
             t[0]
         };
-        (mem, total_mem, swap, total_swap)
+        (mem, total_mem, used_mem, swap, total_swap)
     };
-    return ((mem, swap), (total_mem, total_swap));
+    return ((mem, swap), (total_mem, total_swap), used_mem);
 }
 
 /// Computes the cpu core amount. Should the request for cores fail or be bigger than 255, 1 is returned.

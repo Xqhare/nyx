@@ -9,6 +9,7 @@ pub struct RamData {
     pub memory: Arc<Mutex<VecDeque<f64>>>,
     pub swap: Arc<Mutex<VecDeque<f64>>>,
     pub total_mem: Arc<Mutex<u64>>,
+    pub mem_used: Arc<Mutex<u64>>,
     pub total_swap: Arc<Mutex<u64>>,
 }
 
@@ -20,7 +21,8 @@ impl RamData {
         let swap = Arc::new(Mutex::new(VecDeque::from(vec![tmp.0.1])));
         let total_mem = Arc::new(Mutex::new(tmp.1.0));
         let total_swap = Arc::new(Mutex::new(tmp.1.1));
-        RamData { memory, swap , total_mem, total_swap}
+        let mem_used = Arc::new(Mutex::new(tmp.2));
+        RamData { memory, swap, mem_used, total_mem, total_swap}
     }
 
     pub fn update(&mut self) {
@@ -33,8 +35,10 @@ impl RamData {
         if mem_store.is_ok() {
             let mut ok_mem_store = mem_store.unwrap();
             let swap_store = self.swap.lock();
-            if swap_store.is_ok() {
+            let mem_used_store = self.mem_used.lock();
+            if swap_store.is_ok() && mem_used_store.is_ok() {
                 let mut ok_swap_store = swap_store.unwrap();
+                let mut ok_mem_used_store = mem_used_store.unwrap();
                 // Starting with memory
                 if ok_mem_store.len() == 60 {
                     let _ = ok_mem_store.pop_back();
@@ -45,6 +49,7 @@ impl RamData {
                     ok_mem_store.truncate(59);
                     ok_mem_store.push_front(new_data.0.0);
                 }
+                *ok_mem_used_store = new_data.2;
                 // Then swap
                 if ok_swap_store.len() == 60 {
                     let _ = ok_swap_store.pop_back();

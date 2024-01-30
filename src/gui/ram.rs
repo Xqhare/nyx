@@ -9,7 +9,16 @@ impl Nyx {
     pub fn grid_ram_landing_page(&mut self, ui: &mut Ui) {
         ui.add(|ui: &mut Ui| {
             Grid::new("RAM").striped(true).min_col_width((self.display_size.x / 2.0) - 50.0).num_columns(2).show(ui, |ui: &mut Ui| {
-                ui.label("Memory:");
+                ui.add(|ui: &mut Ui| {
+                    ui.horizontal(|ui: &mut Ui| {
+                        ui.label("Memory:");
+                        ui.spacing();
+                        ui.separator();
+                        ui.spacing();
+                        let available = format!("Total: {} bytes / Used: {} bytes", self.ram_data.total_mem.lock().unwrap(), self.ram_data.mem_used.lock().unwrap());
+                        ui.label(&available);
+                    }).response
+                });
                 ui.label("Swap:");
                 ui.end_row();
                 self.draw_ram_usage(ui, "ram");
