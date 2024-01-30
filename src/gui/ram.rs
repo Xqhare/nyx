@@ -8,14 +8,12 @@ impl Nyx {
 
     pub fn grid_ram_landing_page(&mut self, ui: &mut Ui) {
         ui.add(|ui: &mut Ui| {
-            Grid::new("RAM").striped(true).min_col_width((self.display_size.x / 1.0) - 50.0).num_columns(1).show(ui, |ui: &mut Ui| {
+            Grid::new("RAM").striped(true).min_col_width((self.display_size.x / 2.0) - 50.0).num_columns(2).show(ui, |ui: &mut Ui| {
+                ui.label("Memory:");
                 ui.label("Swap:");
                 ui.end_row();
-                self.draw_ram_usage(ui, "swap");
-                ui.end_row();
-                ui.label("Memory:");
-                ui.end_row();
                 self.draw_ram_usage(ui, "ram");
+                self.draw_ram_usage(ui, "swap");
             }).response
         });
     }
