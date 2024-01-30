@@ -23,12 +23,12 @@ impl Nyx {
     fn draw_ram_usage(&mut self, ui: &mut Ui, mem_swap: &str) {
         ui.vertical_centered_justified(|ui: &mut Ui| {
             let data = match mem_swap {
-                "ram" => &self.test_data,
-                _ => &self.test_data,
+                "ram" => self.ram_data.memory.clone(),
+                _ => self.ram_data.swap.clone(),
             };
-            let chart = BarChart::new(data.iter().enumerate().map(|x| {
+            let chart = BarChart::new(data.lock().unwrap().iter().enumerate().map(|x| {
                 (x.1, x.0 as f64)
-            }).map(|(x, y)| Bar::new(y, *x).width(1.0)).collect()
+            }).map(|(x, y)| Bar::new(y, (*x) as f64).width(1.0)).collect()
             ).color(Color32::GOLD);
 
             let x_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Time".to_string()};
@@ -38,15 +38,16 @@ impl Nyx {
 
             let ram_plot = Plot::new(format!("{mem_swap} Usage").as_str())
                 .show_axes(false)
+                .y_axis_width(3)
                 .custom_x_axes(vec![AxisHints::default().label("Time").formatter(x_fmt).max_digits(4)])
                 .custom_y_axes(vec![AxisHints::default().label("Usage").formatter(y_fmt).max_digits(4)])
-                .label_formatter(label_fmt)                
-                .y_axis_width(3)
+                .label_formatter(label_fmt)
                 .allow_zoom(false)
                 .allow_drag(false)
                 .allow_scroll(false)
                 .allow_boxed_zoom(false)
                 .include_y(100.0)
+                .include_x(60)
                 .set_margin_fraction(Vec2 { x: 0.0, y: 0.0 })
                 .show(ui, |plot_ui| plot_ui.bar_chart(chart));
             if ram_plot.response.clicked(){

@@ -3,7 +3,7 @@ use std::thread;
 use chrono::{Utc, Duration, SecondsFormat};
 use chrono_tz::Tz;
 use rand::{prelude::SliceRandom, thread_rng};
-use sysinfo::{System, RefreshKind, CpuRefreshKind, MINIMUM_CPU_UPDATE_INTERVAL};
+use sysinfo::{System, RefreshKind, CpuRefreshKind, MINIMUM_CPU_UPDATE_INTERVAL, MemoryRefreshKind};
 
 /// Returns the current time with the supplied `seconds_format`
 pub fn time_now_rfc3339zulu(seconds_format: SecondsFormat) -> String {
@@ -58,18 +58,40 @@ pub fn get_cpu_data() -> (Vec<f64>, f64) {
     return (tmp_store, avg);
 }
 
-/// Computes the cpu core amount. Hyperthreading is assumed, if more cores than 255 are
-/// encountered, 255 is returned. Should the request for physical cores fail, 1 is returned.
+/// Returns a touple containing two touples;
+/// The first contains the current memory usage and swap usage in percent in that order,
+/// The second contains the total memory and swap in bytes in that order.
+pub fn get_ram_data() -> ((f64, f64), (u64, u64)) {
+    let mut sys = System::new_with_specifics(RefreshKind::new().with_memory(MemoryRefreshKind::everything()));
+    sys.refresh_memory();
+    thread::sleep(MINIMUM_CPU_UPDATE_INTERVAL);
+    sys.refresh_memory();
+    // Sysinfo's doc only advices a double update for cpu data.
+    let (mem, total_mem, swap, total_swap) = {
+        let total_mem = sys.total_memory();
+        let mem = {
+            let used_mem = sys.used_memory();
+            let expr = format!("({} / ({} / 100))", used_mem, total_mem);
+            let t = mexprp::eval::<f64>(&expr).unwrap().to_vec();
+            t[0]
+        };
+        let total_swap = sys.total_swap();
+        let swap = {
+            let used_swap = sys.used_swap();
+            let expr = format!("({} / ({} / 100))", used_swap, total_swap);
+            let t = mexprp::eval::<f64>(&expr).unwrap().to_vec();
+            t[0]
+        };
+        (mem, total_mem, swap, total_swap)
+    };
+    return ((mem, swap), (total_mem, total_swap));
+}
+
+/// Computes the cpu core amount. Should the request for cores fail or be bigger than 255, 1 is returned.
 pub fn get_cpu_core_amount() -> u8 {
     let sys = System::new_with_specifics(RefreshKind::new().with_cpu(CpuRefreshKind::everything().without_frequency()));
-    let phy_cores = sys.physical_core_count();
-    if phy_cores.is_some() {
-        let out = phy_cores.unwrap().checked_mul(2);
-        if out.is_none() {
-            return 255;
-        } else {
-            return out.unwrap() as u8;
-        }
+    if TryInto::<u8>::try_into(sys.cpus().len()).is_ok() {
+        return TryInto::<u8>::try_into(sys.cpus().len()).unwrap();
     } else {
         return 1;
     }

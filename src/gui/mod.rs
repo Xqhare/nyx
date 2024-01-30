@@ -3,7 +3,7 @@ use chrono::{Duration, SecondsFormat};
 use chrono_tz::Tz;
 use eframe::{*, epaint::Vec2, egui::{CentralPanel, Ui}};
 
-use crate::utils;
+use crate::{utils, comp::ram::RamData};
 
 use crate::comp::{network::Network, disc::Disk, cpu::CpuData};
 
@@ -18,6 +18,7 @@ struct Nyx {
     networks: Vec<Network>,
     disks: Vec<Disk>,
     cpu_data: CpuData,
+    ram_data: RamData,
 
     // Drawing booleans
     show_landing_page: bool,
@@ -48,9 +49,10 @@ impl Default for Nyx {
         let display_size: Vec2 = Vec2 { x: 1200.0, y: 900.0 };
         let next_data_update = utils::next_update_time(Duration::milliseconds(DATAUPDATEINTERVAL));
         let cpu_data = CpuData::new();
+        let ram_data = RamData::new();
         let timezone = chrono_tz::Europe::Berlin;
         Nyx { 
-            test_data, num_cores,  display_size, networks, disks, next_data_update, cpu_data, timezone,
+            test_data, num_cores,  display_size, networks, disks, next_data_update, cpu_data, ram_data, timezone,
             // default true
             show_landing_page: true,
             // default false
@@ -72,6 +74,7 @@ impl App for Nyx {
                 if utils::time_now_rfc3339zulu(SecondsFormat::Secs) >= self.next_data_update {
                     self.next_data_update = utils::next_update_time(Duration::milliseconds(DATAUPDATEINTERVAL));
                     self.cpu_data.update();
+                    self.ram_data.update();
                 }
                 self.draw_main_menu(ui);
                 ui.separator();
