@@ -17,4 +17,5 @@ signal-hook = "0.3.17"
 egui_plot = "0.25.0"
 rand = "0.8.5"
 chrono-tz = "0.8.5"
+mexprp = "0.3.1"
 
