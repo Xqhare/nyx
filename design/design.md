@@ -1,6 +1,7 @@
 Ref A (Polling rate):
 
 A1: To minimize resource usage, data should be queried only every second.
+	Or some user specified timing. -> After some inital testing, one second seems to be the floor I shouldn't go under. No reason to limit the user though, but give him a little warning text in settings.
 
 A2: However the gui is to be drawn at 60hz or better.
 		Solution:
@@ -49,9 +50,23 @@ F3: For Dataconsitency updates should be atomic, either they do not update the s
 
 F4: Proccess cpu usage should be displayed as absoulute (more than 100%) and relative (per core calculated %).
 
+F5: Disk read and write data in mb/s continues to be problematic. While I have a nice way of obtaining the actual number of write and read operations, even after diving into the /proc documentation for linux, I was unable to find something suitable. Now using zfs there seemes to be a way, however this current kernel I am using does not have this? (It seems to be part of the kernel (or an option idfk, kernel documentation is hard)) - I could install it as a kernel module, but I still haven't fully understood why I would need another filesystem for this... Or how this would help me if I actually tried deploying this.
+	So the user will get the total amount of reads and writes in the last UPDATEINTERVAL on a graph. While y = 60 stays, the x max value is flexible, but a min of 1000 should? suffice.
+
 Ref D (Average Load):
 
 Ref D1: I have to write my own average load calculation as avg_load available in sysinfo is unsuitable for the current moment, as it only supplies finished avgerages of the last 1, 10 and 15mins, this doesn't work on windows.
+
+Ref E (OS choice):
+
+E1: The more systemdata I try and read, the more platform specific I am.
+	Exibit A:
+		GPU - A library for amd and another for nvidia -> I only have the amd case covered.
+	Exibit B:
+		DISKS - Disk info is handled platform specific. I have only found a crate for linux.
+	So I have 3 Os's (Linux, Mac and Windows) as well as the gpu manufacturers...
+	I need to give this a scope however, so Linux with amd support it is for now. Maybe windows and nvidia at a later time.
+		Mac support is up in the air, the little research I did points to a third way needed for gpu, cpu and disk info.
 
 ## UI
 
