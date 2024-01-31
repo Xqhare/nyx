@@ -2,7 +2,7 @@ use std::ops::RangeInclusive;
 
 use eframe::{egui::{Ui, Grid}, epaint::{Color32, Vec2}};
 use egui_plot::{BarChart, Bar, PlotPoint, Plot, AxisHints};
-use crate::comp::disc::Disk;
+use crate::comp::disk::Disk;
 
 use super::Nyx;
 
@@ -27,6 +27,11 @@ impl Nyx {
             }).map(|(x, y)| Bar::new(y, *x).width(1.0)).collect()
             ).color(Color32::GOLD);
 
+            let chart2 = BarChart::new(disk.data.iter().enumerate().map(|x| {
+                (x.1, x.0 as f64)
+            }).map(|(x, y)| Bar::new(y, *x).width(0.5)).collect()
+            ).color(Color32::GREEN);
+
             let x_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Time".to_string()};
             let y_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Usage".to_string()};
             // the :.2 in the {} means that the supplied values are cut of 2 digits after the . seperator
@@ -45,7 +50,10 @@ impl Nyx {
                 .allow_boxed_zoom(false)
                 .include_y(100.0)
                 .set_margin_fraction(Vec2 { x: 0.0, y: 0.0 })
-                .show(ui, |plot_ui| plot_ui.bar_chart(chart));
+                .show(ui, |plot_ui| {
+                    plot_ui.bar_chart(chart);
+                    plot_ui.bar_chart(chart2);
+                });
             if disk_plot.response.clicked(){
                 self.disk_clicked();
             }
