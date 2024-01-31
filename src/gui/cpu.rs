@@ -15,7 +15,16 @@ impl Nyx {
                 for n in 1..=self.num_cores {
                     ui.label(format!("CPU - Core {n}").as_str());
                 }
-                ui.label("Average CPU load");
+                ui.add(|ui: &mut Ui| {
+                        ui.horizontal(|ui: &mut Ui| {
+                            ui.label("Average CPU load");
+                            ui.spacing();
+                            ui.separator();
+                            ui.spacing();
+                            let label = format!("{:.5}%", self.cpu_data.avg_load.lock().unwrap().front().unwrap());
+                            ui.label(&label);
+                        }).response
+                });
                 ui.end_row();
                 for core in 1..=self.num_cores {
                     self.draw_cpu_core(ui, core, "cpu core");
