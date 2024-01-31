@@ -11,6 +11,7 @@ pub struct RamData {
     pub total_mem: Arc<Mutex<u64>>,
     pub mem_used: Arc<Mutex<u64>>,
     pub total_swap: Arc<Mutex<u64>>,
+    pub swap_used: Arc<Mutex<u64>>,
 }
 
 impl RamData {
@@ -22,7 +23,8 @@ impl RamData {
         let total_mem = Arc::new(Mutex::new(tmp.1.0));
         let total_swap = Arc::new(Mutex::new(tmp.1.1));
         let mem_used = Arc::new(Mutex::new(tmp.2));
-        RamData { memory, swap, mem_used, total_mem, total_swap}
+        let swap_used = Arc::new(Mutex::new(tmp.3));
+        RamData { memory, swap, mem_used, total_mem, total_swap, swap_used}
     }
 
     pub fn update(&mut self) {
@@ -30,15 +32,17 @@ impl RamData {
         // Ram totals don't usally change during operation!
         let new_data = utils::get_ram_data();
         let mem_store = self.memory.lock();
+        let mem_used_store = self.mem_used.lock();
         // The if statements are nested for atomicity in statechanges. So only if both
         // locks are successfull any data manipulation is done. Ref F3
-        if mem_store.is_ok() {
+        if mem_store.is_ok() && mem_used_store.is_ok() {
             let mut ok_mem_store = mem_store.unwrap();
+            let mut ok_mem_used_store = mem_used_store.unwrap();
             let swap_store = self.swap.lock();
-            let mem_used_store = self.mem_used.lock();
-            if swap_store.is_ok() && mem_used_store.is_ok() {
+            let swap_used_store = self.swap_used.lock();
+            if swap_store.is_ok() && swap_used_store.is_ok() {
                 let mut ok_swap_store = swap_store.unwrap();
-                let mut ok_mem_used_store = mem_used_store.unwrap();
+                let mut ok_swap_used_store = swap_used_store.unwrap();
                 // Starting with memory
                 if ok_mem_store.len() == 60 {
                     let _ = ok_mem_store.pop_back();
@@ -60,6 +64,7 @@ impl RamData {
                     ok_swap_store.truncate(59);
                     ok_swap_store.push_front(new_data.0.1);
                 }
+                *ok_swap_used_store = new_data.3;
             } else {
                 // Ref F3
                 return;

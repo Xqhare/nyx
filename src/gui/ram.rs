@@ -17,9 +17,28 @@ impl Nyx {
                         ui.spacing();
                         let available = format!("Total: {} bytes / Used: {} bytes", self.ram_data.total_mem.lock().unwrap(), self.ram_data.mem_used.lock().unwrap());
                         ui.label(&available);
+                        ui.spacing();
+                        ui.separator();
+                        ui.spacing();
+                        let usage = format!("Usage: {:.5}%", self.ram_data.memory.lock().unwrap().front().unwrap());
+                        ui.label(&usage);
                     }).response
                 });
-                ui.label("Swap:");
+                ui.add(|ui: &mut Ui| {
+                    ui.horizontal(|ui: &mut Ui| {
+                        ui.label("Swap:");
+                        ui.spacing();
+                        ui.separator();
+                        ui.spacing();
+                        let available = format!("Total: {} bytes / Used: {} bytes", self.ram_data.total_swap.lock().unwrap(), self.ram_data.swap_used.lock().unwrap());
+                        ui.label(&available);
+                        ui.spacing();
+                        ui.separator();
+                        ui.spacing();
+                        let usage = format!("Usage: {:.5}%", self.ram_data.swap.lock().unwrap().front().unwrap());
+                        ui.label(&usage);
+                    }).response
+                });
                 ui.end_row();
                 self.draw_ram_usage(ui, "ram");
                 self.draw_ram_usage(ui, "swap");
