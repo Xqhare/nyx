@@ -1,9 +1,9 @@
 
+use crate::utils::time_now_rfc3339_with_timezone;
+
 use super::Nyx;
 
 use eframe::egui::Ui;
-
-use crate::{APPNAME, APPVERSION, APPAUTHORS, utils::time_now_rfc3339_with_timezone};
 
 impl Nyx {
 
@@ -86,15 +86,9 @@ impl Nyx {
             ui.spacing();
             ui.separator();
             ui.spacing();
-            ui.heading(APPNAME);
-            ui.label(" v. ");
-            ui.label(APPVERSION);
-            ui.label(" by ");
-            ui.label(APPAUTHORS);
-            ui.spacing();
-            ui.separator();
-            ui.spacing();
             ui.label(format!("{}", time_now_rfc3339_with_timezone(chrono::SecondsFormat::Secs, self.timezone)));
+
+            
         });
     }
     

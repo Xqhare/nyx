@@ -5,7 +5,7 @@ use eframe::{*, epaint::Vec2, egui::{CentralPanel, Ui}};
 
 use crate::{utils, comp::ram::RamData};
 
-use crate::comp::{network::Network, disc::Disk, cpu::CpuData};
+use crate::comp::{network::Network, disk::Disk, cpu::CpuData};
 
 const DATAUPDATEINTERVAL: i64 = 1000;
 
@@ -67,7 +67,7 @@ impl App for Nyx {
 
     fn update(&mut self, ctx: &egui::Context, _frame: &mut Frame) {
         // This makes sure that Nyx is run continiously with a maximum wait time in millisecounds.
-        ctx.request_repaint_after(std::time::Duration::from_millis(DATAUPDATEINTERVAL as u64));
+        ctx.request_repaint_after(std::time::Duration::from_millis(DATAUPDATEINTERVAL as u64 / 100));
         CentralPanel::default()
             .show(ctx, |ui: &mut Ui| {
                 // Time has come for Data update
@@ -75,6 +75,7 @@ impl App for Nyx {
                     self.next_data_update = utils::next_update_time(Duration::milliseconds(DATAUPDATEINTERVAL));
                     self.cpu_data.update();
                     self.ram_data.update();
+                    let _ = Disk::new("aa".to_string());
                 }
                 self.draw_main_menu(ui);
                 ui.separator();
@@ -107,7 +108,7 @@ impl App for Nyx {
                     ui.label("settings");
                 }
                 if self.show_about_page {
-                    ui.label("about");
+                    self.draw_about_page(ui);
                 }
                 if self.show_eris_page {
                     ui.label("eris");
