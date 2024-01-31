@@ -1,5 +1,8 @@
 # nyx: Nyx Ystem Xplorer
-Nyx is a lightweight and efficient system monitor written in Rust. It provides real-time monitoring of CPU usage, memory consumption, disk I/O, network traffic, and other essential system metrics.
+Nyx is a system monitor written in Rust. It provides real-time monitoring of CPU usage, memory consumption, disk I/O, network traffic, and other essential system metrics.
+
+> [!NOTE]
+> Perfomance of the gui may be lacking, but it is clearly made up by all the features nyx has!
 
 ## Features / Roadmap
 
