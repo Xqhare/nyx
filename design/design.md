@@ -1,3 +1,8 @@
+Ref 00: (Versioning):
+	00A: Major versions, 1.0 after main landing page finished, 2.0 after eris finished.
+	00B: Minor versions, either when it feels appropriate or when patch x.10 or higher is reached.
+	00C: Patch versions, after each feature add, or when it feels appropriate.
+
 Ref A (Polling rate):
 
 A1: To minimize resource usage, data should be queried only every second.
