@@ -3,7 +3,7 @@ use super::Nyx;
 
 use crate::{APPNAME, APPVERSION, APPAUTHORS};
 
-use eframe::{egui::{Ui, Grid, Layout}, emath::Align};
+use eframe::egui::Ui;
 
 impl Nyx {
     

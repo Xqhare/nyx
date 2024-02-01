@@ -5,7 +5,7 @@ use eframe::{*, epaint::Vec2, egui::{CentralPanel, Ui}};
 
 use crate::{utils, comp::{ram::RamData, disk::Disks}};
 
-use crate::comp::{network::Network, disk::Disk, cpu::CpuData};
+use crate::comp::{network::Network, cpu::CpuData};
 
 const DATAUPDATEINTERVAL: i64 = 1000;
 
