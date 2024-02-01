@@ -10,32 +10,33 @@ impl Nyx {
     pub fn grid_disks_landing_page(&mut self, ui: &mut Ui) {
         ui.add(|ui: &mut Ui| {
             Grid::new("Disks").striped(true).min_col_width((self.display_size.x / 1.0) - 50.0).num_columns(1).show(ui, |ui: &mut Ui| {
-                for disk in self.disks.clone() {
-                    ui.label(disk.name.clone());
+                let disks = self.disks.disks.lock().unwrap().clone();
+                for disk in disks {
+                    ui.label(disk.name.to_string());
                     ui.end_row();
                     self.draw_disk_usage(ui, disk.clone());
                     ui.end_row();
-                }
+                };
             }).response
         });    
     }
 
     fn draw_disk_usage(&mut self, ui: &mut Ui, disk: Disk) {
         ui.vertical_centered_justified(|ui: &mut Ui| {
-            let chart = BarChart::new(disk.data.iter().enumerate().map(|x| {
+            let chart = BarChart::new(disk.stat_reads.lock().unwrap().iter().enumerate().map(|x| {
                 (x.1, x.0 as f64)
-            }).map(|(x, y)| Bar::new(y, *x).width(1.0)).collect()
+            }).map(|(x, y)| Bar::new(y, *x as f64).width(1.0)).collect()
             ).color(Color32::GOLD);
 
-            let chart2 = BarChart::new(disk.data.iter().enumerate().map(|x| {
+            let chart2 = BarChart::new(disk.stat_writes.lock().unwrap().iter().enumerate().map(|x| {
                 (x.1, x.0 as f64)
-            }).map(|(x, y)| Bar::new(y, *x).width(0.5)).collect()
+            }).map(|(x, y)| Bar::new(y, *x as f64).width(0.5)).collect()
             ).color(Color32::GREEN);
 
             let x_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Time".to_string()};
             let y_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Usage".to_string()};
             // the :.2 in the {} means that the supplied values are cut of 2 digits after the . seperator
-            let label_fmt = |_s: &str, val: &PlotPoint| {format!("{:.2}s\n{:.2}%", val.x, val.y)};
+            let label_fmt = |_s: &str, val: &PlotPoint| {format!("{:.2}s\n{:.0}", val.x, val.y)};
 
 
             let disk_plot = Plot::new(format!("{} Usage", disk.name).as_str())
@@ -48,7 +49,8 @@ impl Nyx {
                 .allow_drag(false)
                 .allow_scroll(false)
                 .allow_boxed_zoom(false)
-                .include_y(100.0)
+                .include_y(1000.0)
+                .include_x(60)
                 .set_margin_fraction(Vec2 { x: 0.0, y: 0.0 })
                 .show(ui, |plot_ui| {
                     plot_ui.bar_chart(chart);

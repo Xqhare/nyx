@@ -9,7 +9,80 @@ use procfs::{diskstats, process::Process, DiskStat};
 use std::collections::HashMap;
 use std::iter::FromIterator;
 
-pub fn get_disk_data() {
+// You copied that function without understanding why it does what it does, and as a result your
+// code IS GARBAGE. AGAIN. - Linus Torvalds
+//
+/// Returns a Vec containing all data needed to construct and update all disks detected.
+/// Returned values are in order of struct definition. The stat values are dlivered as is from the
+/// kernel, and need more processing before using them.
+pub fn get_disk_data() -> Vec<(String, String, String, bool, String, u64, u64, u64, u64, u64)> {
+    let me = Process::myself().unwrap();
+    let mounts = me.mountinfo().unwrap();
+
+    // Get a list of all disks that we have IO stat info on
+    let disk_stats: HashMap<(i32, i32), DiskStat> =
+        HashMap::from_iter(diskstats().unwrap().into_iter().map(|i| ((i.major, i.minor), i)));
+
+    let mut out: Vec<(String, String, String, bool, String, u64, u64, u64, u64, u64)> = Default::default();
+
+    let disks = Disks::new_with_refreshed_list();
+    let mut tmp_disk_vec: Vec<(&str, &str, String, bool, &str, u64, u64, u64)> = Default::default();
+    for disk in &disks {
+        let name = disk.name().to_str().unwrap_or("");
+        let filesystem = disk.file_system().to_str().unwrap_or("");
+        let disk_type = disk.kind().to_string();
+        let removable: bool = disk.is_removable();
+        let mount = disk.mount_point().to_str().unwrap_or("");
+        let used_bytes: u64 = disk.total_space() - disk.available_space();
+        let free_bytes: u64 = disk.available_space();
+        let total_bytes: u64 = disk.total_space();
+        tmp_disk_vec.push((name, filesystem, disk_type, removable, mount, used_bytes, free_bytes, total_bytes));
+    }
+
+    for mount in mounts {
+        // parse the majmin string (something like "0:3") into an (i32, i32) tuple
+        let (maj, min): (i32, i32) = {
+            let mut s = mount.majmin.split(':');
+            (s.next().unwrap().parse().unwrap(), s.next().unwrap().parse().unwrap())
+        };
+
+        if let Some(stat) = disk_stats.get(&(maj, min)) {
+            if !stat.name.contains("loop") {
+                for disk in &tmp_disk_vec {
+                    if disk.0.contains(&stat.name) {
+                        let name = disk.0.to_string();
+                        let filesystem = disk.1.to_string();
+                        let disk_type = disk.2.to_string();
+                        let removeable = disk.3;
+                        let mounted_on = disk.4.to_string();
+                        let used_bytes = disk.5;
+                        let free_bytes = disk.6;
+                        let total_bytes = disk.7;
+                        let stat_reads = stat.reads;
+                        let stat_writes = stat.writes;
+                        out.push((name, filesystem, disk_type, removeable, mounted_on, used_bytes, free_bytes, total_bytes, stat_reads as u64, stat_writes));
+                    }
+                }
+            }
+        }
+    }
+    return out;
+}
+
+/// Returns a vector with a touple for each disk. The touple contains the name, used, free- bytes,
+/// abs reads and abs writes.
+pub fn get_disk_update_data() -> Vec<(String, u64, u64, u64, u64)>{
+    let mut out: Vec<(String, u64, u64, u64, u64)> = Default::default();
+
+    let disks = Disks::new_with_refreshed_list();
+    let mut tmp_disk_vec: Vec<(String, u64, u64)> = Default::default();
+    for disk in &disks {
+        let name = disk.name().to_str().unwrap_or("").to_string();
+        let used_bytes: u64 = disk.total_space() - disk.available_space();
+        let free_bytes: u64 = disk.available_space();
+        tmp_disk_vec.push((name, used_bytes, free_bytes));
+    }
+
     let me = Process::myself().unwrap();
     let mounts = me.mountinfo().unwrap();
 
@@ -26,17 +99,20 @@ pub fn get_disk_data() {
 
         if let Some(stat) = disk_stats.get(&(maj, min)) {
             if !stat.name.contains("loop") {
-                println!("{} mounted on {}:", stat.name, mount.mount_point.display());
-                println!("  total reads: {} ({} ms)", stat.reads, stat.time_reading);
-                println!("  total writes: {} ({} ms)", stat.writes, stat.time_writing);
-                println!(
-                    "  total flushes: {} ({} ms)",
-                    stat.flushes.unwrap_or(0),
-                    stat.time_flushing.unwrap_or(0)
-                );
+                for disk in &tmp_disk_vec {
+                    if disk.0.contains(&stat.name) {
+                        let name = disk.0.to_string();
+                        let stat_reads = stat.reads;
+                        let stat_writes = stat.writes;
+                        let used_bytes = disk.1;
+                        let free_bytes = disk.2;
+                        out.push((name, used_bytes, free_bytes, stat_reads as u64, stat_writes));
+                    }
+                }
             }
         }
     }
+    return out;
 }
 
 /// Returns the current time with the supplied `seconds_format`
