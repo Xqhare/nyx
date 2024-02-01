@@ -3,7 +3,7 @@ use chrono::{Duration, SecondsFormat};
 use chrono_tz::Tz;
 use eframe::{*, epaint::Vec2, egui::{CentralPanel, Ui}};
 
-use crate::{utils, comp::{ram::RamData, disk::Disks}};
+use crate::{utils, comp::{ram::RamData, disk::Disks, network::Networks}};
 
 use crate::comp::{network::Network, cpu::CpuData};
 
@@ -15,7 +15,7 @@ struct Nyx {
     // Data
     test_data: Vec<f64>,
     num_cores: u8,
-    networks: Vec<Network>,
+    networks: Networks,
     disks: Disks,
     cpu_data: CpuData,
     ram_data: RamData,
@@ -43,7 +43,7 @@ impl Default for Nyx {
     fn default() -> Self {
         let test_data: Vec<f64> = vec![10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.3, 1.0, 2.2, 4.3, 2.6, 3.8, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.3, 1.0, 2.2, 4.3, 2.6, 3.8, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54,];
         let num_cores: u8 = utils::get_cpu_core_amount();
-        let networks = vec![Network::new("First".to_string()), Network::new("Second".to_string())];
+        let networks = Networks::new();
         let disks = Disks::new();
         // TODO Put display_size into settings
         let display_size: Vec2 = Vec2 { x: 1200.0, y: 900.0 };
@@ -76,6 +76,7 @@ impl App for Nyx {
                     self.cpu_data.update();
                     self.ram_data.update();
                     self.disks.update();
+                    self.networks.update();
                 }
                 self.draw_main_menu(ui);
                 ui.separator();

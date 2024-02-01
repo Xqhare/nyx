@@ -3,11 +3,38 @@ use std::thread;
 use chrono::{Utc, Duration, SecondsFormat};
 use chrono_tz::Tz;
 use rand::{prelude::SliceRandom, thread_rng};
-use sysinfo::{System, RefreshKind, CpuRefreshKind, MINIMUM_CPU_UPDATE_INTERVAL, MemoryRefreshKind, Disks};
+use sysinfo::{System, RefreshKind, CpuRefreshKind, MINIMUM_CPU_UPDATE_INTERVAL, MemoryRefreshKind, Disks, Networks};
 
 use procfs::{diskstats, process::Process, DiskStat};
 use std::collections::HashMap;
 use std::iter::FromIterator;
+
+pub fn get_network_data() -> Vec<(String, String, u64, u64, u64, u64, u64, u64, u64, u64, u64, u64, u64, u64)> {
+    let mut out: Vec<(String, String, u64, u64, u64, u64, u64, u64, u64, u64, u64, u64, u64, u64)> = Default::default();
+
+    let networks = Networks::new_with_refreshed_list();
+    for network in networks.iter() {
+        let name = network.0.to_string();
+        let data = network.1;
+        let mac_addr = data.mac_address().to_string();
+        let incoming = data.received();
+        let total_incoming = data.total_received();
+        let errors_incoming = data.errors_on_received();
+        let total_errors_incoming = data.total_errors_on_received();
+        let packets_incoming = data.packets_received();
+        let total_packets_incoming = data.total_packets_received();
+        let outgoing = data.transmitted();
+        let total_outgoing = data.total_transmitted();
+        let errors_outgoing = data.errors_on_transmitted();
+        let total_errors_outgoing = data.total_errors_on_transmitted();
+        let packets_outgoing = data.packets_transmitted();
+        let total_packets_outgoing = data.total_packets_transmitted();
+        out.push((name, mac_addr, incoming, total_incoming, errors_incoming, total_errors_incoming, packets_incoming, total_packets_incoming, outgoing, total_outgoing, errors_outgoing, total_errors_outgoing, packets_outgoing, total_packets_outgoing));
+    }
+
+    return out;
+    
+}
 
 // You copied that function without understanding why it does what it does, and as a result your
 // code IS GARBAGE. AGAIN. - Linus Torvalds
