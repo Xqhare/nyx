@@ -1,4 +1,4 @@
-use std::{collections::VecDeque, sync::{Arc, Mutex}};
+use std::{collections::VecDeque, sync::Mutex, rc::Rc};
 
 use crate::utils;
 
@@ -6,24 +6,24 @@ use crate::utils;
 /// Holds core usage data and average system load data for the last 60 update increments
 pub struct RamData {
     /// Holds average system load data for the last 60 update increments
-    pub memory: Arc<Mutex<VecDeque<f64>>>,
-    pub swap: Arc<Mutex<VecDeque<f64>>>,
-    pub total_mem: Arc<Mutex<u64>>,
-    pub mem_used: Arc<Mutex<u64>>,
-    pub total_swap: Arc<Mutex<u64>>,
-    pub swap_used: Arc<Mutex<u64>>,
+    pub memory: Rc<Mutex<VecDeque<f64>>>,
+    pub swap: Rc<Mutex<VecDeque<f64>>>,
+    pub total_mem: Rc<Mutex<u64>>,
+    pub mem_used: Rc<Mutex<u64>>,
+    pub total_swap: Rc<Mutex<u64>>,
+    pub swap_used: Rc<Mutex<u64>>,
 }
 
 impl RamData {
 
     pub fn new() -> Self {
         let tmp = utils::get_ram_data();
-        let memory = Arc::new(Mutex::new(VecDeque::from(vec![tmp.0.0])));
-        let swap = Arc::new(Mutex::new(VecDeque::from(vec![tmp.0.1])));
-        let total_mem = Arc::new(Mutex::new(tmp.1.0));
-        let total_swap = Arc::new(Mutex::new(tmp.1.1));
-        let mem_used = Arc::new(Mutex::new(tmp.2));
-        let swap_used = Arc::new(Mutex::new(tmp.3));
+        let memory = Rc::new(Mutex::new(VecDeque::from(vec![tmp.0.0])));
+        let swap = Rc::new(Mutex::new(VecDeque::from(vec![tmp.0.1])));
+        let total_mem = Rc::new(Mutex::new(tmp.1.0));
+        let total_swap = Rc::new(Mutex::new(tmp.1.1));
+        let mem_used = Rc::new(Mutex::new(tmp.2));
+        let swap_used = Rc::new(Mutex::new(tmp.3));
         RamData { memory, swap, mem_used, total_mem, total_swap, swap_used}
     }
 
