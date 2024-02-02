@@ -3,7 +3,7 @@ use std::ops::RangeInclusive;
 use eframe::{egui::{Ui, Grid}, epaint::{Color32, Vec2}};
 use egui_plot::{BarChart, Bar, PlotPoint, Plot, AxisHints};
 
-use crate::comp::network::{Network, self};
+use crate::comp::network::Network;
 
 use super::Nyx;
 

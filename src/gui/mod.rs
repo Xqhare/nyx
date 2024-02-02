@@ -3,9 +3,7 @@ use chrono::{Duration, SecondsFormat};
 use chrono_tz::Tz;
 use eframe::{*, epaint::Vec2, egui::{CentralPanel, Ui}};
 
-use crate::{utils, comp::{ram::RamData, disk::Disks, network::Networks}};
-
-use crate::comp::{network::Network, cpu::CpuData};
+use crate::{utils, comp::{ram::RamData, disk::Disks, network::Networks, cpu::CpuData}};
 
 const DATAUPDATEINTERVAL: i64 = 1000;
 
