@@ -112,7 +112,7 @@ UIc1: CPU needs a histogram for each core and overall, as well as a histogram fo
 UIc2: GPU needs a histogram of temperature,
 		- Temp data should be its own entry on the landing page
 
-UIc3: Networks need incoming, total incoming, outcome, total outcome, total erros in, total erros out, total packets income, total packets outcome
+UIc3: Networks need name, mac address, incoming, total incoming, outcome, total outcome, total erros in, total erros out, total packets income, total packets outcome
 
 UIc4: Disks need name, filesystem, type, removable, mounted on, used bytes, free bytes
 

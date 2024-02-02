@@ -2,7 +2,7 @@ use std::{rc::{Rc, self}, sync::Mutex, collections::VecDeque};
 
 use crate::utils;
 
-// Ref UIc3: Networks need name, incoming, total incoming, outcome, total outcome, total erros in, total erros out, total packets income, total packets outcome
+// Ref UIc3: 
 #[derive(Clone)]
 pub struct Network {
     pub name: Rc<String>,
