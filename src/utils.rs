@@ -3,11 +3,41 @@ use std::thread;
 use chrono::{Utc, Duration, SecondsFormat};
 use chrono_tz::Tz;
 use rand::{prelude::SliceRandom, thread_rng};
-use sysinfo::{System, RefreshKind, CpuRefreshKind, MINIMUM_CPU_UPDATE_INTERVAL, MemoryRefreshKind, Disks, Networks};
+use sysinfo::{System, RefreshKind, CpuRefreshKind, MINIMUM_CPU_UPDATE_INTERVAL, MemoryRefreshKind, Disks, Networks, Components};
 
 use procfs::{diskstats, process::Process, DiskStat};
 use std::collections::HashMap;
 use std::iter::FromIterator;
+
+pub fn get_temperature_data() -> Vec<(String, String, f32, f32)> {
+    let mut components = Components::new_with_refreshed_list();
+    let mut out: Vec<(String, String, f32, f32)> = Default::default();
+    for comp in &mut components {
+        comp.refresh();
+        let tmp = comp.label();
+        let if_panics = (tmp, "");
+        let (name, sensor) = tmp.split_once(" ").unwrap_or(if_panics);
+        let current_temperature: f32 = comp.temperature();
+        // I herby define 80 degrees Celsius as the critical lower bound!
+        let critical_temperature: f32 = comp.critical().unwrap_or(80.0);
+        out.push((name.to_string(), sensor.to_string(), current_temperature, critical_temperature));
+    }
+    return out;
+}
+
+pub fn get_temperature_update_data() -> Vec<(String, f32)> {
+    let components = Components::new_with_refreshed_list();
+    let mut out: Vec<(String, f32)> = Default::default();
+    for comp in &components {
+        let tmp = comp.label();
+        let if_panics = ("", tmp);
+        let (_, sensor) = tmp.split_once(" ").unwrap_or(if_panics);
+        let current_temperature: f32 = comp.temperature();
+        out.push((sensor.to_string(), current_temperature));
+    }
+    return out;
+    
+}
 
 pub fn get_network_data() -> Vec<(String, String, u64, u64, u64, u64, u64, u64, u64, u64, u64, u64, u64, u64)> {
     let mut out: Vec<(String, String, u64, u64, u64, u64, u64, u64, u64, u64, u64, u64, u64, u64)> = Default::default();

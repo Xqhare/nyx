@@ -3,7 +3,7 @@ use chrono::{Duration, SecondsFormat};
 use chrono_tz::Tz;
 use eframe::{*, epaint::Vec2, egui::{CentralPanel, Ui}};
 
-use crate::{utils, comp::{ram::RamData, disk::Disks, network::Networks, cpu::CpuData}};
+use crate::{utils, comp::{ram::RamData, disk::Disks, network::Networks, cpu::CpuData, temperature::Temperatures}};
 
 const DATAUPDATEINTERVAL: i64 = 1000;
 
@@ -17,6 +17,7 @@ struct Nyx {
     disks: Disks,
     cpu_data: CpuData,
     ram_data: RamData,
+    temperatures: Temperatures,
 
     // Drawing booleans
     show_landing_page: bool,
@@ -48,9 +49,10 @@ impl Default for Nyx {
         let next_data_update = utils::next_update_time(Duration::milliseconds(DATAUPDATEINTERVAL));
         let cpu_data = CpuData::new();
         let ram_data = RamData::new();
+        let temperatures = Temperatures::new();
         let timezone = chrono_tz::Europe::Berlin;
         Nyx { 
-            test_data, num_cores,  display_size, networks, disks, next_data_update, cpu_data, ram_data, timezone,
+            test_data, num_cores,  display_size, networks, disks, next_data_update, cpu_data, ram_data, timezone, temperatures,
             // default true
             show_landing_page: true,
             // default false
@@ -75,6 +77,7 @@ impl App for Nyx {
                     self.ram_data.update();
                     self.disks.update();
                     self.networks.update();
+                    self.temperatures.update();
                 }
                 self.draw_main_menu(ui);
                 ui.separator();
