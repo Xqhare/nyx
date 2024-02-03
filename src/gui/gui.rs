@@ -3,28 +3,34 @@ use crate::utils::time_now_rfc3339_with_timezone;
 
 use super::Nyx;
 
-use eframe::egui::Ui;
+use eframe::egui::{Ui, ScrollArea};
 
 impl Nyx {
 
     pub fn draw_landing_page(&mut self, ui: &mut Ui) {
-        ui.heading("CPU");
-        self.grid_cpu_landing_page(ui);
-        ui.separator();
-        ui.heading("GPU");
-        self.grid_gpu_landing_page(ui);
-        ui.separator();
-        ui.heading("RAM");
-        self.grid_ram_landing_page(ui);
-        ui.separator();
-        ui.heading("Disks");
-        self.grid_disks_landing_page(ui);
-        ui.separator();
-        ui.heading("Networks");
-        self.gird_networks_landing_page(ui);
+        ScrollArea::vertical().vscroll(true).show(ui, |ui: &mut Ui| {
+            ui.heading("CPU");
+            self.grid_cpu_landing_page(ui);
+            ui.separator();
+            ui.heading("GPU");
+            self.grid_gpu_landing_page(ui);
+            ui.separator();
+            ui.heading("RAM");
+            self.grid_ram_landing_page(ui);
+            ui.separator();
+            ui.heading("Disks");
+            self.grid_disks_landing_page(ui);
+            ui.separator();
+            ui.heading("Networks");
+            self.gird_networks_landing_page(ui);
+            ui.heading("Temperatures");
+            self.gird_temperature_landing_page(ui);
+
+        });
     }
     
     pub fn draw_main_menu(&mut self, ui: &mut Ui) {
+        
         ui.horizontal(|ui: &mut Ui| {
             ui.menu_button("Nyx", |ui: &mut Ui| {
                 if ui.button("Settings").clicked() {
