@@ -13,24 +13,32 @@ pub struct Temperature {
 
 #[derive(Clone)]
 pub struct Temperatures {
-    pub components: Rc<Mutex<Vec<Temperature>>>,
+    pub components: Rc<Mutex<Vec<Vec<Temperature>>>>,
 }
 
 impl Temperature {
+
     fn new(name: String, sensor: String, temperature: f32, critical_temperature: f32) -> Self {
         Temperature { name: Rc::new(name), sensor: Rc::new(sensor), temperature: Rc::new(Mutex::new(VecDeque::from(vec![temperature]))), critical_temperature: Rc::new(critical_temperature) }
     }
+
 }
 
 impl Temperatures {
+
     pub fn new() -> Self {
         let new_data = utils::get_temperature_data();
-        let mut out: Vec<Temperature> = Default::default();
+        let mut out: Vec<Vec<Temperature>> = Default::default();
         for data in new_data {
-            out.push(Temperature::new(data.0, data.1, data.2, data.3));
+            let mut tmp: Vec<Temperature> = Default::default();
+            for entry in data {
+                tmp.push(Temperature::new(entry.0, entry.1, entry.2, entry.3));
+            }
+            out.push(tmp);
         }
         Temperatures { components: Rc::from(Mutex::from(out)) }
     }
+
     pub fn update(&mut self) {
         let new_data = utils::get_temperature_update_data();
         let data_store = self.components.lock();
@@ -40,19 +48,23 @@ impl Temperatures {
             // superflous... lets see how this goes!
             // -> It doesn't! Back to locking!
             for comp in ok_data_store.iter() {
-                for data in &new_data {
-                    if comp.sensor.contains(&data.0) {
-                        let temperature_data = comp.temperature.lock();
-                        if temperature_data.is_ok() {
-                            let mut ok_temperature_data = temperature_data.unwrap();
-                            if ok_temperature_data.len() == 60 {
-                                let _ = ok_temperature_data.pop_back();
-                                ok_temperature_data.push_front(data.1);
-                            } else if ok_temperature_data.len() < 60 {
-                                ok_temperature_data.push_front(data.1);
-                            } else {
-                                ok_temperature_data.truncate(59);
-                                ok_temperature_data.push_front(data.1);
+                for entry in comp {
+                    for data in &new_data {
+                        for thing in data{
+                            if entry.sensor.contains(&thing.0) {
+                                let temperature_data = entry.temperature.lock();
+                                if temperature_data.is_ok() {
+                                    let mut ok_temperature_data = temperature_data.unwrap();
+                                    if ok_temperature_data.len() == 60 {
+                                        let _ = ok_temperature_data.pop_back();
+                                        ok_temperature_data.push_front(thing.1);
+                                    } else if ok_temperature_data.len() < 60 {
+                                        ok_temperature_data.push_front(thing.1);
+                                    } else {
+                                        ok_temperature_data.truncate(59);
+                                        ok_temperature_data.push_front(thing.1);
+                                    }
+                                }
                             }
                         }
                     }

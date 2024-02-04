@@ -9,7 +9,7 @@ use procfs::{diskstats, process::Process, DiskStat};
 use std::collections::HashMap;
 use std::iter::FromIterator;
 
-pub fn get_temperature_data() -> Vec<(String, String, f32, f32)> {
+pub fn get_temperature_data() -> Vec<Vec<(String, String, f32, f32)>> {
     let mut components = Components::new_with_refreshed_list();
     let mut out: Vec<(String, String, f32, f32)> = Default::default();
     for comp in &mut components {
@@ -22,21 +22,60 @@ pub fn get_temperature_data() -> Vec<(String, String, f32, f32)> {
         let critical_temperature: f32 = comp.critical().unwrap_or(80.0);
         out.push((name.to_string(), sensor.to_string(), current_temperature, critical_temperature));
     }
-    return out;
+    let mut prev_name: String = Default::default();
+    let mut clean_out: Vec<Vec<(String, String, f32, f32)>> = Default::default();
+    for entry in out {
+        if prev_name.is_empty() {
+            clean_out.push(vec![entry.clone()]);
+            prev_name = entry.0;
+        } else {
+            if prev_name == entry.0 {
+                // Last should always return something, as the last inserted thing has the name of
+                // this.
+                let mut this_comp = clean_out.pop().unwrap().to_vec();
+                this_comp.push(entry);
+                clean_out.push(this_comp.to_vec());
+            } else {
+                clean_out.push(vec![entry.clone()]);
+                prev_name = entry.0;
+            }
+        }
+        
+    }
+    return clean_out;
 }
 
-pub fn get_temperature_update_data() -> Vec<(String, f32)> {
+pub fn get_temperature_update_data() -> Vec<Vec<(String, f32)>> {
     let components = Components::new_with_refreshed_list();
-    let mut out: Vec<(String, f32)> = Default::default();
+    let mut out: Vec<(String, String, f32)> = Default::default();
     for comp in &components {
         let tmp = comp.label();
         let if_panics = ("", tmp);
-        let (_, sensor) = tmp.split_once(" ").unwrap_or(if_panics);
+        let (name, sensor) = tmp.split_once(" ").unwrap_or(if_panics);
         let current_temperature: f32 = comp.temperature();
-        out.push((sensor.to_string(), current_temperature));
+        out.push((name.to_string(), sensor.to_string(), current_temperature));
     }
-    return out;
-    
+    let mut prev_name: String = Default::default();
+    let mut clean_out: Vec<Vec<(String, f32)>> = Default::default();
+    for entry in out {
+        if prev_name.is_empty() {
+            clean_out.push(vec![(entry.1, entry.2)]);
+            prev_name = entry.0;
+        } else {
+            if prev_name == entry.0 {
+                // Last should always return something, as the last inserted thing has the name of
+                // this.
+                let mut this_comp = clean_out.pop().unwrap().to_vec();
+                this_comp.push((entry.1, entry.2));
+                clean_out.push(this_comp.to_vec());
+            } else {
+                clean_out.push(vec![(entry.1, entry.2)]);
+                prev_name = entry.0;
+            }
+        }
+        
+    }
+    return clean_out;
 }
 
 pub fn get_network_data() -> Vec<(String, String, u64, u64, u64, u64, u64, u64, u64, u64, u64, u64, u64, u64)> {
@@ -263,3 +302,4 @@ pub fn get_cpu_core_amount() -> u8 {
         return 1;
     }
 }
+

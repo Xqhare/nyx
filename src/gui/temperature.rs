@@ -11,13 +11,19 @@ use super::Nyx;
 impl Nyx {
     pub fn gird_temperature_landing_page(&mut self, ui: &mut Ui) {
         ui.add(|ui: &mut Ui| {
-            Grid::new("Temperatures").striped(true).min_col_width((self.display_size.x / 2.0) - 50.0).num_columns(2).show(ui, |ui: &mut Ui| {
+            let max_len = self.temperatures.components.lock().unwrap().iter().map(|v| v.iter().len()).max().unwrap();
+            println!("MAX LEN {}", max_len);
+            Grid::new("Temperatures").striped(true).min_col_width((self.display_size.x / 2.0) - 50.0).num_columns(max_len).show(ui, |ui: &mut Ui| {
                 let temperatures = self.temperatures.components.clone();
                 for temperature in temperatures.lock().unwrap().iter() {
-                    let name = format!("{} {}", temperature.name, temperature.sensor);
-                    ui.label(name);
+                    for comp in temperature {
+                        let name = format!("{} {}",comp.name,comp.sensor);
+                        ui.label(name);
+                    }
                     ui.end_row();
-                    self.draw_temperature_usage(ui, temperature.clone());
+                    for comp in temperature {
+                        self.draw_temperature_usage(ui, comp.clone());
+                    }
                     ui.end_row();
                 }
             }).response
