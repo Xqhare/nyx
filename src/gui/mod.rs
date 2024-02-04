@@ -11,7 +11,6 @@ struct Nyx {
     // AppData
     next_data_update: String,
     // Data
-    test_data: Vec<f64>,
     num_cores: u8,
     networks: Networks,
     disks: Disks,
@@ -40,7 +39,6 @@ struct Nyx {
 impl Default for Nyx {
 
     fn default() -> Self {
-        let test_data: Vec<f64> = vec![10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.3, 1.0, 2.2, 4.3, 2.6, 3.8, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.3, 1.0, 2.2, 4.3, 2.6, 3.8, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54, 10.4, 56.0, 15.4, 68.7, 91.25, 41.2, 56.47, 41.54,];
         let num_cores: u8 = utils::get_cpu_core_amount();
         let networks = Networks::new();
         let disks = Disks::new();
@@ -52,7 +50,7 @@ impl Default for Nyx {
         let temperatures = Temperatures::new();
         let timezone = chrono_tz::Europe::Berlin;
         Nyx { 
-            test_data, num_cores,  display_size, networks, disks, next_data_update, cpu_data, ram_data, timezone, temperatures,
+            num_cores,  display_size, networks, disks, next_data_update, cpu_data, ram_data, timezone, temperatures,
             // default true
             show_landing_page: true,
             // default false
