@@ -1,5 +1,6 @@
 Ref 00: (Versioning):
-	00A: Major versions, 1.0 after main landing page finished, 2.0 after eris finished.
+	00A: Major versions, 1.0 after main landing page finished, 2.0 after subpages finished, 3.0 after eris finished, 4.0 after cli finished
+		- The specific Milestones are interchangeable
 	00B: Minor versions, either when it feels appropriate or when patch x.10 or higher is reached.
 	00C: Patch versions, after each feature add, or when it feels appropriate.
 
@@ -103,6 +104,18 @@ UIb1: Do I need a "settings" place?
 		- eris settings?
 			- could be split up by system component as its own subservice, with readout and visualiation
 			- Or be its own subpage with overview in landing page
+
+UIb2: Settings need to include:
+	- timezone
+	- dark/light mode
+	- dataupdateinterval
+	- display size?
+	- Main chart colour
+	- Traffic error colour
+		- Traffic recievied colour?
+	- Disk read colour
+		- Disk write colour?
+	- Display time in ribbon
 
 Ref UIc (Data to display)
 
