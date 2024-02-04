@@ -13,6 +13,7 @@ Nyx is a system monitor written in Rust. It provides real-time monitoring of CPU
 	- Currently AMD on Linux x86-64 only.
 	- Nvidia support maybe should I have one for testing.
 	- ARM / AArch64 maybe should I have one for testing.
+- Cli mode / version for even less ressource consumption
 
 ## Why Use Nyx?
 
