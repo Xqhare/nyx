@@ -133,7 +133,7 @@ mod about;
 // This will take in startup config later!
 pub fn start_nyx() {
     let app_name = "Nyx";
-    let size: Vec2 = Vec2 { x: 1165.0, y: 1000.0 };
+    let size: Vec2 = Vec2 { x: 1200.0, y: 1000.0 };
     let mut native_options = NativeOptions::default();
     native_options.viewport.inner_size = Option::from(size);
     run_native(app_name, native_options, Box::new(|_cc| { Box::<Nyx>::default()})).expect("E 01");
