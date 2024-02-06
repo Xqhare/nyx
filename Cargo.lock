@@ -1549,15 +1549,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "13e3bf6590cbc649f4d1a3eefc9d5d6eb746f5200ffb04e5e142700b8faa56e7"
 
 [[package]]
-name = "libdrm_amdgpu_sys"
-version = "0.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6badab42a333de99a838f765a5fe283a0eda3484d1e58dc753d53ef27881b252"
-dependencies = [
- "libc",
-]
-
-[[package]]
 name = "libloading"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1804,14 +1795,13 @@ dependencies = [
 
 [[package]]
 name = "nyx"
-version = "0.3.5"
+version = "1.0.0"
 dependencies = [
  "chrono",
  "chrono-tz",
  "dirs",
  "eframe",
  "egui_plot",
- "libdrm_amdgpu_sys",
  "mexprp",
  "neith",
  "procfs",

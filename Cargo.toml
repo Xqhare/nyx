@@ -1,6 +1,6 @@
 [package]
 name = "nyx"
-version = "0.3.5"
+version = "1.0.0"
 edition = "2021"
 authors = ["Xqhare"]
 
@@ -10,7 +10,6 @@ authors = ["Xqhare"]
 chrono = "0.4.31"
 dirs = "5.0.1"
 eframe = "0.25.0"
-libdrm_amdgpu_sys = "0.4.1"
 sysinfo = "0.30.5"
 neith = { path = "../neith" }
 signal-hook = "0.3.17"
