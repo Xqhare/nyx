@@ -55,7 +55,6 @@ Used in this project:
 - [chrono-tz](https://crates.io/crates/chrono-tz)
 - [eframe](https://crates.io/crates/eframe)
 - [sysinfo](https://crates.io/crates/sysinfo)
-- [libdrm_amdgpu_sys](https://crates.io/crates/libdrm_amdgpu_sys)
 - [dirs](https://crates.io/crates/dirs)
 - [mexprp](https://crates.io/crates/mexprp)
 - [procfs](https://crates.io/crates/procfs)

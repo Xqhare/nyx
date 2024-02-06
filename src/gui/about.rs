@@ -50,13 +50,6 @@ impl Nyx {
             ui.spacing();
             ui.spacing();
             ui.spacing();
-            ui.heading("libdrm_amdgpu_sys");
-            ui.hyperlink_to("Crates.io", "https://crates.io/crates/libdrm_amdgpu_sys");
-            ui.hyperlink_to("License", "https://github.com/Umio-Yasuno/libdrm-amdgpu-sys-rs/blob/main/LICENSE");
-            ui.spacing();
-            ui.spacing();
-            ui.spacing();
-            ui.spacing();
             ui.heading("dirs");
             ui.hyperlink_to("Crates.io", "https://crates.io/crates/dirs");
             ui.hyperlink_to("License", "https://github.com/dirs-dev/dirs-rs/blob/main/LICENSE-MIT");
