@@ -3,7 +3,8 @@ use super::Nyx;
 
 impl Nyx {
 
-    pub fn grid_gpu_landing_page(&mut self, ui: &mut Ui) {
-        ui.label("GPU");
+    #![allow(dead_code)]
+    pub fn grid_gpu_landing_page(&mut self, _ui: &mut Ui) {
+        // Ref F1
     }
 }

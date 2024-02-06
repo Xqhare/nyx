@@ -11,9 +11,10 @@ impl Nyx {
         ScrollArea::vertical().vscroll(true).show(ui, |ui: &mut Ui| {
             ui.heading("CPU");
             self.grid_cpu_landing_page(ui);
+            /* Ref F1 
             ui.separator();
             ui.heading("GPU");
-            self.grid_gpu_landing_page(ui);
+            self.grid_gpu_landing_page(ui); */
             ui.separator();
             ui.heading("RAM");
             self.grid_ram_landing_page(ui);
@@ -54,11 +55,12 @@ impl Nyx {
                 self.clear_screen();
                 self.show_cpu_page = true;
             }
+            /* Ref F1
             if ui.button("GPU").clicked() {
                 println!("GPU");
                 self.clear_screen();
                 self.show_gpu_page = true;
-            }
+            } */
             if ui.button("RAM").clicked() {
                 println!("RAM");
                 self.clear_screen();
