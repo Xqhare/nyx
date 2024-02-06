@@ -64,3 +64,4 @@ Used in this project:
 - [mexprp](https://crates.io/crates/mexprp)
 - [procfs](https://crates.io/crates/procfs)
 - [rand](https://crates.io/crates/rand)
+- [image](https://crates.io/crates/image)
