@@ -74,6 +74,10 @@ E1: The more systemdata I try and read, the more platform specific I am.
 	I need to give this a scope however, so Linux with amd support it is for now. Maybe windows and nvidia at a later time.
 		Mac support is up in the air, the little research I did points to a third way needed for gpu, cpu and disk info.
 
+Ref F (GPU stats):
+
+F1:	After testing two ways of getting gpu info, each pointing to a deeper implementation, I am now at reading out the pci bus, grep the result for Radeon, to get the driver id on disk to do my own read outs. This is not scaleable, at least not as I understand it. While digging deeper here would be interressting and a solution has to exist, I think it is now out of scope for this project. It will remain on the Roadmap though for future investigation, as will any code already written for gpu
+
 ## UI
 
 Ref UIa (Unix):
@@ -124,6 +128,8 @@ UIc1: CPU needs a histogram for each core and overall, as well as a histogram fo
 
 UIc2: GPU needs a histogram of temperature,
 		- Temp data should be its own entry on the landing page
+	Histogram of usage
+	Vram Type, Bit Width, Peak memory BW, L2chache, Vram usage (histogram), gtt usage, Marketing name, DeviceId, Family, ASIC name, Chip class, CU, Max Engine clock, Peak FP32, gpu type
 
 UIc3: Networks need name, mac address, incoming, total incoming, outcome, total outcome, total erros in, total erros out, total packets income, total packets outcome
 
