@@ -1,7 +1,10 @@
 
+use std::sync::Arc;
+
 use chrono::{Duration, SecondsFormat};
 use chrono_tz::Tz;
-use eframe::{*, epaint::Vec2, egui::{CentralPanel, Ui}};
+use eframe::{epaint::Vec2, egui::{CentralPanel, Ui, IconData, Context}, run_native, NativeOptions, App, Frame};
+
 
 use crate::{utils, comp::{ram::RamData, disk::Disks, network::Networks, cpu::CpuData, temperature::Temperatures}};
 
@@ -63,7 +66,7 @@ impl Default for Nyx {
 
 impl App for Nyx {
 
-    fn update(&mut self, ctx: &egui::Context, _frame: &mut Frame) {
+    fn update(&mut self, ctx: &Context, _frame: &mut Frame) {
         // This makes sure that Nyx is run continiously with a maximum wait time in millisecounds.
         ctx.request_repaint_after(std::time::Duration::from_millis(DATAUPDATEINTERVAL as u64 / 100));
         CentralPanel::default()
@@ -131,11 +134,12 @@ mod help;
 mod about;
 
 // This will take in startup config later!
-pub fn start_nyx() {
+pub fn start_nyx(icon: IconData) {
     let app_name = "Nyx";
     let size: Vec2 = Vec2 { x: 1200.0, y: 1000.0 };
     let mut native_options = NativeOptions::default();
     native_options.viewport.inner_size = Option::from(size);
+    native_options.viewport.icon = Option::from(Arc::from(icon));
     run_native(app_name, native_options, Box::new(|_cc| { Box::<Nyx>::default()})).expect("E 01");
 }
 
