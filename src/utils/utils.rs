@@ -259,7 +259,7 @@ pub fn get_cpu_data() -> (Vec<f64>, f64) {
             }
             out
         };
-        sum / tmp_store.len() as f64
+        sum / (tmp_store.len() as f64 / 2.0)
     };
     return (tmp_store, avg);
 }
