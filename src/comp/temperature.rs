@@ -27,7 +27,7 @@ impl Temperature {
 impl Temperatures {
 
     pub fn new() -> Self {
-        let new_data = utils::get_temperature_data();
+        let new_data = utils::utils::get_temperature_data();
         let mut out: Vec<Vec<Temperature>> = Default::default();
         for data in new_data {
             let mut tmp: Vec<Temperature> = Default::default();
@@ -40,7 +40,7 @@ impl Temperatures {
     }
 
     pub fn update(&mut self) {
-        let new_data = utils::get_temperature_update_data();
+        let new_data = utils::utils::get_temperature_update_data();
         let data_store = self.components.lock();
         if data_store.is_ok() {
             let ok_data_store = data_store.unwrap();

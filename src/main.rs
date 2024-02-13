@@ -1,7 +1,8 @@
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 
 use eframe::egui::IconData;
 use gui::start_nyx;
+use utils::settings::Settings;
 
 mod gui;
 mod comp;
@@ -14,7 +15,8 @@ const APPAUTHORS: &str = env!("CARGO_PKG_AUTHORS");
 fn main() {
     let pic_path = dirs::picture_dir().unwrap();
     let icon_path = pic_path.join("logo.jpeg");
-    start_nyx(load_icon(icon_path));
+    let settings = Settings::default();
+    start_nyx(load_icon(icon_path), settings);
 }
 
 fn load_icon(path: PathBuf)-> IconData {

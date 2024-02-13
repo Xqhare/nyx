@@ -1,6 +1,6 @@
 use std::ops::RangeInclusive;
 
-use eframe::{egui::{Ui, Grid}, epaint::{Color32, Vec2}};
+use eframe::{egui::{Ui, Grid}, epaint::Vec2};
 use egui_plot::{BarChart, Bar, PlotPoint, Plot, AxisHints};
 
 use crate::comp::network::Network;
@@ -44,12 +44,12 @@ impl Nyx {
             let chart = BarChart::new(data.unwrap().iter().enumerate().map(|x| {
             (x.1, x.0 as f64)
             }).map(|(x, y)| Bar::new(y, mexprp::eval::<f64>(format!("{x} / 1024").as_str()).unwrap().unwrap_single()).width(1.0)).collect()
-            ).color(Color32::GOLD);
+            ).color(self.settings.network_colour);
 
             let err_chart = BarChart::new(error.unwrap().iter().enumerate().map(|x| {
             (x.1, x.0 as f64)
             }).map(|(x, y)| Bar::new(y, mexprp::eval::<f64>(format!("{x} / 1024").as_str()).unwrap().unwrap_single()).width(0.5)).collect()
-            ).color(Color32::RED);
+            ).color(self.settings.network_error_colour);
 
             let x_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Time".to_string()};
             let y_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Usage".to_string()};

@@ -1,5 +1,5 @@
 
-use crate::utils::time_now_rfc3339_with_timezone;
+use crate::utils::utils::time_now_rfc3339_with_timezone;
 
 use super::Nyx;
 
@@ -18,12 +18,13 @@ impl Nyx {
             ui.separator();
             ui.heading("RAM");
             self.grid_ram_landing_page(ui);
-            ui.separator();
-            ui.heading("Disks");
-            self.grid_disks_landing_page(ui);
+            
             ui.separator();
             ui.heading("Networks");
             self.gird_networks_landing_page(ui);
+            ui.separator();
+            ui.heading("Disks");
+            self.grid_disks_landing_page(ui);
             ui.heading("Temperatures");
             self.gird_temperature_landing_page(ui);
 
@@ -94,7 +95,9 @@ impl Nyx {
             ui.spacing();
             ui.separator();
             ui.spacing();
-            ui.label(format!("{}", time_now_rfc3339_with_timezone(chrono::SecondsFormat::Secs, self.timezone)));
+            if self.settings.display_time_ribbon {
+                ui.label(format!("{}", time_now_rfc3339_with_timezone(chrono::SecondsFormat::Secs, self.settings.timezone)));
+            }
 
             
         });

@@ -36,7 +36,7 @@ impl Network {
 
 impl Networks {
     pub fn new() -> Self {
-        let data = utils::get_network_data();
+        let data = utils::utils::get_network_data();
         let mut networks: Vec<Network> = Default::default();
         for network_data in data {
             let network = Network::new(network_data.0, network_data.1, network_data.2, network_data.3, network_data.4, network_data.5, network_data.6, network_data.7, network_data.8, network_data.9, network_data.10, network_data.11, network_data.12, network_data.13);
@@ -46,7 +46,7 @@ impl Networks {
     }
 
     pub fn update(&mut self) {
-        let new_data = utils::get_network_data();
+        let new_data = utils::utils::get_network_data();
         let data_store = self.networks.lock();
         if data_store.is_ok() {
             let ok_data_store = data_store.unwrap();

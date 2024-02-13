@@ -119,6 +119,7 @@ UIb2: Settings need to include:
 		- Traffic recievied colour?
 	- Disk read colour
 		- Disk write colour?
+	- Colour choice for each chart!
 	- Display time in ribbon
 
 Ref UIc (Data to display)

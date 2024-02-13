@@ -1,6 +1,6 @@
 use std::ops::RangeInclusive;
 
-use eframe::{egui::{Ui, Grid}, epaint::{Color32, Vec2}};
+use eframe::{egui::{Ui, Grid}, epaint::Vec2};
 use egui_plot::{BarChart, Bar, PlotPoint, Plot, AxisHints};
 use crate::comp::disk::Disk;
 
@@ -26,12 +26,12 @@ impl Nyx {
             let chart = BarChart::new(disk.stat_reads.lock().unwrap().iter().enumerate().map(|x| {
                 (x.1, x.0 as f64)
             }).map(|(x, y)| Bar::new(y, *x as f64).width(1.0)).collect()
-            ).color(Color32::GOLD);
+            ).color(self.settings.disk_read_colour);
 
             let chart2 = BarChart::new(disk.stat_writes.lock().unwrap().iter().enumerate().map(|x| {
                 (x.1, x.0 as f64)
             }).map(|(x, y)| Bar::new(y, *x as f64).width(0.5)).collect()
-            ).color(Color32::GREEN);
+            ).color(self.settings.disk_write_colour);
 
             let x_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Time".to_string()};
             let y_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Usage".to_string()};

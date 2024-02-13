@@ -6,7 +6,7 @@ use chrono_tz::Tz;
 use eframe::{epaint::Vec2, egui::{CentralPanel, Ui, IconData, Context}, run_native, NativeOptions, App, Frame};
 
 
-use crate::{utils, comp::{ram::RamData, disk::Disks, network::Networks, cpu::CpuData, temperature::Temperatures}};
+use crate::{utils::{self, settings::Settings}, comp::{ram::RamData, disk::Disks, network::Networks, cpu::CpuData, temperature::Temperatures}};
 
 const DATAUPDATEINTERVAL: i64 = 1000;
 
@@ -37,23 +37,25 @@ struct Nyx {
     // Settings
     display_size: Vec2,
     timezone: Tz,
+    settings: Settings,
 }
 
 impl Default for Nyx {
 
     fn default() -> Self {
-        let num_cores: u8 = utils::get_cpu_core_amount();
+        let num_cores: u8 = utils::utils::get_cpu_core_amount();
         let networks = Networks::new();
         let disks = Disks::new();
         // TODO Put display_size into settings
         let display_size: Vec2 = Vec2 { x: 1200.0, y: 900.0 };
-        let next_data_update = utils::next_update_time(Duration::milliseconds(DATAUPDATEINTERVAL));
+        let next_data_update = utils::utils::next_update_time(Duration::milliseconds(DATAUPDATEINTERVAL));
         let cpu_data = CpuData::new();
         let ram_data = RamData::new();
         let temperatures = Temperatures::new();
         let timezone = chrono_tz::Europe::Berlin;
+        let settings = Settings::default();
         Nyx { 
-            num_cores,  display_size, networks, disks, next_data_update, cpu_data, ram_data, timezone, temperatures,
+            num_cores,  display_size, networks, disks, next_data_update, cpu_data, ram_data, timezone, temperatures, settings,
             // default true
             show_landing_page: true,
             // default false
@@ -64,6 +66,30 @@ impl Default for Nyx {
 
 }
 
+impl Nyx {
+    fn new(settings: Settings) -> Self {
+        let num_cores: u8 = utils::utils::get_cpu_core_amount();
+        let networks = Networks::new();
+        let disks = Disks::new();
+        // TODO Put display_size into settings
+        let display_size: Vec2 = Vec2 { x: 1200.0, y: 900.0 };
+        let next_data_update = utils::utils::next_update_time(Duration::milliseconds(DATAUPDATEINTERVAL));
+        let cpu_data = CpuData::new();
+        let ram_data = RamData::new();
+        let temperatures = Temperatures::new();
+        let timezone = chrono_tz::Europe::Berlin;
+        let settings = settings;
+        Nyx { 
+            num_cores,  display_size, networks, disks, next_data_update, cpu_data, ram_data, timezone, temperatures, settings,
+            // default true
+            show_landing_page: true,
+            // default false
+            show_cpu_page: false, show_ram_page: false, show_help: false, show_gpu_page: false, show_disk_page: false, show_temperature_page: false, show_network_page: false,
+            show_settings_page: false, show_about_page: false, show_eris_page: false,
+        }
+    }
+}
+
 impl App for Nyx {
 
     fn update(&mut self, ctx: &Context, _frame: &mut Frame) {
@@ -72,8 +98,8 @@ impl App for Nyx {
         CentralPanel::default()
             .show(ctx, |ui: &mut Ui| {
                 // Time has come for Data update
-                if utils::time_now_rfc3339zulu(SecondsFormat::Secs) >= self.next_data_update {
-                    self.next_data_update = utils::next_update_time(Duration::milliseconds(DATAUPDATEINTERVAL));
+                if utils::utils::time_now_rfc3339zulu(SecondsFormat::Secs) >= self.next_data_update {
+                    self.next_data_update = utils::utils::next_update_time(Duration::milliseconds(DATAUPDATEINTERVAL));
                     self.cpu_data.update();
                     self.ram_data.update();
                     self.disks.update();
@@ -108,7 +134,7 @@ impl App for Nyx {
                     ui.label("temperature");
                 }
                 if self.show_settings_page {
-                    ui.label("settings");
+                    self.draw_settings_page(ui);
                 }
                 if self.show_about_page {
                     self.draw_about_page(ui);
@@ -134,12 +160,12 @@ mod help;
 mod about;
 
 // This will take in startup config later!
-pub fn start_nyx(icon: IconData) {
+pub fn start_nyx(icon: IconData, settings: Settings) {
     let app_name = "Nyx";
-    let size: Vec2 = Vec2 { x: 1200.0, y: 1000.0 };
+    let size: Vec2 = settings.display_size;
     let mut native_options = NativeOptions::default();
     native_options.viewport.inner_size = Option::from(size);
     native_options.viewport.icon = Option::from(Arc::from(icon));
-    run_native(app_name, native_options, Box::new(|_cc| { Box::<Nyx>::default()})).expect("E 01");
+    run_native(app_name, native_options, Box::new(|_cc| { Box::new(Nyx::new(settings)) })).expect("E 01");
 }
 

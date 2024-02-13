@@ -17,7 +17,7 @@ pub struct RamData {
 impl RamData {
 
     pub fn new() -> Self {
-        let tmp = utils::get_ram_data();
+        let tmp = utils::utils::get_ram_data();
         let memory = Rc::new(Mutex::new(VecDeque::from(vec![tmp.0.0])));
         let swap = Rc::new(Mutex::new(VecDeque::from(vec![tmp.0.1])));
         let total_mem = Rc::new(Mutex::new(tmp.1.0));
@@ -30,7 +30,7 @@ impl RamData {
     pub fn update(&mut self) {
         // Not all of the returned data has to be used, only the first touple!
         // Ram totals don't usally change during operation!
-        let new_data = utils::get_ram_data();
+        let new_data = utils::utils::get_ram_data();
         let mem_store = self.memory.lock();
         let mem_used_store = self.mem_used.lock();
         // The if statements are nested for atomicity in statechanges. So only if both

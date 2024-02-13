@@ -15,7 +15,7 @@ impl CpuData {
 
     /// Creates a new instance of `CpuData` filled with one datapoint for each cpu and average load
     pub fn new() -> Self {
-        let tmp = utils::get_cpu_data();
+        let tmp = utils::utils::get_cpu_data();
         let core_data: Arc<Mutex<Vec<Arc<Mutex<VecDeque<f64>>>>>>  = {
             let mut queue: Vec<Arc<Mutex<VecDeque<f64>>>> = Default::default();
             for data in tmp.0 {
@@ -31,7 +31,7 @@ impl CpuData {
 
     /// Updates the exsisting instance of `CpuData` with one datapoint for each cpu and average load
     pub fn update(&mut self) {
-        let new_data = utils::get_cpu_data();
+        let new_data = utils::utils::get_cpu_data();
         let data_store = self.avg_load.lock();
         if data_store.is_ok() {
             let mut ok_store = data_store.unwrap();

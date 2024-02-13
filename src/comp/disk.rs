@@ -1,6 +1,6 @@
 use std::{sync::Mutex, rc::Rc, collections::VecDeque};
 
-use crate::utils::{get_disk_data, get_disk_update_data};
+use crate::utils::utils::{get_disk_data, get_disk_update_data};
 
 // Ref UIc4: Disks need name, filesystem, type, removable, mounted on, used bytes, free bytes
 #[derive(Clone, Debug)]

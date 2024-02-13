@@ -1,6 +1,6 @@
 use std::ops::RangeInclusive;
 
-use eframe::{egui::{ScrollArea, Ui, Grid}, epaint::{Color32, Vec2}};
+use eframe::{egui::{ScrollArea, Ui, Grid}, epaint::Vec2};
 use egui_plot::{BarChart, Bar, PlotPoint, Plot, AxisHints};
 
 use super::Nyx;
@@ -60,7 +60,7 @@ impl Nyx {
                 .map(|(x, y)| Bar::new(y as f64, x).width(1.0))
                 .collect()
             )
-            .color(Color32::GOLD);
+            .color(self.settings.cpu_colour);
             let x_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Time".to_string()};
             let y_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Usage".to_string()};
             // the :.2 in the {} means that the supplied values are cut of 2 digits after the . seperator

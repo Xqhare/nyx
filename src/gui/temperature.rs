@@ -1,6 +1,6 @@
 use std::ops::RangeInclusive;
 
-use eframe::{egui::{Ui, Grid}, epaint::{Color32, Vec2}};
+use eframe::{egui::{Ui, Grid}, epaint::Vec2};
 use egui_plot::{BarChart, Bar, PlotPoint, Plot, AxisHints};
 
 
@@ -35,7 +35,7 @@ impl Nyx {
             let chart = BarChart::new(data.unwrap().iter().enumerate().map(|x| {
             (x.1, x.0 as f64)
             }).map(|(x, y)| Bar::new(y, *x as f64).width(1.0)).collect()
-            ).color(Color32::GOLD);
+            ).color(self.settings.temperature_colour);
 
             let x_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Time".to_string()};
             let y_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Usage".to_string()};
