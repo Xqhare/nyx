@@ -14,9 +14,15 @@ const APPAUTHORS: &str = env!("CARGO_PKG_AUTHORS");
 
 fn main() {
     let pic_path = dirs::picture_dir().unwrap();
+    let config_path = dirs::config_dir().unwrap();
+    let setting_path = config_path.join("nyxconfig.json");
     let icon_path = pic_path.join("logo.jpeg");
-    let settings = Settings::default();
-    start_nyx(load_icon(icon_path), settings);
+    let settings = Settings::load(setting_path);
+    if settings.is_ok() {
+        start_nyx(load_icon(icon_path), settings.unwrap());
+    } else {
+        start_nyx(load_icon(icon_path), Settings::default());
+    }
 }
 
 fn load_icon(path: PathBuf)-> IconData {
