@@ -65,3 +65,4 @@ Used in this project:
 - [procfs](https://crates.io/crates/procfs)
 - [rand](https://crates.io/crates/rand)
 - [image](https://crates.io/crates/image)
+- [json](https://crates.io/crates/json)

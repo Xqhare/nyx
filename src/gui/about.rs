@@ -81,6 +81,13 @@ impl Nyx {
             ui.heading("image");
             ui.hyperlink_to("Crates.io", "https://crates.io/crates/image");
             ui.hyperlink_to("License", "https://github.com/image-rs/image/blob/master/LICENSE-MIT");
+            ui.spacing();
+            ui.spacing();
+            ui.spacing();
+            ui.spacing();
+            ui.heading("json");
+            ui.hyperlink_to("Crates.io", "https://crates.io/crates/json");
+            ui.hyperlink_to("License", "https://github.com/maciejhirsz/json-rust/blob/master/LICENSE-MIT");
         });
         // Grid doesn't work because egui hasn't implemented centering grids
         // jet. Ref: https://github.com/emilk/egui/issues/2247
