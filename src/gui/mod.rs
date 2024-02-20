@@ -36,7 +36,6 @@ struct Nyx {
     
     // Settings
     display_size: Vec2,
-    timezone: Tz,
     settings: Settings,
 }
 
@@ -52,10 +51,9 @@ impl Default for Nyx {
         let cpu_data = CpuData::new();
         let ram_data = RamData::new();
         let temperatures = Temperatures::new();
-        let timezone = chrono_tz::Europe::Berlin;
         let settings = Settings::default();
         Nyx { 
-            num_cores,  display_size, networks, disks, next_data_update, cpu_data, ram_data, timezone, temperatures, settings,
+            num_cores,  display_size, networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings,
             // default true
             show_landing_page: true,
             // default false
@@ -77,10 +75,9 @@ impl Nyx {
         let cpu_data = CpuData::new();
         let ram_data = RamData::new();
         let temperatures = Temperatures::new();
-        let timezone = chrono_tz::Europe::Berlin;
         let settings = settings;
         Nyx { 
-            num_cores,  display_size, networks, disks, next_data_update, cpu_data, ram_data, timezone, temperatures, settings,
+            num_cores,  display_size, networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings,
             // default true
             show_landing_page: true,
             // default false

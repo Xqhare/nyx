@@ -1,5 +1,5 @@
 
-use eframe::egui::{Ui, Grid};
+use eframe::egui::{Ui, Grid, ComboBox};
 
 use super::Nyx;
 
@@ -29,6 +29,11 @@ impl Nyx {
             ui.label("Temperature colour:");
             ui.color_edit_button_srgba(&mut self.settings.temperature_colour);
         });
-        
+        ComboBox::from_label("Timezonesettingbox").selected_text(format!("{}", self.settings.timezone)).show_ui(ui, |ui: &mut Ui| {
+            for tz in chrono_tz::TZ_VARIANTS {
+                ui.selectable_value(&mut self.settings.timezone, tz, format!("{}", tz));
+            }
+            println!("{}", self.settings.timezone)
+        });
     }
 }
