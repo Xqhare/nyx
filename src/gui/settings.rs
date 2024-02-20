@@ -85,7 +85,9 @@ impl Nyx {
         ui.separator();
         ui.spacing();
         if ui.button("Save Settings").clicked() {
-            println!("SAVE!");
+            // This can go wrong, I should handle this somehow. TODO!
+            let _ = self.settings.save(self.settings.save_location.clone());
+            ui.label("Saved!");
         }
     }
 
