@@ -2,7 +2,6 @@
 use std::sync::Arc;
 
 use chrono::{Duration, SecondsFormat};
-use chrono_tz::Tz;
 use eframe::{epaint::Vec2, egui::{CentralPanel, Ui, IconData, Context}, run_native, NativeOptions, App, Frame};
 
 
