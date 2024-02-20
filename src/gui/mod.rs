@@ -7,8 +7,6 @@ use eframe::{epaint::Vec2, egui::{CentralPanel, Ui, IconData, Context}, run_nati
 
 use crate::{utils::{self, settings::Settings}, comp::{ram::RamData, disk::Disks, network::Networks, cpu::CpuData, temperature::Temperatures}};
 
-const DATAUPDATEINTERVAL: i64 = 1000;
-
 struct Nyx {
     // AppData
     next_data_update: String,
@@ -34,7 +32,6 @@ struct Nyx {
     show_eris_page: bool,
     
     // Settings
-    display_size: Vec2,
     settings: Settings,
 }
 
@@ -45,14 +42,13 @@ impl Default for Nyx {
         let networks = Networks::new();
         let disks = Disks::new();
         // TODO Put display_size into settings
-        let display_size: Vec2 = Vec2 { x: 1200.0, y: 900.0 };
-        let next_data_update = utils::utils::next_update_time(Duration::milliseconds(DATAUPDATEINTERVAL));
+        let next_data_update = utils::utils::next_update_time(Duration::milliseconds(1000));
         let cpu_data = CpuData::new();
         let ram_data = RamData::new();
         let temperatures = Temperatures::new();
         let settings = Settings::default();
         Nyx { 
-            num_cores,  display_size, networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings,
+            num_cores, networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings,
             // default true
             show_landing_page: true,
             // default false
@@ -69,14 +65,13 @@ impl Nyx {
         let networks = Networks::new();
         let disks = Disks::new();
         // TODO Put display_size into settings
-        let display_size: Vec2 = Vec2 { x: 1200.0, y: 900.0 };
-        let next_data_update = utils::utils::next_update_time(Duration::milliseconds(DATAUPDATEINTERVAL));
+        let next_data_update = utils::utils::next_update_time(Duration::milliseconds(settings.data_update_interval));
         let cpu_data = CpuData::new();
         let ram_data = RamData::new();
         let temperatures = Temperatures::new();
         let settings = settings;
         Nyx { 
-            num_cores,  display_size, networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings,
+            num_cores, networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings,
             // default true
             show_landing_page: true,
             // default false
@@ -90,12 +85,12 @@ impl App for Nyx {
 
     fn update(&mut self, ctx: &Context, _frame: &mut Frame) {
         // This makes sure that Nyx is run continiously with a maximum wait time in millisecounds.
-        ctx.request_repaint_after(std::time::Duration::from_millis(DATAUPDATEINTERVAL as u64 / 100));
+        ctx.request_repaint_after(std::time::Duration::from_millis(self.settings.data_update_interval as u64 / 100));
         CentralPanel::default()
             .show(ctx, |ui: &mut Ui| {
                 // Time has come for Data update
                 if utils::utils::time_now_rfc3339zulu(SecondsFormat::Secs) >= self.next_data_update {
-                    self.next_data_update = utils::utils::next_update_time(Duration::milliseconds(DATAUPDATEINTERVAL));
+                    self.next_data_update = utils::utils::next_update_time(Duration::milliseconds(self.settings.data_update_interval));
                     self.cpu_data.update();
                     self.ram_data.update();
                     self.disks.update();
@@ -162,6 +157,7 @@ pub fn start_nyx(icon: IconData, settings: Settings) {
     let mut native_options = NativeOptions::default();
     native_options.viewport.inner_size = Option::from(size);
     native_options.viewport.icon = Option::from(Arc::from(icon));
+    native_options.default_theme = settings.dark_theme;
     run_native(app_name, native_options, Box::new(|_cc| { Box::new(Nyx::new(settings)) })).expect("E 01");
 }
 

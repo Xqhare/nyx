@@ -8,7 +8,7 @@ impl Nyx {
 
     pub fn grid_ram_landing_page(&mut self, ui: &mut Ui) {
         ui.add(|ui: &mut Ui| {
-            Grid::new("RAM").striped(true).min_col_width((self.display_size.x / 2.0) - 50.0).num_columns(2).show(ui, |ui: &mut Ui| {
+            Grid::new("RAM").striped(true).min_col_width((self.settings.display_size.x / 2.0) - 50.0).num_columns(2).show(ui, |ui: &mut Ui| {
                 ui.add(|ui: &mut Ui| {
                     ui.horizontal(|ui: &mut Ui| {
                         ui.label("Memory:");

@@ -10,7 +10,7 @@ use super::Nyx;
 impl Nyx {
     pub fn gird_networks_landing_page(&mut self, ui: &mut Ui) {
         ui.add(|ui: &mut Ui| {
-            Grid::new("Networks").striped(true).min_col_width((self.display_size.x / 2.0) - 50.0).num_columns(2).show(ui, |ui: &mut Ui| {
+            Grid::new("Networks").striped(true).min_col_width((self.settings.display_size.x / 2.0) - 50.0).num_columns(2).show(ui, |ui: &mut Ui| {
                 let networks = self.networks.networks.clone();
                 for network in networks.lock().unwrap().iter() {
                     let name = format!("{} | Outgoing", network.name);

@@ -36,7 +36,6 @@ impl Nyx {
         ui.horizontal(|ui: &mut Ui| {
             ui.menu_button("Nyx", |ui: &mut Ui| {
                 if ui.button("Settings").clicked() {
-                    println!("Settings click");
                     self.clear_screen();
                     self.show_settings_page = true;
                 }

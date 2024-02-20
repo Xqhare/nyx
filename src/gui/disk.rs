@@ -9,7 +9,7 @@ use super::Nyx;
 impl Nyx {
     pub fn grid_disks_landing_page(&mut self, ui: &mut Ui) {
         ui.add(|ui: &mut Ui| {
-            Grid::new("Disks").striped(true).min_col_width((self.display_size.x / 1.0) - 50.0).num_columns(1).show(ui, |ui: &mut Ui| {
+            Grid::new("Disks").striped(true).min_col_width((self.settings.display_size.x / 1.0) - 50.0).num_columns(1).show(ui, |ui: &mut Ui| {
                 let disks = self.disks.disks.lock().unwrap().clone();
                 for disk in disks {
                     ui.label(disk.name.to_string());

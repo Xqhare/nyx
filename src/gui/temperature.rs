@@ -12,7 +12,7 @@ impl Nyx {
     pub fn gird_temperature_landing_page(&mut self, ui: &mut Ui) {
         ui.add(|ui: &mut Ui| {
             let max_len = self.temperatures.components.lock().unwrap().iter().map(|v| v.iter().len()).max().unwrap();
-            Grid::new("Temperatures").striped(true).min_col_width((self.display_size.x / max_len as f32) - 50.0).num_columns(max_len).show(ui, |ui: &mut Ui| {
+            Grid::new("Temperatures").striped(true).min_col_width((self.settings.display_size.x / max_len as f32) - 50.0).num_columns(max_len).show(ui, |ui: &mut Ui| {
                 let temperatures = self.temperatures.components.clone();
                 for temperature in temperatures.lock().unwrap().iter() {
                     for comp in temperature {
