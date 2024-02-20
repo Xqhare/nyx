@@ -1,3 +1,5 @@
+use std::{path::Path, io::Error};
+
 use chrono_tz::Tz;
 use eframe::epaint::{Color32, Vec2};
 
@@ -43,5 +45,9 @@ impl Default for Settings {
 impl Settings {
     fn new(main_colour: Color32, cpu_colour: Color32, ram_colour: Color32, network_colour: Color32, network_error_colour: Color32, disk_write_colour: Color32, disk_read_colour: Color32, temperature_colour: Color32, timezone: Tz, dark_theme: bool, data_update_interval: i64, display_size: Vec2, display_time_ribbon: bool) -> Self {
         Settings { main_colour, cpu_colour, ram_colour, network_colour, network_error_colour, disk_write_colour, temperature_colour, disk_read_colour, timezone, dark_theme, data_update_interval, display_size, display_time_ribbon }
+    }
+
+    fn load<P> (path: P) -> Result<Self, Error> where P: AsRef<Path> {
+        todo!()
     }
 }
