@@ -11,6 +11,12 @@ impl Nyx {
         ScrollArea::vertical().vscroll(true).show(ui, |ui: &mut Ui| {
             ui.heading("CPU");
             self.grid_cpu_landing_page(ui);
+            ui.separator();
+            ui.heading("Processes");
+            self.grid_process_landing_page(ui);
+            ui.separator();
+            ui.heading("Disks");
+            self.grid_disks_landing_page(ui);
             /* Ref F1 
             ui.separator();
             ui.heading("GPU");
@@ -18,16 +24,12 @@ impl Nyx {
             ui.separator();
             ui.heading("RAM");
             self.grid_ram_landing_page(ui);
-            
             ui.separator();
             ui.heading("Networks");
             self.gird_networks_landing_page(ui);
             ui.separator();
-            ui.heading("Disks");
-            self.grid_disks_landing_page(ui);
             ui.heading("Temperatures");
             self.gird_temperature_landing_page(ui);
-
         });
     }
     
@@ -114,6 +116,7 @@ impl Nyx {
         self.show_settings_page = false;
         self.show_about_page = false;
         self.show_eris_page = false;
+        self.show_advanced_settings_page = false;
     }
     
     fn reset_to_landing_page(&mut self) {
