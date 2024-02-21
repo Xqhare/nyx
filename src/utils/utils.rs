@@ -9,6 +9,12 @@ use procfs::{diskstats, process::Process, DiskStat};
 use std::collections::HashMap;
 use std::iter::FromIterator;
 
+pub fn get_process_amount() -> usize {
+    let mut processes = System::new();
+    processes.refresh_processes();
+    return processes.processes().len();
+}
+
 pub fn get_temperature_data() -> Vec<Vec<(String, String, f32, f32)>> {
     let mut components = Components::new_with_refreshed_list();
     let mut out: Vec<(String, String, f32, f32)> = Default::default();
