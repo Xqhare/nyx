@@ -5,7 +5,7 @@ use chrono::{Duration, SecondsFormat};
 use eframe::{epaint::Vec2, egui::{CentralPanel, Ui, IconData, Context}, run_native, NativeOptions, App, Frame};
 
 
-use crate::{utils::{self, settings::Settings}, comp::{ram::RamData, disk::Disks, network::Networks, cpu::CpuData, temperature::Temperatures}};
+use crate::{utils::{self, settings::Settings}, comp::{ram::RamData, disk::Disks, network::Networks, cpu::CpuData, temperature::Temperatures, process::ProcessData}};
 
 struct Nyx {
     // AppData
@@ -17,6 +17,7 @@ struct Nyx {
     cpu_data: CpuData,
     ram_data: RamData,
     temperatures: Temperatures,
+    process_data: ProcessData,
 
     // Drawing booleans
     show_landing_page: bool,
@@ -28,6 +29,7 @@ struct Nyx {
     show_network_page: bool,
     show_temperature_page: bool,
     show_settings_page: bool,
+    show_advanced_settings_page: bool,
     show_about_page: bool,
     show_eris_page: bool,
     
@@ -47,13 +49,14 @@ impl Default for Nyx {
         let ram_data = RamData::new();
         let temperatures = Temperatures::new();
         let settings = Settings::default();
+        let process_data = ProcessData::new();
         Nyx { 
-            num_cores, networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings,
+            num_cores, networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings, process_data,
             // default true
             show_landing_page: true,
             // default false
             show_cpu_page: false, show_ram_page: false, show_help: false, show_gpu_page: false, show_disk_page: false, show_temperature_page: false, show_network_page: false,
-            show_settings_page: false, show_about_page: false, show_eris_page: false,
+            show_settings_page: false, show_about_page: false, show_eris_page: false, show_advanced_settings_page: false,
         }
     }
 
@@ -69,14 +72,15 @@ impl Nyx {
         let cpu_data = CpuData::new();
         let ram_data = RamData::new();
         let temperatures = Temperatures::new();
+        let process_data = ProcessData::new();
         let settings = settings;
         Nyx { 
-            num_cores, networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings,
+            num_cores, networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings, process_data,
             // default true
             show_landing_page: true,
             // default false
             show_cpu_page: false, show_ram_page: false, show_help: false, show_gpu_page: false, show_disk_page: false, show_temperature_page: false, show_network_page: false,
-            show_settings_page: false, show_about_page: false, show_eris_page: false,
+            show_settings_page: false, show_about_page: false, show_eris_page: false, show_advanced_settings_page: false,
         }
     }
 }
@@ -96,6 +100,7 @@ impl App for Nyx {
                     self.disks.update();
                     self.networks.update();
                     self.temperatures.update();
+                    self.process_data.update();
                 }
                 self.draw_main_menu(ui);
                 ui.separator();
@@ -149,6 +154,7 @@ mod eris;
 mod settings;
 mod help;
 mod about;
+mod process;
 
 // This will take in startup config later!
 pub fn start_nyx(icon: IconData, settings: Settings) {
