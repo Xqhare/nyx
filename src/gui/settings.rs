@@ -1,4 +1,6 @@
 
+use std::fs;
+
 use eframe::{egui::{Ui, Grid, ComboBox}, Theme, epaint::Vec2};
 
 use super::Nyx;
@@ -80,14 +82,35 @@ impl Nyx {
             ui.end_row();
             ui.label("Temperature colour:");
             ui.color_edit_button_srgba(&mut self.settings.temperature_colour);
+            ui.end_row();
+            ui.label("Process amount colour:");
+            ui.color_edit_button_srgba(&mut self.settings.process_data_colour);
         });
         ui.spacing();
         ui.separator();
         ui.spacing();
+        if self.show_advanced_settings_page {
+            ui.heading("Advanced Settings");
+            ui.label("Any change to these settings at your own risk!");
+            if ui.button("Delete settings file").clicked() {
+                let tmp = fs::remove_file(self.settings.save_location.clone());
+                if tmp.is_ok() {
+                    ui.heading("DELETED");
+                } else {
+                    ui.heading("SOMETHING WENT WRONG, RESTART NYX!");
+                }
+            }
+
+            ui.separator();
+            ui.spacing();
+        }
         if ui.button("Save Settings").clicked() {
             // This can go wrong, I should handle this somehow. TODO!
             let _ = self.settings.save(self.settings.save_location.clone());
             ui.label("Saved!");
+        }
+        if ui.button("Advanced Settings").clicked() {
+            self.show_advanced_settings_page = true;
         }
     }
 
