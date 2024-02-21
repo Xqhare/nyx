@@ -16,6 +16,7 @@ pub struct Settings {
     pub disk_write_colour: Color32,
     pub disk_read_colour: Color32,
     pub temperature_colour: Color32,
+    pub process_data_colour: Color32,
     pub timezone: Tz,
     pub dark_theme: Theme,
     pub data_update_interval: i64,
@@ -41,6 +42,7 @@ impl Default for Settings {
             disk_write_colour: Color32::GOLD,
             disk_read_colour: Color32::GREEN,
             temperature_colour: Color32::GOLD,
+            process_data_colour: Color32::GOLD,
             timezone: chrono_tz::GMT,
             dark_theme: Theme::Dark, 
             data_update_interval: 1000,
@@ -55,8 +57,8 @@ impl Default for Settings {
 }
 
 impl Settings {
-    pub fn new(main_colour: Color32, cpu_colour: Color32, ram_colour: Color32, network_colour: Color32, network_error_colour: Color32, disk_write_colour: Color32, disk_read_colour: Color32, temperature_colour: Color32, timezone: Tz, dark_theme: Theme, data_update_interval: i64, display_size: Vec2, display_time_ribbon: bool, save_location: PathBuf) -> Self {
-        Settings { main_colour, cpu_colour, ram_colour, network_colour, network_error_colour, disk_write_colour, temperature_colour, disk_read_colour, timezone, dark_theme, data_update_interval, display_size, display_time_ribbon, set_size_x: format!("{}", display_size.x), set_size_y: format!("{}", display_size.y), set_interval: format!("{}", data_update_interval), save_location, }
+    pub fn new(main_colour: Color32, cpu_colour: Color32, ram_colour: Color32, network_colour: Color32, network_error_colour: Color32, disk_write_colour: Color32, disk_read_colour: Color32, temperature_colour: Color32, process_data_colour: Color32, timezone: Tz, dark_theme: Theme, data_update_interval: i64, display_size: Vec2, display_time_ribbon: bool, save_location: PathBuf) -> Self {
+        Settings { main_colour, cpu_colour, ram_colour, network_colour, network_error_colour, disk_write_colour, temperature_colour, disk_read_colour, process_data_colour, timezone, dark_theme, data_update_interval, display_size, display_time_ribbon, set_size_x: format!("{}", display_size.x), set_size_y: format!("{}", display_size.y), set_interval: format!("{}", data_update_interval), save_location, }
     }
 
     pub fn load(path: PathBuf) -> Result<Self, Error> {
@@ -72,6 +74,7 @@ impl Settings {
         let mut disk_write_colour: Color32 = Default::default();
         let mut disk_read_colour: Color32 = Default::default();
         let mut temperature_colour: Color32 = Default::default();
+        let mut process_data_colour: Color32 = Default::default();
 
         let mut timezone: Tz = Default::default();
         let mut dark_theme: Theme = Theme::Dark;
@@ -88,6 +91,7 @@ impl Settings {
                 "disk_write_colour" => disk_write_colour = Color32::from_rgba_premultiplied(t.1.clone().array_remove(0).as_u8().unwrap(), t.1.clone().array_remove(1).as_u8().unwrap(), t.1.clone().array_remove(2).as_u8().unwrap(), t.1.clone().array_remove(3).as_u8().unwrap()),
                 "disk_read_colour" => disk_read_colour = Color32::from_rgba_premultiplied(t.1.clone().array_remove(0).as_u8().unwrap(), t.1.clone().array_remove(1).as_u8().unwrap(), t.1.clone().array_remove(2).as_u8().unwrap(), t.1.clone().array_remove(3).as_u8().unwrap()),
                 "temperature_colour" => temperature_colour = Color32::from_rgba_premultiplied(t.1.clone().array_remove(0).as_u8().unwrap(), t.1.clone().array_remove(1).as_u8().unwrap(), t.1.clone().array_remove(2).as_u8().unwrap(), t.1.clone().array_remove(3).as_u8().unwrap()),
+                "process_data_colour" => process_data_colour = Color32::from_rgba_premultiplied(t.1.clone().array_remove(0).as_u8().unwrap(), t.1.clone().array_remove(1).as_u8().unwrap(), t.1.clone().array_remove(2).as_u8().unwrap(), t.1.clone().array_remove(3).as_u8().unwrap()),
 
                 "timezone" => {
                     let tz: Tz = t.1.clone().take_string().unwrap().parse().unwrap();
@@ -103,7 +107,7 @@ impl Settings {
                 _ => println!("heyo!"),
             }
         }
-        let out = Settings::new(main_colour, cpu_colour, ram_colour, network_colour, network_error_colour, disk_write_colour, disk_read_colour, temperature_colour, timezone, dark_theme, data_update_interval, display_size, display_time_ribbon, path);
+        let out = Settings::new(main_colour, cpu_colour, ram_colour, network_colour, network_error_colour, disk_write_colour, disk_read_colour, temperature_colour, process_data_colour, timezone, dark_theme, data_update_interval, display_size, display_time_ribbon, path);
         return Ok(out);
     }
 
@@ -166,7 +170,14 @@ impl Settings {
         let _ = tcb.push(self.temperature_colour.a());
         let tc = final_json.insert("temperature_colour", tcb);
 
-        if mc.is_ok() && cc.is_ok() && rc.is_ok() && nc.is_ok() && nec.is_ok() && dwc.is_ok() && drc.is_ok() && tc.is_ok() {
+        let mut pdb = JsonValue::new_array();
+        let _ = pdb.push(self.temperature_colour.r());
+        let _ = pdb.push(self.temperature_colour.g());
+        let _ = pdb.push(self.temperature_colour.b());
+        let _ = pdb.push(self.temperature_colour.a());
+        let pb = final_json.insert("process_data_colour", pdb);
+        
+        if mc.is_ok() && cc.is_ok() && rc.is_ok() && nc.is_ok() && nec.is_ok() && dwc.is_ok() && drc.is_ok() && tc.is_ok() && pb.is_ok() {
             let tz = final_json.insert("timezone", format!("{}", self.timezone));
             let dt = final_json.insert("dark_theme", format!("{:?}", self.dark_theme));
             let dui = final_json.insert("data_update_interval", self.data_update_interval);
