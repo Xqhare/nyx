@@ -37,7 +37,7 @@ impl Nyx {
                 .allow_drag(false)
                 .allow_scroll(false)
                 .allow_boxed_zoom(false)
-                .include_y(5000.0)
+                .include_y(4000.0)
                 .include_x(60)
                 .set_margin_fraction(Vec2 { x: 0.0, y: 0.0 })
                 .show(ui, |plot_ui| {
@@ -50,8 +50,7 @@ impl Nyx {
     }
 
     fn process_clicked(&mut self) {
-            println!("DISK MENU CLICKED");
             self.clear_screen();
-            self.show_cpu_page = true;
+            self.show_process_page = true;
     }
 }
