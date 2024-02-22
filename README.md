@@ -8,6 +8,8 @@ Nyx is a system monitor written in Rust. It provides real-time monitoring of CPU
 
 - Customizable logging feature.
 	- Write important statisitcs to disc and query them.
+- Customizable history depth of any chart
+- Full controll over every process
 - Support for various system architectures / gpu vendors
 	- GPU monitoring of amd cards
 	- Nvidia support maybe should I have one for testing.
@@ -17,7 +19,16 @@ Nyx is a system monitor written in Rust. It provides real-time monitoring of CPU
 ## Features
 
 - Real-time monitoring of system metrics
-- Currently only supports my system specifically (Others could maybe, sometimes, work!)
+- Advanced chart colour technology - Use any colour you want!
+- Extreme precision
+- Timezone support
+- Time and date display
+- Settable settings
+- Advanced settings
+- A logo
+- Intuitive and classic design
+- Choice between light and dark mode
+- Currently only supports my systems specifically (Other systems could maybe, sometimes, work too!)
 
 
 ## Why Use Nyx?
@@ -29,6 +40,18 @@ With Nyx, you can:
 - Keep an eye on your system's performance
 - Identify potential bottlenecks
 - Optimize resource usage
+
+## How to use Nyx?
+
+Nyx is easily installed, as the install wizard is the person present using the computer!
+
+1. Compile from soucre as executables are not provided, get better scrub
+	- If any are provided they will probably not work anyways!
+2. Put the logo.jpeg into you pictures folder.
+	- No logo no Nyx! It took me several minutes to generate and cost me almost a halfcent in electricity, so I will force it on everyone!
+3. Pray it works.
+4. ???
+5. Use Nyx like the aplha human you clearly are!
 
 ## Nyx: A Fitting Name for a System Monitor
 
