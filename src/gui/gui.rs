@@ -57,6 +57,10 @@ impl Nyx {
                 self.clear_screen();
                 self.show_cpu_page = true;
             }
+            if ui.button("PROCESSES").clicked() {
+                self.clear_screen();
+                self.show_process_page = true;
+            }
             /* Ref F1
             if ui.button("GPU").clicked() {
                 println!("GPU");
@@ -117,6 +121,7 @@ impl Nyx {
         self.show_about_page = false;
         self.show_eris_page = false;
         self.show_advanced_settings_page = false;
+        self.show_process_page = false;
     }
     
     fn reset_to_landing_page(&mut self) {
