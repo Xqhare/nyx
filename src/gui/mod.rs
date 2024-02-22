@@ -23,6 +23,7 @@ struct Nyx {
     show_landing_page: bool,
     show_help: bool,
     show_cpu_page: bool,
+    show_process_page: bool,
     show_ram_page: bool,
     show_gpu_page: bool,
     show_disk_page: bool,
@@ -56,7 +57,7 @@ impl Default for Nyx {
             show_landing_page: true,
             // default false
             show_cpu_page: false, show_ram_page: false, show_help: false, show_gpu_page: false, show_disk_page: false, show_temperature_page: false, show_network_page: false,
-            show_settings_page: false, show_about_page: false, show_eris_page: false, show_advanced_settings_page: false,
+            show_settings_page: false, show_about_page: false, show_eris_page: false, show_advanced_settings_page: false, show_process_page: false,
         }
     }
 
@@ -80,7 +81,7 @@ impl Nyx {
             show_landing_page: true,
             // default false
             show_cpu_page: false, show_ram_page: false, show_help: false, show_gpu_page: false, show_disk_page: false, show_temperature_page: false, show_network_page: false,
-            show_settings_page: false, show_about_page: false, show_eris_page: false, show_advanced_settings_page: false,
+            show_settings_page: false, show_about_page: false, show_eris_page: false, show_advanced_settings_page: false, show_process_page: false,
         }
     }
 }
@@ -111,7 +112,7 @@ impl App for Nyx {
                     self.draw_landing_page(ui);
                 }
                 if self.show_cpu_page {
-                    ui.label("cpu");
+                    self.cpu_page(ui);
                 }
                 if self.show_ram_page {
                     ui.label("ram");
@@ -131,6 +132,9 @@ impl App for Nyx {
                 }
                 if self.show_settings_page {
                     self.draw_settings_page(ui);
+                }
+                if self.show_process_page {
+                    ui.label("process");
                 }
                 if self.show_about_page {
                     self.draw_about_page(ui);
