@@ -11,8 +11,8 @@ impl Nyx {
         ScrollArea::horizontal()
             .hscroll(true)
             .show(ui, |ui: &mut Ui| {
-            Grid::new("landing page cpu").striped(true).num_columns(self.num_cores as usize + 1).show(ui, |ui: &mut Ui| {
-                for n in 1..=self.num_cores {
+            Grid::new("landing page cpu").striped(true).num_columns(self.cpu_data.num_cores as usize + 1).show(ui, |ui: &mut Ui| {
+                for n in 1..=self.cpu_data.num_cores {
                     ui.label(format!("CPU - Core {n}").as_str());
                 }
                 ui.add(|ui: &mut Ui| {
@@ -26,7 +26,7 @@ impl Nyx {
                         }).response
                 });
                 ui.end_row();
-                for core in 1..=self.num_cores {
+                for core in 1..=self.cpu_data.num_cores {
                     self.draw_cpu_core(ui, core, "cpu core");
                 }
                 self.draw_cpu_core(ui, 0, "avg");
@@ -87,7 +87,6 @@ impl Nyx {
     }
 
     fn cpu_clicked(&mut self) {
-        println!("CPU MENU CLICKED");
         self.clear_screen();
         self.show_cpu_page = true;
     }
@@ -96,6 +95,8 @@ impl Nyx {
         ScrollArea::vertical()
             .vscroll(true)
             .show(ui, |ui: &mut Ui| {
+            ui.heading("CPU Info");
+            ui.label(format!("Number of cores: {}", self.cpu_data.num_cores));
             Grid::new("page cpu").striped(true).num_columns(1).show(ui, |ui: &mut Ui| {
                 ui.add(|ui: &mut Ui| {
                     ui.horizontal(|ui: &mut Ui| {
@@ -110,7 +111,7 @@ impl Nyx {
                 ui.end_row();
                 self.draw_cpu_core(ui, 0, "avg");
                 ui.end_row();
-                for n in 1..=self.num_cores {
+                for n in 1..=self.cpu_data.num_cores {
                     ui.label(format!("CPU - Core {n} | Load: {:.5}%", self.cpu_data.core_data.lock().unwrap().get(n as usize - 1).unwrap().lock().unwrap().front().unwrap()).as_str());
                     ui.end_row();
                     self.draw_cpu_core(ui, n, "cpu core");

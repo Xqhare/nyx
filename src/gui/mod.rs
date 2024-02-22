@@ -11,7 +11,6 @@ struct Nyx {
     // AppData
     next_data_update: String,
     // Data
-    num_cores: u8,
     networks: Networks,
     disks: Disks,
     cpu_data: CpuData,
@@ -41,7 +40,6 @@ struct Nyx {
 impl Default for Nyx {
 
     fn default() -> Self {
-        let num_cores: u8 = utils::utils::get_cpu_core_amount();
         let networks = Networks::new();
         let disks = Disks::new();
         // TODO Put display_size into settings
@@ -52,7 +50,7 @@ impl Default for Nyx {
         let settings = Settings::default();
         let process_data = ProcessData::new();
         Nyx { 
-            num_cores, networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings, process_data,
+            networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings, process_data,
             // default true
             show_landing_page: true,
             // default false
@@ -65,7 +63,6 @@ impl Default for Nyx {
 
 impl Nyx {
     fn new(settings: Settings) -> Self {
-        let num_cores: u8 = utils::utils::get_cpu_core_amount();
         let networks = Networks::new();
         let disks = Disks::new();
         // TODO Put display_size into settings
@@ -76,7 +73,7 @@ impl Nyx {
         let process_data = ProcessData::new();
         let settings = settings;
         Nyx { 
-            num_cores, networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings, process_data,
+            networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings, process_data,
             // default true
             show_landing_page: true,
             // default false
