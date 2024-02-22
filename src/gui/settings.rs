@@ -62,8 +62,11 @@ impl Nyx {
         Grid::new("Coloursettingsgrid").striped(true).num_columns(2).show(ui, |ui: &mut Ui| {
             ui.heading("Colours:");
             ui.end_row();
-            ui.label("CPU usage colour:");
+            ui.label("Single core CPU usage colour:");
             ui.color_edit_button_srgba(&mut self.settings.cpu_colour);
+            ui.end_row();
+            ui.label("Average CPU usage colour:");
+            ui.color_edit_button_srgba(&mut self.settings.cpu_avg_colour);
             ui.end_row();
             ui.label("RAM usage colour:");
             ui.color_edit_button_srgba(&mut self.settings.ram_colour);
