@@ -48,10 +48,10 @@ impl Nyx {
                     0 as usize
                 }
             };
-            let (data, name) = match avg_core {
+            let (data, name, colour) = match avg_core {
                 // I really dislike the cloning of the needed for data readout from appstate here: Ref F1
-                "avg" => (self.cpu_data.avg_load.clone(), "avg load".to_string()),
-                _ => (self.cpu_data.core_data.lock().unwrap()[index].clone(), format!("CPU {core_nr}")),
+                "avg" => (self.cpu_data.avg_load.clone(), "avg load".to_string(), self.settings.cpu_avg_colour),
+                _ => (self.cpu_data.core_data.lock().unwrap()[index].clone(), format!("CPU {core_nr}"), self.settings.cpu_colour),
             };
             // Locks need an unwrap or similar, keep that in mind!
             let chart = BarChart::new(data.lock().unwrap().iter()
@@ -60,7 +60,7 @@ impl Nyx {
                 .map(|(x, y)| Bar::new(y as f64, x).width(1.0))
                 .collect()
             )
-            .color(self.settings.cpu_colour);
+            .color(colour);
             let x_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Time".to_string()};
             let y_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Usage".to_string()};
             // the :.2 in the {} means that the supplied values are cut of 2 digits after the . seperator
@@ -92,5 +92,33 @@ impl Nyx {
         self.show_cpu_page = true;
     }
 
+    pub fn cpu_page(&mut self, ui: &mut Ui) {
+        ScrollArea::vertical()
+            .vscroll(true)
+            .show(ui, |ui: &mut Ui| {
+            Grid::new("page cpu").striped(true).num_columns(1).show(ui, |ui: &mut Ui| {
+                ui.add(|ui: &mut Ui| {
+                    ui.horizontal(|ui: &mut Ui| {
+                        ui.label("Average CPU load");
+                        ui.spacing();
+                        ui.separator();
+                        ui.spacing();
+                        let label = format!("{:.5}%", self.cpu_data.avg_load.lock().unwrap().front().unwrap());
+                        ui.label(&label);
+                    }).response
+                });
+                ui.end_row();
+                self.draw_cpu_core(ui, 0, "avg");
+                ui.end_row();
+                for n in 1..=self.num_cores {
+                    ui.label(format!("CPU - Core {n} | Load: {:.5}%", self.cpu_data.core_data.lock().unwrap().get(n as usize - 1).unwrap().lock().unwrap().front().unwrap()).as_str());
+                    ui.end_row();
+                    self.draw_cpu_core(ui, n, "cpu core");
+                    ui.end_row();
+                }
+                
+            });
+        });
+    }
 }
 
