@@ -8,7 +8,7 @@ use json::{JsonValue, parse};
 // Ref UIb2
 #[derive(Debug)]
 pub struct Settings {
-    pub main_colour: Color32,
+    pub cpu_avg_colour: Color32,
     pub cpu_colour: Color32,
     pub ram_colour: Color32,
     pub network_colour: Color32,
@@ -34,7 +34,7 @@ impl Default for Settings {
         let setting_path = config_path.join("nyxconfig.json");
         // No touchy the numbers! I SAID NO TOUCHY!!!
         Settings { 
-            main_colour: Color32::GOLD, 
+            cpu_avg_colour: Color32::GOLD, 
             cpu_colour: Color32::GOLD,
             ram_colour: Color32::GOLD,
             network_colour: Color32::GOLD,
@@ -57,8 +57,8 @@ impl Default for Settings {
 }
 
 impl Settings {
-    pub fn new(main_colour: Color32, cpu_colour: Color32, ram_colour: Color32, network_colour: Color32, network_error_colour: Color32, disk_write_colour: Color32, disk_read_colour: Color32, temperature_colour: Color32, process_data_colour: Color32, timezone: Tz, dark_theme: Theme, data_update_interval: i64, display_size: Vec2, display_time_ribbon: bool, save_location: PathBuf) -> Self {
-        Settings { main_colour, cpu_colour, ram_colour, network_colour, network_error_colour, disk_write_colour, temperature_colour, disk_read_colour, process_data_colour, timezone, dark_theme, data_update_interval, display_size, display_time_ribbon, set_size_x: format!("{}", display_size.x), set_size_y: format!("{}", display_size.y), set_interval: format!("{}", data_update_interval), save_location, }
+    pub fn new(cpu_avg_colour: Color32, cpu_colour: Color32, ram_colour: Color32, network_colour: Color32, network_error_colour: Color32, disk_write_colour: Color32, disk_read_colour: Color32, temperature_colour: Color32, process_data_colour: Color32, timezone: Tz, dark_theme: Theme, data_update_interval: i64, display_size: Vec2, display_time_ribbon: bool, save_location: PathBuf) -> Self {
+        Settings { cpu_avg_colour, cpu_colour, ram_colour, network_colour, network_error_colour, disk_write_colour, temperature_colour, disk_read_colour, process_data_colour, timezone, dark_theme, data_update_interval, display_size, display_time_ribbon, set_size_x: format!("{}", display_size.x), set_size_y: format!("{}", display_size.y), set_interval: format!("{}", data_update_interval), save_location, }
     }
 
     pub fn load(path: PathBuf) -> Result<Self, Error> {
@@ -66,7 +66,7 @@ impl Settings {
         let mut buffer: String = Default::default();
         let _ = input.read_to_string(&mut buffer);
         let json_val: JsonValue = parse(&buffer).expect("UNABLE TO PARSE JSON!");
-        let mut main_colour: Color32 = Default::default();
+        let mut cpu_avg_colour: Color32 = Default::default();
         let mut cpu_colour: Color32 = Default::default();
         let mut ram_colour: Color32 = Default::default();
         let mut network_colour: Color32 = Default::default();
@@ -83,7 +83,7 @@ impl Settings {
         let mut display_time_ribbon: bool = Default::default();
         for t in json_val.entries() {
             match t.0 {
-                "main_colour" => main_colour = Color32::from_rgba_premultiplied(t.1.clone().array_remove(0).as_u8().unwrap(), t.1.clone().array_remove(1).as_u8().unwrap(), t.1.clone().array_remove(2).as_u8().unwrap(), t.1.clone().array_remove(3).as_u8().unwrap()),
+                "cpu_avg_colour" => cpu_avg_colour = Color32::from_rgba_premultiplied(t.1.clone().array_remove(0).as_u8().unwrap(), t.1.clone().array_remove(1).as_u8().unwrap(), t.1.clone().array_remove(2).as_u8().unwrap(), t.1.clone().array_remove(3).as_u8().unwrap()),
                 "cpu_colour" => cpu_colour = Color32::from_rgba_premultiplied(t.1.clone().array_remove(0).as_u8().unwrap(), t.1.clone().array_remove(1).as_u8().unwrap(), t.1.clone().array_remove(2).as_u8().unwrap(), t.1.clone().array_remove(3).as_u8().unwrap()),
                 "ram_colour" => ram_colour = Color32::from_rgba_premultiplied(t.1.clone().array_remove(0).as_u8().unwrap(), t.1.clone().array_remove(1).as_u8().unwrap(), t.1.clone().array_remove(2).as_u8().unwrap(), t.1.clone().array_remove(3).as_u8().unwrap()),
                 "network_colour" => network_colour = Color32::from_rgba_premultiplied(t.1.clone().array_remove(0).as_u8().unwrap(), t.1.clone().array_remove(1).as_u8().unwrap(), t.1.clone().array_remove(2).as_u8().unwrap(), t.1.clone().array_remove(3).as_u8().unwrap()),
@@ -107,19 +107,19 @@ impl Settings {
                 _ => println!("heyo!"),
             }
         }
-        let out = Settings::new(main_colour, cpu_colour, ram_colour, network_colour, network_error_colour, disk_write_colour, disk_read_colour, temperature_colour, process_data_colour, timezone, dark_theme, data_update_interval, display_size, display_time_ribbon, path);
+        let out = Settings::new(cpu_avg_colour, cpu_colour, ram_colour, network_colour, network_error_colour, disk_write_colour, disk_read_colour, temperature_colour, process_data_colour, timezone, dark_theme, data_update_interval, display_size, display_time_ribbon, path);
         return Ok(out);
     }
 
     pub fn save(&self, path: PathBuf) -> Result<(), Error> {
         let mut final_json = JsonValue::new_object();
 
-        let mut tmcb = JsonValue::new_array();
-        let _ = tmcb.push(self.main_colour.r());
-        let _ = tmcb.push(self.main_colour.g());
-        let _ = tmcb.push(self.main_colour.b());
-        let _ = tmcb.push(self.main_colour.a());
-        let mc = final_json.insert("main_colour", tmcb);
+        let mut cacb = JsonValue::new_array();
+        let _ = cacb.push(self.cpu_avg_colour.r());
+        let _ = cacb.push(self.cpu_avg_colour.g());
+        let _ = cacb.push(self.cpu_avg_colour.b());
+        let _ = cacb.push(self.cpu_avg_colour.a());
+        let cac = final_json.insert("cpu_avg_colour", cacb);
 
         let mut ccb = JsonValue::new_array();
         let _ = ccb.push(self.cpu_colour.r());
@@ -177,7 +177,7 @@ impl Settings {
         let _ = pdb.push(self.temperature_colour.a());
         let pb = final_json.insert("process_data_colour", pdb);
         
-        if mc.is_ok() && cc.is_ok() && rc.is_ok() && nc.is_ok() && nec.is_ok() && dwc.is_ok() && drc.is_ok() && tc.is_ok() && pb.is_ok() {
+        if cac.is_ok() && cc.is_ok() && rc.is_ok() && nc.is_ok() && nec.is_ok() && dwc.is_ok() && drc.is_ok() && tc.is_ok() && pb.is_ok() {
             let tz = final_json.insert("timezone", format!("{}", self.timezone));
             let dt = final_json.insert("dark_theme", format!("{:?}", self.dark_theme));
             let dui = final_json.insert("data_update_interval", self.data_update_interval);
