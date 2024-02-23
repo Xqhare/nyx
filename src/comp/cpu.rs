@@ -31,7 +31,7 @@ impl CpuData {
             };
             Arc::new(Mutex::new(queue))
         };
-        let (num_cores, phy_cores, sys_name, kernel_ver, os_ver, host_name) = utils::utils::get_cpu_core_amount();
+        let (num_cores, phy_cores, sys_name, kernel_ver, os_ver, host_name) = utils::utils::get_system_data();
         let avg_load: Arc<Mutex<VecDeque<f64>>> = Arc::new(Mutex::new(VecDeque::from(vec![tmp.1])));
         CpuData { core_data, avg_load, num_cores, phy_cores, sys_name, kernel_ver, os_ver, host_name }
     }

@@ -300,7 +300,7 @@ pub fn get_ram_data() -> ((f64, f64), (u64, u64), u64, u64) {
 }
 
 /// Computes the cpu core amount. Should the request for cores fail or be bigger than 255, 1 is returned.
-pub fn get_cpu_core_amount() ->  (u8, Option<usize>, Option<String>, Option<String>, Option<String>, Option<String>) {
+pub fn get_system_data() ->  (u8, Option<usize>, Option<String>, Option<String>, Option<String>, Option<String>) {
     let sys = System::new_with_specifics(RefreshKind::new().with_cpu(CpuRefreshKind::everything().with_frequency()));
     let cpu_phy_core = sys.physical_core_count();
     let sys_name = System::name();
