@@ -52,8 +52,7 @@ impl Nyx {
                     self.show_about_page = true;
                 }
             });
-            if ui.button("CPU").clicked() {
-                println!("CPU");
+            if ui.button("Cpu").clicked() {
                 self.clear_screen();
                 self.show_cpu_page = true;
             }
