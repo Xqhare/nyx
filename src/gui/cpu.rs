@@ -95,31 +95,57 @@ impl Nyx {
         ScrollArea::vertical()
             .vscroll(true)
             .show(ui, |ui: &mut Ui| {
-            ui.heading("CPU Info");
-            ui.label(format!("Number of cores: {}", self.cpu_data.num_cores));
-            Grid::new("page cpu").striped(true).num_columns(1).show(ui, |ui: &mut Ui| {
-                ui.add(|ui: &mut Ui| {
-                    ui.horizontal(|ui: &mut Ui| {
-                        ui.label("Average CPU load");
-                        ui.spacing();
+                ui.heading("System Info");
+                ui.horizontal(|ui: &mut Ui| {
+                    if self.cpu_data.phy_cores.is_some() {
+                        ui.label(format!("Number of physical cores: {}", self.cpu_data.phy_cores.unwrap()));
                         ui.separator();
-                        ui.spacing();
-                        let label = format!("{:.5}%", self.cpu_data.avg_load.lock().unwrap().front().unwrap());
-                        ui.label(&label);
-                    }).response
+                    }
+                    ui.label(format!("Number of total cores: {}", self.cpu_data.num_cores));
+                    
                 });
-                ui.end_row();
-                self.draw_cpu_core(ui, 0, "avg");
-                ui.end_row();
-                for n in 1..=self.cpu_data.num_cores {
-                    ui.label(format!("CPU - Core {n} | Load: {:.5}%", self.cpu_data.core_data.lock().unwrap().get(n as usize - 1).unwrap().lock().unwrap().front().unwrap()).as_str());
+                ui.horizontal(|ui: &mut Ui| {
+                    if self.cpu_data.sys_name.is_some() {
+                        ui.label(format!("System name: {}", self.cpu_data.sys_name.clone().unwrap()));
+                    }
+                    if self.cpu_data.host_name.is_some() {
+                        ui.separator();
+                        ui.label(format!("Host name: {}", self.cpu_data.host_name.clone().unwrap()));
+                    }
+                });
+                ui.horizontal(|ui: &mut Ui| {
+                    if self.cpu_data.os_ver.is_some() {
+                        ui.label(format!("OS version: {}", self.cpu_data.os_ver.clone().unwrap()));
+                    }
+                    if self.cpu_data.kernel_ver.is_some() {
+                        ui.separator();
+                        ui.label(format!("Kernel version: {}", self.cpu_data.kernel_ver.clone().unwrap()));
+                    }
+                });
+                ui.separator();
+                Grid::new("page cpu").striped(true).num_columns(1).show(ui, |ui: &mut Ui| {
+                    ui.add(|ui: &mut Ui| {
+                        ui.horizontal(|ui: &mut Ui| {
+                            ui.label("Average CPU load");
+                            ui.spacing();
+                            ui.separator();
+                            ui.spacing();
+                            let label = format!("{:.5}%", self.cpu_data.avg_load.lock().unwrap().front().unwrap());
+                            ui.label(&label);
+                        }).response
+                    });
                     ui.end_row();
-                    self.draw_cpu_core(ui, n, "cpu core");
+                    self.draw_cpu_core(ui, 0, "avg");
                     ui.end_row();
-                }
+                    for n in 1..=self.cpu_data.num_cores {
+                        ui.label(format!("CPU - Core {n} | Load: {:.5}%", self.cpu_data.core_data.lock().unwrap().get(n as usize - 1).unwrap().lock().unwrap().front().unwrap()).as_str());
+                        ui.end_row();
+                        self.draw_cpu_core(ui, n, "cpu core");
+                        ui.end_row();
+                    }
                 
+                });
             });
-        });
     }
 }
 
