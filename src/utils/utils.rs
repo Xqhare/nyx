@@ -300,12 +300,19 @@ pub fn get_ram_data() -> ((f64, f64), (u64, u64), u64, u64) {
 }
 
 /// Computes the cpu core amount. Should the request for cores fail or be bigger than 255, 1 is returned.
-pub fn get_cpu_core_amount() -> u8 {
-    let sys = System::new_with_specifics(RefreshKind::new().with_cpu(CpuRefreshKind::everything().without_frequency()));
-    if TryInto::<u8>::try_into(sys.cpus().len()).is_ok() {
-        return TryInto::<u8>::try_into(sys.cpus().len()).unwrap();
+pub fn get_cpu_core_amount() ->  (u8, Option<usize>, Option<String>, Option<String>, Option<String>, Option<String>) {
+    let sys = System::new_with_specifics(RefreshKind::new().with_cpu(CpuRefreshKind::everything().with_frequency()));
+    let cpu_phy_core = sys.physical_core_count();
+    let sys_name = System::name();
+    let kernel_ver = System::kernel_version();
+    let os_ver = System::long_os_version();
+    let host_name = System::host_name();
+    let cpu_core_total = TryInto::<u8>::try_into(sys.cpus().len());
+
+    if cpu_core_total.is_ok() {
+        return (cpu_core_total.unwrap(), cpu_phy_core, sys_name, kernel_ver, os_ver, host_name);
     } else {
-        return 1;
+        return (1, cpu_phy_core, sys_name, kernel_ver, os_ver, host_name);
     }
 }
 
