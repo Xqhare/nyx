@@ -10,6 +10,11 @@ pub struct CpuData {
     /// Holds average system load data for the last 60 update increments
     pub avg_load: Arc<Mutex<VecDeque<f64>>>,
     pub num_cores: u8,
+    pub phy_cores: Option<usize>,
+    pub sys_name: Option<String>,
+    pub kernel_ver: Option<String>,
+    pub os_ver: Option<String>,
+    pub host_name: Option<String>,
 }
 
 impl CpuData {
@@ -26,9 +31,9 @@ impl CpuData {
             };
             Arc::new(Mutex::new(queue))
         };
-        let num_cores: u8 = utils::utils::get_cpu_core_amount();
+        let (num_cores, phy_cores, sys_name, kernel_ver, os_ver, host_name) = utils::utils::get_cpu_core_amount();
         let avg_load: Arc<Mutex<VecDeque<f64>>> = Arc::new(Mutex::new(VecDeque::from(vec![tmp.1])));
-        CpuData { core_data, avg_load, num_cores }
+        CpuData { core_data, avg_load, num_cores, phy_cores, sys_name, kernel_ver, os_ver, host_name }
     }
 
     /// Updates the exsisting instance of `CpuData` with one datapoint for each cpu and average load
