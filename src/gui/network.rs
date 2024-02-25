@@ -13,9 +13,8 @@ impl Nyx {
             Grid::new("Networks").striped(true).min_col_width((self.settings.display_size.x / 2.0) - 50.0).num_columns(2).show(ui, |ui: &mut Ui| {
                 let networks = self.networks.networks.clone();
                 for network in networks.lock().unwrap().iter() {
-                    let name = format!("{} | Outgoing", network.name);
-                    ui.label(name);
-                    ui.label("Incoming");
+                    ui.label(format!("{} | Outgoing: {}kb/s", network.name, network.outgoing.lock().unwrap().front().unwrap()));
+                    ui.label(format!("Incoming: {}kb/s", network.incoming.lock().unwrap().front().unwrap()));
                     ui.end_row();
                     self.draw_network_usage(ui, network.clone(), "out");
                     self.draw_network_usage(ui, network.clone(), "inc");
