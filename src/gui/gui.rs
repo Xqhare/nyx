@@ -50,39 +50,45 @@ impl Nyx {
                     self.show_about_page = true;
                 }
             });
-            if ui.button("Cpu").clicked() {
-                self.clear_screen();
-                self.show_cpu_page = true;
-            }
-            if ui.button("PROCESSES").clicked() {
-                self.clear_screen();
-                self.show_process_page = true;
-            }
-            /* Ref F1
-            if ui.button("GPU").clicked() {
-                println!("GPU");
-                self.clear_screen();
-                self.show_gpu_page = true;
-            } */
-            if ui.button("RAM").clicked() {
-                println!("RAM");
-                self.clear_screen();
-                self.show_ram_page = true;
-            }
-            if ui.button("DISC").clicked() {
-                println!("DISC");
-                self.clear_screen();
-                self.show_disk_page = true;
-            }
-            if ui.button("NETWORKS").clicked() {
-                println!("NETWORKS");
-                self.clear_screen();
-                self.show_network_page = true;
-            }
-            if ui.button("TEMPERATURE").clicked() {
-                println!("TEMPERATURE");
-                self.clear_screen();
-                self.show_temperature_page = true;
+            ui.menu_button("Components", |ui: &mut Ui| {
+                if ui.button("Cpu").clicked() {
+                    self.clear_screen();
+                    self.show_cpu_page = true;
+                }
+                if ui.button("PROCESSES").clicked() {
+                    self.clear_screen();
+                    self.show_process_page = true;
+                }
+                /* Ref F1
+                if ui.button("GPU").clicked() {
+                    println!("GPU");
+                    self.clear_screen();
+                    self.show_gpu_page = true;
+                } */
+                if ui.button("RAM").clicked() {
+                    println!("RAM");
+                    self.clear_screen();
+                    self.show_ram_page = true;
+                }
+                if ui.button("DISC").clicked() {
+                    println!("DISC");
+                    self.clear_screen();
+                    self.show_disk_page = true;
+                }
+                if ui.button("NETWORKS").clicked() {
+                    println!("NETWORKS");
+                    self.clear_screen();
+                    self.show_network_page = true;
+                }
+                if ui.button("TEMPERATURE").clicked() {
+                    println!("TEMPERATURE");
+                    self.clear_screen();
+                    self.show_temperature_page = true;
+                }
+            });
+            if ui. button("Minimal view").clicked() {
+                println!("MIN VIEW");
+                self.show_minimal_view = true;
             }
             if ui.button("Eris").clicked() {
                 println!("Eris click");
@@ -119,6 +125,7 @@ impl Nyx {
         self.show_eris_page = false;
         self.show_advanced_settings_page = false;
         self.show_process_page = false;
+        self.show_minimal_view = false;
     }
     
     fn reset_to_landing_page(&mut self) {

@@ -32,6 +32,7 @@ struct Nyx {
     show_advanced_settings_page: bool,
     show_about_page: bool,
     show_eris_page: bool,
+    show_minimal_view: bool,
     
     // Settings
     settings: Settings,
@@ -55,7 +56,7 @@ impl Default for Nyx {
             show_landing_page: true,
             // default false
             show_cpu_page: false, show_ram_page: false, show_help: false, show_gpu_page: false, show_disk_page: false, show_temperature_page: false, show_network_page: false,
-            show_settings_page: false, show_about_page: false, show_eris_page: false, show_advanced_settings_page: false, show_process_page: false,
+            show_settings_page: false, show_about_page: false, show_eris_page: false, show_advanced_settings_page: false, show_process_page: false, show_minimal_view: false,
         }
     }
 
@@ -78,7 +79,7 @@ impl Nyx {
             show_landing_page: true,
             // default false
             show_cpu_page: false, show_ram_page: false, show_help: false, show_gpu_page: false, show_disk_page: false, show_temperature_page: false, show_network_page: false,
-            show_settings_page: false, show_about_page: false, show_eris_page: false, show_advanced_settings_page: false, show_process_page: false,
+            show_settings_page: false, show_about_page: false, show_eris_page: false, show_advanced_settings_page: false, show_process_page: false, show_minimal_view: false,
         }
     }
 }
@@ -138,6 +139,9 @@ impl App for Nyx {
                 }
                 if self.show_eris_page {
                     ui.label("eris");
+                }
+                if self.show_minimal_view {
+                    ui.label("minimal view");
                 }
             });
     }
