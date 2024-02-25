@@ -40,7 +40,6 @@ impl Nyx {
                     self.show_settings_page = true;
                 }
                 if ui.button("Help").clicked() {
-                    println!("Help click");
                     self.clear_screen();
                     self.show_help = true;
                 }

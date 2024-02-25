@@ -104,7 +104,7 @@ impl App for Nyx {
                 self.draw_main_menu(ui);
                 ui.separator();
                 if self.show_help {
-                    ui.label("help");
+                    self.help_page(ui);
                 }
                 if self.show_landing_page {
                     self.draw_landing_page(ui);
