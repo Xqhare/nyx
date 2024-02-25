@@ -70,8 +70,7 @@ impl Nyx {
                     self.clear_screen();
                     self.show_ram_page = true;
                 }
-                if ui.button("DISC").clicked() {
-                    println!("DISC");
+                if ui.button("Disks").clicked() {
                     self.clear_screen();
                     self.show_disk_page = true;
                 }
@@ -80,7 +79,7 @@ impl Nyx {
                     self.clear_screen();
                     self.show_network_page = true;
                 }
-                if ui.button("TEMPERATURE").clicked() {
+                if ui.button("TEMPERATURES").clicked() {
                     println!("TEMPERATURE");
                     self.clear_screen();
                     self.show_temperature_page = true;

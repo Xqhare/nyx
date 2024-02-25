@@ -1,6 +1,6 @@
 use std::ops::RangeInclusive;
 
-use eframe::{egui::{Ui, Grid}, epaint::Vec2};
+use eframe::{egui::{Ui, Grid, ScrollArea}, epaint::Vec2};
 use egui_plot::{BarChart, Bar, PlotPoint, Plot, AxisHints};
 use crate::comp::disk::Disk;
 
@@ -69,10 +69,53 @@ impl Nyx {
     }
 
     fn disk_clicked(&mut self) {
-            println!("DISK MENU CLICKED");
             self.clear_screen();
             self.show_disk_page = true;
     }
 
-
+    pub fn disk_page(&mut self, ui: &mut Ui) {
+        ScrollArea::vertical()
+            .vscroll(true)
+            .show(ui, |ui: &mut Ui| {
+                Grid::new("page disk").striped(true).num_columns(1).show(ui, |ui: &mut Ui| {
+                    let data_store = self.disks.disks.lock();
+                    if data_store.is_ok() {
+                        let ok_store = data_store.unwrap().clone();
+                        for disk in ok_store.iter().enumerate() {
+                            let disk_data = disk.1;
+                            ui.vertical(|ui: &mut Ui| {
+                                ui.heading(format!("Disk {}", disk.0));
+                                ui.horizontal(|ui: &mut Ui| {
+                                    ui.label(format!("Name: {}", disk_data.name));
+                                    ui.label(format!("Type: {}", disk_data.disk_type));
+                                    ui.label(format!("Mountpoint: {}", disk_data.mountpoint));
+                                    if *disk_data.removable {
+                                        ui.label("Removable: Yes");
+                                    } else {
+                                        ui.label("Removable: No");
+                                    }
+                                });
+                                
+                                let used_byte = disk_data.used_bytes.lock();
+                                let free_byte = disk_data.free_bytes.lock();
+                                if used_byte.is_ok() && free_byte.is_ok() {
+                                    let ok_use_byte = used_byte.unwrap();
+                                    let ok_free_byte = free_byte.unwrap();
+                                    ui.horizontal(|ui: &mut Ui| {
+                                        ui.label(format!("Total bytes: {}", disk_data.total_bytes));
+                                        ui.label(format!("Used bytes: {}", ok_use_byte));
+                                        ui.label(format!("Free bytes: {}", ok_free_byte));
+                                    });
+                                    
+                                }
+                            });
+                            ui.end_row();
+                            self.draw_disk_usage(ui, disk_data.to_owned());
+                            ui.end_row();
+                        }
+                    }
+                });
+                
+            });
+    }
 }

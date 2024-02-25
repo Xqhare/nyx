@@ -91,7 +91,7 @@ impl App for Nyx {
         ctx.request_repaint_after(std::time::Duration::from_millis(self.settings.data_update_interval as u64 / 100));
         CentralPanel::default()
             .show(ctx, |ui: &mut Ui| {
-                // Time has come for Data update
+                // I am once again asking for another data update. - Thanks Bernie!
                 if utils::utils::time_now_rfc3339zulu(SecondsFormat::Secs) >= self.next_data_update {
                     self.next_data_update = utils::utils::next_update_time(Duration::milliseconds(self.settings.data_update_interval));
                     self.cpu_data.update();
@@ -120,7 +120,7 @@ impl App for Nyx {
                     ui.label("gpu");
                 }
                 if self.show_disk_page {
-                    ui.label("disk");
+                    self.disk_page(ui);
                 }
                 if self.show_network_page {
                     ui.label("network");
