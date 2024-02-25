@@ -66,7 +66,7 @@ impl Nyx {
                 .allow_drag(false)
                 .allow_scroll(false)
                 .allow_boxed_zoom(false)
-                .include_y(10000.0)
+                .include_y(13500.0)
                 .include_x(60.0)
                 .set_margin_fraction(Vec2 { x: 0.0, y: 0.0 })
                 .show(ui, |plot_ui| {
