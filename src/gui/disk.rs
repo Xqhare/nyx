@@ -12,7 +12,13 @@ impl Nyx {
             Grid::new("Disks").striped(true).min_col_width((self.settings.display_size.x / 1.0) - 50.0).num_columns(1).show(ui, |ui: &mut Ui| {
                 let disks = self.disks.disks.lock().unwrap().clone();
                 for disk in disks {
-                    ui.label(disk.name.to_string());
+                    ui.horizontal(|ui: &mut Ui| {
+                        ui.label(disk.name.to_string());
+                        ui.separator();
+                        ui.label(format!("Reads: {}", disk.stat_reads.lock().unwrap().front().unwrap()));
+                        ui.label("/");
+                        ui.label(format!("Writes: {}", disk.stat_writes.lock().unwrap().front().unwrap()));
+                    });
                     ui.end_row();
                     self.draw_disk_usage(ui, disk.clone());
                     ui.end_row();
@@ -49,7 +55,7 @@ impl Nyx {
                 .allow_drag(false)
                 .allow_scroll(false)
                 .allow_boxed_zoom(false)
-                .include_y(1000.0)
+                .include_y(1800.0)
                 .include_x(60)
                 .set_margin_fraction(Vec2 { x: 0.0, y: 0.0 })
                 .show(ui, |plot_ui| {
