@@ -16,8 +16,11 @@ impl Nyx {
                 let temperatures = self.temperatures.components.clone();
                 for temperature in temperatures.lock().unwrap().iter() {
                     for comp in temperature {
-                        let name = format!("{} {}",comp.name,comp.sensor);
-                        ui.label(name);
+                        ui.horizontal(|ui: &mut Ui| {
+                            ui.label(format!("{} {}", comp.name, comp.sensor));
+                            ui.separator();
+                            ui.label(format!("{}\u{00B0}C", comp.temperature.lock().unwrap().front().unwrap()))
+                        });
                     }
                     ui.end_row();
                     for comp in temperature {
