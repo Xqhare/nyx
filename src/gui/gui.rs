@@ -9,10 +9,8 @@ impl Nyx {
 
     pub fn draw_landing_page(&mut self, ui: &mut Ui) {
         ScrollArea::vertical().vscroll(true).show(ui, |ui: &mut Ui| {
-            ui.heading("CPU");
             self.grid_cpu_landing_page(ui);
             ui.separator();
-            ui.heading("Processes");
             self.grid_process_landing_page(ui);
             ui.separator();
             ui.heading("Disks");
