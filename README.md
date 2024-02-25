@@ -8,6 +8,9 @@ Nyx is a system monitor written in Rust. It provides real-time monitoring of CPU
 
 - Customizable logging feature.
 	- Write important statisitcs to disc and query them.
+	- 2 modes:
+		1. Save it into an actual db for better quering
+		2. Save it into several json files so any user can query the data how they want
 - Customizable history depth of any chart
 - Full controll over every process
 - Support for various system architectures / gpu vendors
@@ -16,6 +19,7 @@ Nyx is a system monitor written in Rust. It provides real-time monitoring of CPU
 	- ARM / AArch64 maybe should I have one for testing.
 - Cli mode / version for even less ressource consumption
 - A minimied view, perfect for monitoring the system on a second monitor using minimal space
+- A welcome message on startup with tipps!
 
 ## Features
 
