@@ -46,7 +46,7 @@ impl Default for Settings {
             timezone: chrono_tz::GMT,
             dark_theme: Theme::Dark, 
             data_update_interval: 1000,
-            display_size: Vec2 { x: 1200.0, y: 1000.0 },
+            display_size: Vec2 { x: 1300.0, y: 1000.0 },
             set_size_x: format!("1200.0"),
             set_size_y: format!("1000.0"),
             set_interval: format!("1000"),
