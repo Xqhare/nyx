@@ -115,12 +115,12 @@ impl App for Nyx {
                     self.cpu_page(ui);
                 }
                 if self.show_ram_page {
-                    ui.label("ram");
+                    self.ram_page(ui);
                 }
-                
-                if self.show_gpu_page {
+                // Ref F1
+                /* if self.show_gpu_page {
                     ui.label("gpu");
-                }
+                } */
                 if self.show_disk_page {
                     self.disk_page(ui);
                 }
