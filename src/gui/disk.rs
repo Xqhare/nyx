@@ -84,7 +84,7 @@ impl Nyx {
                         for disk in ok_store.iter().enumerate() {
                             let disk_data = disk.1;
                             ui.vertical(|ui: &mut Ui| {
-                                ui.heading(format!("Disk {}", disk.0));
+                                ui.heading(format!("Disk {}", disk.0 + 1));
                                 ui.horizontal(|ui: &mut Ui| {
                                     ui.label(format!("Name: {}", disk_data.name));
                                     ui.label(format!("Type: {}", disk_data.disk_type));
