@@ -30,9 +30,9 @@ D1: Saving of timestamps
 		Nyx queries data once per second (This could be done in a seperate thread)
 			Timestamps for systemdata only need seconds to be unique. Especially since other computation time could impact the polling rate.
 
-Ref F (Appstate):
+Ref E (Appstate):
 
-F1: Using Vec or VecDeque create the need to clone data, which isn't desirable. 
+E1: Using Vec or VecDeque create the need to clone data, which isn't desirable. 
 	After consulting with google and bard, I have come to the conclusion that a singly linked list seemst to be the best move for a copyable list perfect for my needs.
 		f64 can be copyied, I checked.
 		singly linked lists seem to not be a part of the std library -> Something to implement myself, nice!
@@ -48,15 +48,15 @@ F1: Using Vec or VecDeque create the need to clone data, which isn't desirable.
 		With this in mind, I now believe Rc<VecDeque> or Arc<VecDeque> to be the better way of doing this.
 	To help with Ref F2, I believe Arc<Mutex<VecDeque>> to be the thing to go for.
 
-F2: Mutation of Appstate
+E2: Mutation of Appstate
 	As Appstate will be mutated at least once every polling interval, it seems adviceable to do this in a seperate thread and passing the new appstate back as a Arc.
 	Waiting with a .join() defeats the purpose, as drawing could be interrupted. The graphs need 60fps obviously!
 
-F3: For Dataconsitency updates should be atomic, either they do not update the state at all of a component or all states are updated.
+E3: For Dataconsitency updates should be atomic, either they do not update the state at all of a component or all states are updated.
 
-F4: Proccess cpu usage should be displayed as absoulute (more than 100%) and relative (per core calculated %).
+E4: Proccess cpu usage should be displayed as absoulute (more than 100%) and relative (per core calculated %).
 
-F5: Disk read and write data in mb/s continues to be problematic. While I have a nice way of obtaining the actual number of write and read operations, even after diving into the /proc documentation for linux, I was unable to find something suitable. Now using zfs there seemes to be a way, however this current kernel I am using does not have this? (It seems to be part of the kernel (or an option idfk, kernel documentation is hard)) - I could install it as a kernel module, but I still haven't fully understood why I would need another filesystem for this... Or how this would help me if I actually tried deploying this.
+E5: Disk read and write data in mb/s continues to be problematic. While I have a nice way of obtaining the actual number of write and read operations, even after diving into the /proc documentation for linux, I was unable to find something suitable. Now using zfs there seemes to be a way, however this current kernel I am using does not have this? (It seems to be part of the kernel (or an option idfk, kernel documentation is hard)) - I could install it as a kernel module, but I still haven't fully understood why I would need another filesystem for this... Or how this would help me if I actually tried deploying this.
 	So the user will get the total amount of reads and writes in the last UPDATEINTERVAL on a graph. While y = 60 stays, the x max value is flexible, but a min of 1000 should? suffice.
 
 Ref D (Average Load):
