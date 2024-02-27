@@ -1,6 +1,6 @@
 use std::ops::RangeInclusive;
 
-use eframe::{egui::{Ui, Grid}, epaint::Vec2};
+use eframe::{egui::{Ui, Grid, ScrollArea}, epaint::Vec2};
 use egui_plot::{BarChart, Bar, PlotPoint, Plot, AxisHints};
 
 
@@ -69,10 +69,40 @@ impl Nyx {
     }
 
     fn temperature_clicked(&mut self) {
-            println!("TEMPERATURE MENU CLICKED");
             self.clear_screen();
             self.show_temperature_page = true;
     }
 
+    pub fn temperature_page(&mut self, ui: &mut Ui) {
+        ScrollArea::vertical().vscroll(true).show(ui, |ui: &mut Ui| {
+            Grid::new("temperature page").striped(true).num_columns(1).show(ui, |ui: &mut Ui| {
+                let data_store = self.temperatures.components.lock();
+                if data_store.is_ok() {
+                    let ok_store = data_store.unwrap().clone();
+                    for component in ok_store.iter() {
+                        ui.vertical(|ui: &mut Ui| {
+                            // The first clone is not necessary I think, I am worried
+                            // about mutating the appstate though.
+                            ui.heading(format!("{}", component.clone().first().unwrap().name));
+                        });
+                        ui.end_row();
+                        for temperature in component {
+                            ui.horizontal(|ui: &mut Ui| {
+                                ui.label(format!("Sensor: {}", temperature.sensor));
+                                ui.label(format!("Critical temperature: {}\u{00B0}C", temperature.critical_temperature));
+                                let t = temperature.temperature.lock();
+                                if t.is_ok() {
+                                    ui.label(format!("Current temperature: {}\u{00B0}C", t.unwrap().front().unwrap()));
+                                }
+                            });
+                            ui.end_row();
+                            self.draw_temperature_usage(ui, temperature.clone());
+                            ui.end_row();
+                        }
+                    }
+                }
+            });
+        });
+    }
 
 }
