@@ -20,7 +20,7 @@ impl Nyx {
             ui.heading("GPU");
             self.grid_gpu_landing_page(ui); */
             ui.separator();
-            ui.heading("RAM");
+            ui.heading("Ram");
             self.grid_ram_landing_page(ui);
             ui.separator();
             ui.heading("Networks");
@@ -44,7 +44,6 @@ impl Nyx {
                     self.show_help = true;
                 }
                 if ui.button("About").clicked() {
-                    println!("About click");
                     self.clear_screen();
                     self.show_about_page = true;
                 }
@@ -55,6 +54,7 @@ impl Nyx {
                     self.show_cpu_page = true;
                 }
                 if ui.button("PROCESSES").clicked() {
+                    println!("Process click");
                     self.clear_screen();
                     self.show_process_page = true;
                 }
@@ -64,8 +64,7 @@ impl Nyx {
                     self.clear_screen();
                     self.show_gpu_page = true;
                 } */
-                if ui.button("RAM").clicked() {
-                    println!("RAM");
+                if ui.button("Ram").clicked() {
                     self.clear_screen();
                     self.show_ram_page = true;
                 }
@@ -73,13 +72,11 @@ impl Nyx {
                     self.clear_screen();
                     self.show_disk_page = true;
                 }
-                if ui.button("NETWORKS").clicked() {
-                    println!("NETWORKS");
+                if ui.button("Networks").clicked() {
                     self.clear_screen();
                     self.show_network_page = true;
                 }
-                if ui.button("TEMPERATURES").clicked() {
-                    println!("TEMPERATURE");
+                if ui.button("Temperatures").clicked() {
                     self.clear_screen();
                     self.show_temperature_page = true;
                 }

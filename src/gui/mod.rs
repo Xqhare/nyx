@@ -131,7 +131,7 @@ impl App for Nyx {
                     self.temperature_page(ui);
                 }
                 if self.show_settings_page {
-                    self.draw_settings_page(ui, ctx);
+                    self.draw_settings_page(ui);
                 }
                 if self.show_process_page {
                     ui.label("process");

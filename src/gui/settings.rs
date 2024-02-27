@@ -1,14 +1,14 @@
 
 use std::fs;
 
-use eframe::{egui::{Ui, Grid, ComboBox, Window, Context}, Theme, epaint::Vec2};
+use eframe::{egui::{Ui, Grid, ComboBox}, Theme, epaint::Vec2};
 
 use crate::utils::settings::Settings;
 
 use super::Nyx;
 
 impl Nyx {
-    pub fn draw_settings_page(&mut self, ui: &mut Ui, ctx: &Context) {
+    pub fn draw_settings_page(&mut self, ui: &mut Ui) {
         ui.horizontal(|ui: &mut Ui| {
             ui.vertical(|ui: &mut Ui| {
                 ui.heading("Date & Time:");
