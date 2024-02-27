@@ -49,7 +49,7 @@ impl Nyx {
                 }
             };
             let (data, name, colour) = match avg_core {
-                // I really dislike the cloning of the needed for data readout from appstate here: Ref F1
+                // I really dislike the cloning of the needed for data readout from appstate here: Ref E1
                 "avg" => (self.cpu_data.avg_load.clone(), "avg load".to_string(), self.settings.cpu_avg_colour),
                 _ => (self.cpu_data.core_data.lock().unwrap()[index].clone(), format!("CPU {core_nr}"), self.settings.cpu_colour),
             };
