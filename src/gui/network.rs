@@ -86,7 +86,6 @@ impl Nyx {
     }
 
     fn network_clicked(&mut self) {
-            println!("NETWORK MENU CLICKED");
             self.clear_screen();
             self.show_network_page = true;
     }
