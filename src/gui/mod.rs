@@ -125,7 +125,7 @@ impl App for Nyx {
                     self.disk_page(ui);
                 }
                 if self.show_network_page {
-                    ui.label("network");
+                    self.network_page(ui);
                 }
                 if self.show_temperature_page {
                     ui.label("temperature");
