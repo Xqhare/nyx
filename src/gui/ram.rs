@@ -1,6 +1,6 @@
 use std::ops::RangeInclusive;
 
-use eframe::{egui::{Ui, Grid}, epaint::Vec2};
+use eframe::{egui::{Ui, Grid, ScrollArea}, epaint::Vec2};
 use egui_plot::{BarChart, Bar, PlotPoint, Plot, AxisHints};
 use super::Nyx;
 
@@ -83,10 +83,46 @@ impl Nyx {
     }
 
     fn ram_clicked(&mut self) {
-        println!("RAM MENU CLICKED");
         self.clear_screen();
         self.show_ram_page = true;
     }
 
+    pub fn ram_page(&mut self, ui: &mut Ui) {
+        ScrollArea::vertical().vscroll(true).show(ui, |ui: &mut Ui| {
+            Grid::new("ram page").striped(true).num_columns(1).show(ui, |ui: &mut Ui| {
+                ui.horizontal(|ui: &mut Ui| {
+                    ui.label("Memory:");
+                    ui.spacing();
+                    ui.separator();
+                    ui.spacing();
+                    let available = format!("Total: {} bytes / Used: {} bytes", self.ram_data.total_mem.lock().unwrap(), self.ram_data.mem_used.lock().unwrap());
+                    ui.label(&available);
+                    ui.spacing();
+                    ui.separator();
+                    ui.spacing();
+                    let usage = format!("Usage: {:.5}%", self.ram_data.memory.lock().unwrap().front().unwrap());
+                    ui.label(&usage);
+                });
+                ui.end_row();
+                self.draw_ram_usage(ui, "ram");
+                ui.end_row();
+                ui.horizontal(|ui: &mut Ui| {
+                    ui.label("Swap:");
+                    ui.spacing();
+                    ui.separator();
+                    ui.spacing();
+                    let available = format!("Total: {} bytes / Used: {} bytes", self.ram_data.total_swap.lock().unwrap(), self.ram_data.swap_used.lock().unwrap());
+                    ui.label(&available);
+                    ui.spacing();
+                    ui.separator();
+                    ui.spacing();
+                    let usage = format!("Usage: {:.5}%", self.ram_data.swap.lock().unwrap().front().unwrap());
+                    ui.label(&usage);
+                });
+                ui.end_row();
+                self.draw_ram_usage(ui, "swap");
+            });
+        });
+    }
 
 }
