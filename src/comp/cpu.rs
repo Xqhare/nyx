@@ -15,6 +15,11 @@ pub struct CpuData {
     pub kernel_ver: Option<String>,
     pub os_ver: Option<String>,
     pub host_name: Option<String>,
+/// Returns Cpu name, brand, vendor and frequency.
+    pub cpu_name: String,
+    pub cpu_brand: String,
+    pub cpu_vendor: String,
+    pub cpu_frequency: u64,
 }
 
 impl CpuData {
@@ -33,7 +38,8 @@ impl CpuData {
         };
         let (num_cores, phy_cores, sys_name, kernel_ver, os_ver, host_name) = utils::utils::get_system_data();
         let avg_load: Arc<Mutex<VecDeque<f64>>> = Arc::new(Mutex::new(VecDeque::from(vec![tmp.1])));
-        CpuData { core_data, avg_load, num_cores, phy_cores, sys_name, kernel_ver, os_ver, host_name }
+        let (cpu_name, cpu_brand, cpu_vendor, cpu_frequency) = utils::utils::get_cpu_info();
+        CpuData { core_data, avg_load, num_cores, phy_cores, sys_name, kernel_ver, os_ver, host_name, cpu_name, cpu_brand, cpu_vendor, cpu_frequency }
     }
 
     /// Updates the exsisting instance of `CpuData` with one datapoint for each cpu and average load

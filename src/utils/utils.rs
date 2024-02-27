@@ -316,3 +316,14 @@ pub fn get_system_data() ->  (u8, Option<usize>, Option<String>, Option<String>,
     }
 }
 
+/// Returns Cpu name, brand, vendor and frequency.
+pub fn get_cpu_info() -> (String, String, String, u64) {
+    let sys = System::new_with_specifics(RefreshKind::new().with_cpu(CpuRefreshKind::everything()));
+    let info = sys.global_cpu_info();
+    let cpu_name = info.name().to_string();
+    let cpu_brand = info.brand().to_string();
+    let cpu_vendor = info.vendor_id().to_string();
+    let cpu_frequency = info.frequency();
+    return (cpu_name, cpu_brand, cpu_vendor, cpu_frequency);
+}
+

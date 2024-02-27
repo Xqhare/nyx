@@ -95,33 +95,47 @@ impl Nyx {
         ScrollArea::vertical()
             .vscroll(true)
             .show(ui, |ui: &mut Ui| {
-                ui.heading("System Info");
                 ui.horizontal(|ui: &mut Ui| {
-                    if self.cpu_data.phy_cores.is_some() {
-                        ui.label(format!("Number of physical cores: {}", self.cpu_data.phy_cores.unwrap()));
-                        ui.separator();
-                    }
-                    ui.label(format!("Number of total cores: {}", self.cpu_data.num_cores));
-                    
+                    ui.vertical(|ui: &mut Ui| {
+                        ui.heading("System Info");
+                        ui.horizontal(|ui: &mut Ui| {
+                            if self.cpu_data.phy_cores.is_some() {
+                                ui.label(format!("Number of physical cores: {}", self.cpu_data.phy_cores.unwrap()));
+                                ui.separator();
+                            }
+                            ui.label(format!("Number of total cores: {}", self.cpu_data.num_cores));
+                            
+                        });
+                        ui.horizontal(|ui: &mut Ui| {
+                            if self.cpu_data.sys_name.is_some() {
+                                ui.label(format!("System name: {}", self.cpu_data.sys_name.clone().unwrap()));
+                            }
+                            if self.cpu_data.host_name.is_some() {
+                                ui.separator();
+                                ui.label(format!("Host name: {}", self.cpu_data.host_name.clone().unwrap()));
+                            }
+                        });
+                        ui.horizontal(|ui: &mut Ui| {
+                            if self.cpu_data.os_ver.is_some() {
+                                ui.label(format!("OS version: {}", self.cpu_data.os_ver.clone().unwrap()));
+                            }
+                            if self.cpu_data.kernel_ver.is_some() {
+                                ui.separator();
+                                ui.label(format!("Kernel version: {}", self.cpu_data.kernel_ver.clone().unwrap()));
+                            }
+                        });
+                    });
+                    ui.vertical(|ui: &mut Ui| {
+                        ui.heading("CPU Info");
+                        ui.horizontal(|ui: &mut Ui| {
+                            ui.label(format!("CPU Name: {}", self.cpu_data.cpu_name));
+                            ui.label(format!("CPU Brand: {}", self.cpu_data.cpu_brand));
+                            ui.label(format!("CPU Vendor: {}", self.cpu_data.cpu_vendor));
+                        });
+                        ui.label(format!("CPU Frequency: {}", self.cpu_data.cpu_frequency));
+                    });
                 });
-                ui.horizontal(|ui: &mut Ui| {
-                    if self.cpu_data.sys_name.is_some() {
-                        ui.label(format!("System name: {}", self.cpu_data.sys_name.clone().unwrap()));
-                    }
-                    if self.cpu_data.host_name.is_some() {
-                        ui.separator();
-                        ui.label(format!("Host name: {}", self.cpu_data.host_name.clone().unwrap()));
-                    }
-                });
-                ui.horizontal(|ui: &mut Ui| {
-                    if self.cpu_data.os_ver.is_some() {
-                        ui.label(format!("OS version: {}", self.cpu_data.os_ver.clone().unwrap()));
-                    }
-                    if self.cpu_data.kernel_ver.is_some() {
-                        ui.separator();
-                        ui.label(format!("Kernel version: {}", self.cpu_data.kernel_ver.clone().unwrap()));
-                    }
-                });
+                
                 ui.separator();
                 Grid::new("page cpu").striped(true).num_columns(1).show(ui, |ui: &mut Ui| {
                     ui.add(|ui: &mut Ui| {
