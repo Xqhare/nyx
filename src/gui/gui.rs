@@ -104,8 +104,8 @@ impl Nyx {
             if self.settings.display_time_ribbon {
                 ui.label(format!("{}", time_now_rfc3339_with_timezone(chrono::SecondsFormat::Secs, self.settings.timezone)));
             }
-
             
+        
         });
     }
     
@@ -124,6 +124,7 @@ impl Nyx {
         self.show_advanced_settings_page = false;
         self.show_process_page = false;
         self.show_minimal_view = false;
+        self.show_error_msg = false;
     }
     
     fn reset_to_landing_page(&mut self) {

@@ -2,7 +2,7 @@
 use std::sync::Arc;
 
 use chrono::{Duration, SecondsFormat};
-use eframe::{epaint::Vec2, egui::{CentralPanel, Ui, IconData, Context}, run_native, NativeOptions, App, Frame};
+use eframe::{epaint::{Vec2, Pos2}, egui::{CentralPanel, Ui, IconData, Context, Window}, run_native, NativeOptions, App, Frame};
 
 
 use crate::{utils::{self, settings::Settings}, comp::{ram::RamData, disk::Disks, network::Networks, cpu::CpuData, temperature::Temperatures, process::ProcessData}};
@@ -33,6 +33,8 @@ struct Nyx {
     show_about_page: bool,
     show_eris_page: bool,
     show_minimal_view: bool,
+    show_success_msg: bool,
+    show_error_msg: bool,
     
     // Settings
     settings: Settings,
@@ -56,7 +58,7 @@ impl Default for Nyx {
             show_landing_page: true,
             // default false
             show_cpu_page: false, show_ram_page: false, show_help: false, show_gpu_page: false, show_disk_page: false, show_temperature_page: false, show_network_page: false,
-            show_settings_page: false, show_about_page: false, show_eris_page: false, show_advanced_settings_page: false, show_process_page: false, show_minimal_view: false,
+            show_settings_page: false, show_about_page: false, show_eris_page: false, show_advanced_settings_page: false, show_process_page: false, show_minimal_view: false, show_error_msg: false, show_success_msg: false,
         }
     }
 
@@ -79,7 +81,7 @@ impl Nyx {
             show_landing_page: true,
             // default false
             show_cpu_page: false, show_ram_page: false, show_help: false, show_gpu_page: false, show_disk_page: false, show_temperature_page: false, show_network_page: false,
-            show_settings_page: false, show_about_page: false, show_eris_page: false, show_advanced_settings_page: false, show_process_page: false, show_minimal_view: false,
+            show_settings_page: false, show_about_page: false, show_eris_page: false, show_advanced_settings_page: false, show_process_page: false, show_minimal_view: false, show_error_msg: false, show_success_msg: false,
         }
     }
 }
@@ -129,7 +131,7 @@ impl App for Nyx {
                     ui.label("temperature");
                 }
                 if self.show_settings_page {
-                    self.draw_settings_page(ui);
+                    self.draw_settings_page(ui, ctx);
                 }
                 if self.show_process_page {
                     ui.label("process");
@@ -142,6 +144,16 @@ impl App for Nyx {
                 }
                 if self.show_minimal_view {
                     ui.label("minimal view");
+                }
+                if self.show_success_msg {
+                Window::new("Success").collapsible(false).resizable(false).default_pos(Pos2::new(self.settings.display_size.x / 2.0, self.settings.display_size.y / 2.0)).open(&mut self.show_success_msg).show(ctx, |ui: &mut Ui| {
+                        ui.label("Task done successfully");
+                    });
+                }
+                if self.show_error_msg {
+                    Window::new("Error").collapsible(true).resizable(false).open(&mut self.show_error_msg).show(ctx, |ui: &mut Ui| {
+                            ui.label("An error has occured. Consider restarting Nyx");
+                        });
                 }
             });
     }

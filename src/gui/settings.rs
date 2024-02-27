@@ -1,12 +1,14 @@
 
 use std::fs;
 
-use eframe::{egui::{Ui, Grid, ComboBox}, Theme, epaint::Vec2};
+use eframe::{egui::{Ui, Grid, ComboBox, Window, Context}, Theme, epaint::Vec2};
+
+use crate::utils::settings::Settings;
 
 use super::Nyx;
 
 impl Nyx {
-    pub fn draw_settings_page(&mut self, ui: &mut Ui) {
+    pub fn draw_settings_page(&mut self, ui: &mut Ui, ctx: &Context) {
         ui.horizontal(|ui: &mut Ui| {
             ui.vertical(|ui: &mut Ui| {
                 ui.heading("Date & Time:");
@@ -95,14 +97,28 @@ impl Nyx {
         if self.show_advanced_settings_page {
             ui.heading("Advanced Settings");
             ui.label("Any change to these settings at your own risk!");
-            if ui.button("Delete settings file").clicked() {
-                let tmp = fs::remove_file(self.settings.save_location.clone());
-                if tmp.is_ok() {
-                    ui.heading("DELETED");
-                } else {
-                    ui.heading("SOMETHING WENT WRONG, RESTART NYX!");
+            ui.label("Settings-file:");
+            ui.horizontal(|ui: &mut Ui| {
+                if ui.button("Delete settings file").clicked() {
+                    let tmp = fs::remove_file(self.settings.save_location.clone());
+                    if tmp.is_ok() {
+                        self.show_success_msg = true;
+                    } else {
+                        self.show_error_msg = true;
+                    }
                 }
-            }
+                if ui.button("Reset settings").clicked() {
+                    self.settings = Settings::default();
+                    let tmp = self.settings.save(self.settings.save_location.clone());
+                    if tmp.is_ok() {
+                        self.show_success_msg = true;
+                    } else {
+                        self.show_error_msg = true;
+                    }
+                }
+                
+            });
+            
 
             ui.separator();
             ui.spacing();
@@ -110,11 +126,12 @@ impl Nyx {
         if ui.button("Save Settings").clicked() {
             // This can go wrong, I should handle this somehow. TODO!
             let _ = self.settings.save(self.settings.save_location.clone());
-            ui.label("Saved!");
+            self.show_success_msg = true;
         }
         if ui.button("Advanced Settings").clicked() {
             self.show_advanced_settings_page = true;
         }
+        
     }
 
     fn set_size(&mut self) {
