@@ -35,6 +35,41 @@ impl Nyx {
         });
     }
 
+    pub fn mini_cpu(&mut self, ui: &mut Ui) {
+        let (data, name, colour) = {
+                (self.cpu_data.avg_load.clone(), "avg load".to_string(), self.settings.cpu_avg_colour)
+            };
+            let chart = BarChart::new(data.lock().unwrap().iter()
+                .enumerate()
+                .map(|x| (*x.1, x.0))
+                .map(|(x, y)| Bar::new(y as f64, x).width(1.0))
+                .collect()
+            )
+            .color(colour);
+            let x_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Time".to_string()};
+            let y_fmt = |_x, _digits, _range: &RangeInclusive<f64>| {"Usage".to_string()};
+            // the :.2 in the {} means that the supplied values are cut of 2 digits after the . seperator
+            let label_fmt = |_s: &str, val: &PlotPoint| {format!("{:.2}s\n{:.2}%", val.x, val.y)};
+
+            let cpu_plot = Plot::new(name)
+                .show_axes(false)
+                .y_axis_width(3)
+                .custom_x_axes(vec![AxisHints::default().label("Time").formatter(x_fmt).max_digits(4)])
+                .custom_y_axes(vec![AxisHints::default().label("Usage").formatter(y_fmt).max_digits(4)])
+                .label_formatter(label_fmt)
+                .allow_zoom(false)
+                .allow_drag(false)
+                .allow_scroll(false)
+                .allow_boxed_zoom(false)
+                .include_y(100.0)
+                .include_x(60)
+                .set_margin_fraction(Vec2 { x: 0.0, y: 0.0 })
+                .show(ui, |plot_ui| plot_ui.bar_chart(chart));
+            if cpu_plot.response.clicked(){
+                self.cpu_clicked();
+            }
+    }
+
     /// `core_nr` can be set to any number if avg load is drawn.
     /// `avg_core` is only matched for "avg", if it is not avg, it is a core
     fn draw_cpu_core(&mut self, ui: &mut Ui, core_nr: u8, avg_core: &str) {

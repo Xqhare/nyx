@@ -143,7 +143,7 @@ impl App for Nyx {
                     ui.label("eris");
                 }
                 if self.show_minimal_view {
-                    ui.label("minimal view");
+                    self.mini_viewer_page(ui);
                 }
                 if self.show_success_msg {
                 Window::new("Success").collapsible(false).resizable(false).default_pos(Pos2::new(self.settings.display_size.x / 2.0, self.settings.display_size.y / 2.0)).open(&mut self.show_success_msg).show(ctx, |ui: &mut Ui| {
@@ -172,6 +172,7 @@ mod settings;
 mod help;
 mod about;
 mod process;
+mod mini_viewer;
 
 // This will take in startup config later!
 pub fn start_nyx(icon: IconData, settings: Settings) {

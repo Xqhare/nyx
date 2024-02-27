@@ -27,7 +27,7 @@ impl Nyx {
         });    
     }
 
-    fn draw_disk_usage(&mut self, ui: &mut Ui, disk: Disk) {
+    pub fn draw_disk_usage(&mut self, ui: &mut Ui, disk: Disk) {
         ui.vertical_centered_justified(|ui: &mut Ui| {
             let chart = BarChart::new(disk.stat_reads.lock().unwrap().iter().enumerate().map(|x| {
                 (x.1, x.0 as f64)

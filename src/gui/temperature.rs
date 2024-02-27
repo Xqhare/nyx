@@ -32,7 +32,7 @@ impl Nyx {
         });
     }
 
-    fn draw_temperature_usage(&mut self, ui: &mut Ui, temperature: Temperature) {
+    pub fn draw_temperature_usage(&mut self, ui: &mut Ui, temperature: Temperature) {
         let data = temperature.temperature.lock();
         ui.vertical_centered_justified(|ui: &mut Ui| {
             let chart = BarChart::new(data.unwrap().iter().enumerate().map(|x| {

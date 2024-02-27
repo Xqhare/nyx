@@ -24,7 +24,7 @@ impl Nyx {
         });
     }
 
-    fn draw_network_usage(&mut self, ui: &mut Ui, network: Network, data_type: &str) {
+    pub fn draw_network_usage(&mut self, ui: &mut Ui, network: Network, data_type: &str) {
         let (data, error) = {
             match data_type {
                 "inc" => {

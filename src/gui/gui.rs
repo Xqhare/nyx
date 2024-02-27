@@ -85,7 +85,7 @@ impl Nyx {
                 }
             });
             if ui. button("Minimal view").clicked() {
-                println!("MIN VIEW");
+                self.clear_screen();
                 self.show_minimal_view = true;
             }
             if ui.button("Eris").clicked() {

@@ -46,7 +46,7 @@ impl Nyx {
         });
     }
 
-    fn draw_ram_usage(&mut self, ui: &mut Ui, mem_swap: &str) {
+    pub fn draw_ram_usage(&mut self, ui: &mut Ui, mem_swap: &str) {
         ui.vertical_centered_justified(|ui: &mut Ui| {
             let data = match mem_swap {
                 "ram" => self.ram_data.memory.clone(),
