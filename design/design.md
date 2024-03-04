@@ -1,5 +1,5 @@
 Ref 00: (Versioning):
-	00A: Major versions, 1.0 after main landing page finished, 2.0 after subpages finished, 3.0 after eris finished, 4.0 after cli finished
+	00A: Major versions, 1.0 after main landing page finished, 2.0 after all subpages except eris finished, 3.0 after eris finished, 4.0 after cli finished
 		- The specific Milestones are interchangeable
 	00B: Minor versions, either when it feels appropriate or when patch x.10 or higher is reached.
 	00C: Patch versions, after each feature add, or when it feels appropriate.
