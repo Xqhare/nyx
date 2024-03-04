@@ -5,11 +5,12 @@ use chrono::{Duration, SecondsFormat};
 use eframe::{epaint::{Vec2, Pos2}, egui::{CentralPanel, Ui, IconData, Context, Window}, run_native, NativeOptions, App, Frame};
 
 
-use crate::{utils::{self, settings::Settings}, comp::{ram::RamData, disk::Disks, network::Networks, cpu::CpuData, temperature::Temperatures, process::ProcessData}};
+use crate::{utils::{self, settings::Settings}, comp::{ram::RamData, disk::Disks, network::Networks, cpu::CpuData, temperature::Temperatures, process::{ProcessData, Processes}}};
 
 struct Nyx {
     // AppData
     next_data_update: String,
+    next_process_update: String,
     // Data
     networks: Networks,
     disks: Disks,
@@ -17,6 +18,7 @@ struct Nyx {
     ram_data: RamData,
     temperatures: Temperatures,
     process_data: ProcessData,
+    processes: Processes,
 
     // Drawing booleans
     show_landing_page: bool,
@@ -47,13 +49,15 @@ impl Default for Nyx {
         let disks = Disks::new();
         // TODO Put display_size into settings
         let next_data_update = utils::utils::next_update_time(Duration::milliseconds(1000));
+        let next_process_update = utils::utils::next_update_time(Duration::milliseconds(15000));
         let cpu_data = CpuData::new();
         let ram_data = RamData::new();
         let temperatures = Temperatures::new();
         let settings = Settings::default();
         let process_data = ProcessData::new();
+        let processes = Processes::new();
         Nyx { 
-            networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings, process_data,
+            networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings, process_data, processes, next_process_update,
             // default true
             show_landing_page: true,
             // default false
@@ -70,13 +74,15 @@ impl Nyx {
         let disks = Disks::new();
         // TODO Put display_size into settings
         let next_data_update = utils::utils::next_update_time(Duration::milliseconds(settings.data_update_interval));
+        let next_process_update = utils::utils::next_update_time(Duration::milliseconds(settings.data_update_interval * 15));
         let cpu_data = CpuData::new();
         let ram_data = RamData::new();
         let temperatures = Temperatures::new();
         let process_data = ProcessData::new();
+        let processes = Processes::new();
         let settings = settings;
         Nyx { 
-            networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings, process_data,
+            networks, disks, next_data_update, cpu_data, ram_data, temperatures, settings, process_data, processes, next_process_update,
             // default true
             show_landing_page: true,
             // default false
@@ -90,18 +96,29 @@ impl App for Nyx {
 
     fn update(&mut self, ctx: &Context, _frame: &mut Frame) {
         // This makes sure that Nyx is run continiously with a maximum wait time in millisecounds.
+        // This is also the root cause for the unresponsiveness. I know now that eframe has an
+        // async mode, I don't want to rewirte this to use it though.
         ctx.request_repaint_after(std::time::Duration::from_millis(self.settings.data_update_interval as u64 / 100));
         CentralPanel::default()
             .show(ctx, |ui: &mut Ui| {
                 // I am once again asking for another data update. - Thanks Bernie!
-                if utils::utils::time_now_rfc3339zulu(SecondsFormat::Secs) >= self.next_data_update {
+                let time_now = utils::utils::time_now_rfc3339zulu(SecondsFormat::Secs);
+                if time_now >= self.next_data_update {
                     self.next_data_update = utils::utils::next_update_time(Duration::milliseconds(self.settings.data_update_interval));
-                    self.cpu_data.update();
-                    self.ram_data.update();
-                    self.disks.update();
-                    self.networks.update();
-                    self.temperatures.update();
-                    self.process_data.update();
+                    if !self.show_process_page {
+                        self.cpu_data.update();
+                        self.ram_data.update();
+                        self.disks.update();
+                        self.networks.update();
+                        self.temperatures.update();
+                        self.process_data.update();
+                    }
+                    
+                } else if time_now >= self.next_process_update {
+                    // Only update the process list when it is shown to the user
+                    if self.show_process_page {
+                        self.processes = Processes::new();
+                    }
                 }
                 self.draw_main_menu(ui);
                 ui.separator();
@@ -134,7 +151,7 @@ impl App for Nyx {
                     self.draw_settings_page(ui);
                 }
                 if self.show_process_page {
-                    ui.label("process");
+                    self.process_page(ui);
                 }
                 if self.show_about_page {
                     self.draw_about_page(ui);
@@ -174,7 +191,6 @@ mod about;
 mod process;
 mod mini_viewer;
 
-// This will take in startup config later!
 pub fn start_nyx(icon: IconData, settings: Settings) {
     let app_name = "Nyx";
     let size: Vec2 = settings.display_size;

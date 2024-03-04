@@ -15,6 +15,32 @@ pub fn get_process_amount() -> usize {
     return processes.processes().len();
 }
 
+/// Returns a vector with all processes currently runnning. Each touple contains the name, memory,
+/// parent id, status, user id, run time and group id in this order. Some are options.
+pub fn get_process_data() -> Vec<(u32, String, u64, Option<u32>, String, u64)> {
+    let mut processes = System::new();
+    processes.refresh_processes();
+    let mut out: Vec<(u32, String, u64, Option<u32>, String, u64)> = Default::default();
+    for proc in processes.processes() {
+        let pid = proc.0.as_u32();
+        let temp = proc.1;
+        let name = temp.name().to_string();
+        let mem = temp.memory();
+        let parent_pid = {
+            if temp.parent().is_some() {
+                Some(temp.parent().unwrap().as_u32())
+            } else {
+                None
+            }
+        };
+        let status = temp.status().to_string();
+        
+        let run_time = temp.run_time();
+        out.push((pid, name, mem, parent_pid, status, run_time))
+    }
+    out
+}
+
 pub fn get_temperature_data() -> Vec<Vec<(String, String, f32, f32)>> {
     let mut components = Components::new_with_refreshed_list();
     let mut out: Vec<(String, String, f32, f32)> = Default::default();
