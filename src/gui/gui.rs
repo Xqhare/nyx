@@ -8,7 +8,7 @@ use eframe::egui::{Ui, ScrollArea};
 impl Nyx {
 
     pub fn draw_landing_page(&mut self, ui: &mut Ui) {
-        ScrollArea::vertical().vscroll(true).show(ui, |ui: &mut Ui| {
+        ScrollArea::new([false, true]).vscroll(true).show(ui, |ui: &mut Ui| {
             self.grid_cpu_landing_page(ui);
             ui.separator();
             self.grid_process_landing_page(ui);
