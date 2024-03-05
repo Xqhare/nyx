@@ -2,6 +2,9 @@ use std::ops::RangeInclusive;
 
 use eframe::{egui::{Ui, Grid, ScrollArea}, epaint::Vec2};
 use egui_plot::{BarChart, Bar, PlotPoint, Plot, AxisHints};
+use sysinfo::Process;
+
+use crate::comp::process::Processes;
 
 use super::Nyx;
 
@@ -55,16 +58,21 @@ impl Nyx {
     }
 
     pub fn process_page(&mut self, ui: &mut Ui) {
+        Grid::new("proc grid column names").show(ui, |ui: &mut Ui| {
+            let col_names = vec!["Name", "PID", "Memory", "Status", "Runtime", "Parent PID"];
+            for name in col_names {
+                ui.label(name);
+            }
+            ui.end_row();
+        });
+        if ui.button("Update").clicked() {
+            self.processes = Processes::new();
+        }
         ScrollArea::new([false, true]).show(ui, |ui: &mut Ui| {
-            Grid::new("Process grid").striped(true).num_columns(6).show(ui, |ui: &mut Ui| {
+            Grid::new("Process grid").striped(true).show(ui, |ui: &mut Ui| {
                 let data_store = self.processes.processes.lock();
                 if data_store.is_ok() {
                     let ok_store = data_store.unwrap();
-                    let col_names = vec!["Name", "PID", "Memory", "Status", "Runtime", "Parent PID"];
-                    for name in col_names {
-                        ui.label(name);
-                    }
-                    ui.end_row();
                     for proc in ok_store.iter() {
                         ui.label(format!("{}", proc.name));
                         ui.label(format!("{}", proc.pid));
@@ -80,6 +88,50 @@ impl Nyx {
                     }
                 }
             });
+        });
+    }
+
+    pub fn new_process_page(&mut self, ui: &mut Ui) {
+        if ui.button("Update").clicked() {
+            self.processes = Processes::new();
+        }
+        ScrollArea::new([false, true]).show(ui, |ui: &mut Ui| {
+            let data_store = self.processes.processes.lock();
+            if data_store.is_ok() {
+                let ok_store = data_store.unwrap();
+                for proc in ok_store.iter() {
+                    ui.add(|ui: &mut Ui| {
+                        ui.horizontal(|ui: &mut Ui| {
+                            ui.label(format!("{}", proc.name));
+                            ui.separator();
+                            ui.label(format!("PID: {}", proc.pid));
+                            ui.separator();
+                            ui.label(format!("Memory usage: {}", proc.mem));
+                            ui.separator();
+                            ui.label(format!("Status: {}", proc.status));
+                            ui.separator();
+                            ui.label(format!("Runtime: {}", proc.runtime));
+                            ui.separator();
+                            if proc.parent_pid.is_some() {
+                                ui.label(format!("Parent PID: {}", proc.parent_pid.unwrap()));
+                            } else {
+                                ui.label("");
+                            }
+                            ui.separator();
+                            ui.menu_button("Actions", |ui: &mut Ui| {
+                                if ui.button("Kill").clicked() {
+                                    let pid = proc.pid;
+                                    let aa = 0;
+                                }
+                                if ui.button("Stop").clicked() {
+                                }
+                            });
+                        }).response
+                        
+                    });
+                }
+            }
+
         });
     }
 }
