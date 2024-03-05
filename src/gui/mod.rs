@@ -114,12 +114,13 @@ impl App for Nyx {
                         self.process_data.update();
                     }
                     
-                } else if time_now >= self.next_process_update {
+                }
+                /* if time_now >= self.next_process_update {
                     // Only update the process list when it is shown to the user
                     if self.show_process_page {
                         self.processes = Processes::new();
                     }
-                }
+                } */
                 self.draw_main_menu(ui);
                 ui.separator();
                 if self.show_help {
@@ -151,7 +152,7 @@ impl App for Nyx {
                     self.draw_settings_page(ui);
                 }
                 if self.show_process_page {
-                    self.process_page(ui);
+                    self.new_process_page(ui);
                 }
                 if self.show_about_page {
                     self.draw_about_page(ui);
