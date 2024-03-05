@@ -1,5 +1,6 @@
 use std::{sync::Mutex, rc::Rc, collections::VecDeque};
 
+
 use crate::utils::{self, utils::get_process_data};
 
 #[derive(Clone)]
@@ -35,7 +36,7 @@ impl ProcessData {
 }
 
 /// Represents a single process, holding the pertinant data for it, e.g. pid, parent pid, etc
-pub struct Process {
+pub struct NyxProcess {
     pub pid: u32,
     pub name: String,
     pub mem: u64,
@@ -44,23 +45,23 @@ pub struct Process {
     pub runtime: u64,
 }
 
-impl Process {
+impl NyxProcess {
     pub fn new(pid: u32, name: String, mem: u64, parent_pid: Option<u32>, status: String, runtime: u64, ) -> Self {
-        Process { pid, name, mem, parent_pid, status, runtime}
+        NyxProcess { pid, name, mem, parent_pid, status, runtime}
     }
 }
 
 /// Holds all current processes
 pub struct Processes {
-    pub processes: Rc<Mutex<Vec<Process>>>,
+    pub processes: Rc<Mutex<Vec<NyxProcess>>>,
 }
 
 impl Processes {
     pub fn new() -> Self {
         let data = get_process_data();
-        let mut out: Vec<Process> = Default::default();
+        let mut out: Vec<NyxProcess> = Default::default();
         for entry in data {
-            let proc = Process::new(entry.0, entry.1, entry.2, entry.3, entry.4, entry.5);
+            let proc = NyxProcess::new(entry.0, entry.1, entry.2, entry.3, entry.4, entry.5);
             out.push(proc);
         }
         Processes { processes: Rc::new(Mutex::new(out)) }
