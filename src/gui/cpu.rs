@@ -8,7 +8,7 @@ use super::Nyx;
 impl Nyx {
 
     pub fn grid_cpu_landing_page(&mut self, ui: &mut Ui) {
-        ScrollArea::horizontal()
+        ScrollArea::new([true, false])
             .hscroll(true)
             .show(ui, |ui: &mut Ui| {
             Grid::new("landing page cpu").striped(true).num_columns(self.cpu_data.num_cores as usize + 1).show(ui, |ui: &mut Ui| {
