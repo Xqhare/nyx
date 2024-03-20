@@ -48,8 +48,8 @@ impl Default for Nyx {
         let networks = Networks::new();
         let disks = Disks::new();
         // TODO Put display_size into settings
-        let next_data_update = utils::utils::next_update_time(Duration::milliseconds(1000));
-        let next_process_update = utils::utils::next_update_time(Duration::milliseconds(15000));
+        let next_data_update = utils::utils::next_update_time(Duration::try_milliseconds(1000).unwrap());
+        let next_process_update = utils::utils::next_update_time(Duration::try_milliseconds(15000).unwrap());
         let cpu_data = CpuData::new();
         let ram_data = RamData::new();
         let temperatures = Temperatures::new();
@@ -72,9 +72,10 @@ impl Nyx {
     fn new(settings: Settings) -> Self {
         let networks = Networks::new();
         let disks = Disks::new();
-        // TODO Put display_size into settings
-        let next_data_update = utils::utils::next_update_time(Duration::milliseconds(settings.data_update_interval));
-        let next_process_update = utils::utils::next_update_time(Duration::milliseconds(settings.data_update_interval * 15));
+        // Unwrapping should be fine, it just checks if the duration is larger than an i64, and I
+        // don't do that.
+        let next_data_update = utils::utils::next_update_time(Duration::try_milliseconds(settings.data_update_interval).unwrap());
+        let next_process_update = utils::utils::next_update_time(Duration::try_milliseconds(settings.data_update_interval * 15).unwrap());
         let cpu_data = CpuData::new();
         let ram_data = RamData::new();
         let temperatures = Temperatures::new();
@@ -104,7 +105,7 @@ impl App for Nyx {
                 // I am once again asking for another data update. - Thanks Bernie!
                 let time_now = utils::utils::time_now_rfc3339zulu(SecondsFormat::Secs);
                 if time_now >= self.next_data_update {
-                    self.next_data_update = utils::utils::next_update_time(Duration::milliseconds(self.settings.data_update_interval));
+                    self.next_data_update = utils::utils::next_update_time(Duration::try_milliseconds(self.settings.data_update_interval).unwrap());
                     if !self.show_process_page {
                         self.cpu_data.update();
                         self.ram_data.update();
