@@ -19,6 +19,7 @@ Nyx is a system monitor written in Rust. It provides real-time monitoring of CPU
 	- ARM / AArch64 maybe should I have one for testing.
 - Cli mode / version for even less ressource consumption
 - A welcome message on startup with tipps!
+- Backend v2 -> Now for Linux only for real! (Procfs is used in Linux / BSD but not by Windows or OSX)
 
 ## Features
 
