@@ -56,6 +56,8 @@ E3: For Dataconsitency updates should be atomic, either they do not update the s
 
 E4: Proccess cpu usage should be displayed as absoulute (more than 100%) and relative (per core calculated %).
 
+E4A: All work on process needs to be redone, first it has an enourmous impact on performance, second is sysinfo wierd and uncooperative. This actually calls for a backend rewrite, however I think this should be on the backburner. I however really like the idea of removing a dependency, it will create the need for a handrolled system interaction for process stop and kill.
+
 E5: Disk read and write data in mb/s continues to be problematic. While I have a nice way of obtaining the actual number of write and read operations, even after diving into the /proc documentation for linux, I was unable to find something suitable. Now using zfs there seemes to be a way, however this current kernel I am using does not have this? (It seems to be part of the kernel (or an option idfk, kernel documentation is hard)) - I could install it as a kernel module, but I still haven't fully understood why I would need another filesystem for this... Or how this would help me if I actually tried deploying this.
 	So the user will get the total amount of reads and writes in the last UPDATEINTERVAL on a graph. While y = 60 stays, the x max value is flexible, but a min of 1000 should? suffice.
 
