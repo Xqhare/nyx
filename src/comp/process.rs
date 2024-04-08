@@ -1,6 +1,8 @@
 use std::{sync::Mutex, rc::Rc, collections::VecDeque};
 
 
+use procfs::process;
+
 use crate::utils::{self, utils::get_process_data};
 
 #[derive(Clone)]
@@ -33,6 +35,12 @@ impl ProcessData {
             }
         }
     }
+}
+
+#[derive(Debug)]
+pub struct ProcfsEntry {
+    pub stat: process::Stat,
+    pub cmdline: Option<Vec<String>>,
 }
 
 /// Represents a single process, holding the pertinant data for it, e.g. pid, parent pid, etc
