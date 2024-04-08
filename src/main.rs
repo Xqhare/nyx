@@ -18,6 +18,12 @@ fn main() {
     let setting_path = config_path.join("nyxconfig.json");
     let icon_path = pic_path.join("logo.jpeg");
     let settings = Settings::load(setting_path);
+    let test = utils::utils::get_process_data_new();
+    if test.is_some() {
+        for thing in test.unwrap() {
+            println!("{:?}", thing);
+        }
+    }
     if settings.is_ok() {
         start_nyx(load_icon(icon_path), settings.unwrap());
     } else {
