@@ -2,6 +2,7 @@ use std::thread;
 
 use chrono::{Utc, Duration, SecondsFormat};
 use chrono_tz::Tz;
+use procfs::process;
 use rand::{prelude::SliceRandom, thread_rng};
 use sysinfo::{System, RefreshKind, CpuRefreshKind, MINIMUM_CPU_UPDATE_INTERVAL, MemoryRefreshKind, Disks, Networks, Components};
 
@@ -9,10 +10,27 @@ use procfs::{diskstats, process::Process, DiskStat};
 use std::collections::HashMap;
 use std::iter::FromIterator;
 
+use crate::comp::process::ProcfsEntry;
+
 pub fn get_process_amount() -> usize {
     let mut processes = System::new();
     processes.refresh_processes();
     return processes.processes().len();
+}
+
+pub fn get_process_data_new() -> Option<Vec<ProcfsEntry>> {
+    let processes: Vec<ProcfsEntry> = match process::all_processes() {
+        Err(_err) => return None,
+        Ok(proc) => proc,
+    }.filter_map(|v| {
+        v.and_then(|p| {
+                let stat = p.stat()?;
+                let cmdline = p.cmdline().ok();
+                Ok(ProcfsEntry { stat, cmdline })
+            })
+            .ok()
+        }).collect();
+    return Some(processes);
 }
 
 /// Returns a vector with all processes currently runnning. Each touple contains the name, memory,
