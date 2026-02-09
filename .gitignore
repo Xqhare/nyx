@@ -20,3 +20,10 @@ target/
 
 # Added by Xqahre
 *.vim
+
+
+# Added by cargo
+#
+# already existing elements were commented out
+
+#/target
