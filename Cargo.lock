@@ -4,8 +4,8 @@ version = 4
 
 [[package]]
 name = "athena"
-version = "0.6.0"
-source = "git+https://github.com/Xqhare/athena#055f9f3b085317fb1446e0ce013fc872eb1365f4"
+version = "0.7.0"
+source = "git+https://github.com/Xqhare/athena#42223727e3ecbbb8328feb7e482be6edb9934432"
 
 [[package]]
 name = "hermes"
@@ -26,6 +26,10 @@ dependencies = [
 [[package]]
 name = "nyx"
 version = "0.1.0"
+dependencies = [
+ "nyx-backend",
+ "nyx-tui",
+]
 
 [[package]]
 name = "nyx-backend"

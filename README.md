@@ -71,6 +71,16 @@ Right now I believe I will need most of my already written eco-sytem:
 
 - FPS counter & Backend Update time (because funny)
 
+## Note on testing
+
+As this project uses workspaces, use:
+
+```bash
+cargo test -p nyx-backend
+```
+
+Tests for the frontend, if any are actually written, can also be run this way, just replace `nyx-backend` with `nyx-frontend`.
+
 ## OLD README - use for inspiration
 
 ## Roadmap
