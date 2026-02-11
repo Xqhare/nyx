@@ -1,16 +1,16 @@
-USER         PID CMD                         %MEM %CPU
-master    781206 ps -eo user,pid,cmd,%mem,%c  0.0 50.0
-101         1273 urbackupsrv run              1.4  0.5
-root         737 /usr/local/sbin/urbackupcli  0.0  0.5
-master      1543 /usr/local/bin/gitea web     0.6  0.2
-root         747 /usr/bin/containerd          0.2  0.1
-root         734 /usr/bin/python3 /usr/bin/f  0.0  0.0
-root         806 /usr/bin/dockerd -H fd:// -  0.3  0.0
-root      780951 [kworker/0:1-mm_percpu_wq]   0.0  0.0
-root        1280 shamash                      0.0  0.0
-root      780316 [kworker/5:1-i915-unordered  0.0  0.0
-root      777594 [kworker/4:2-pm]             0.0  0.0
-root      750533 [kworker/2:1-mm_percpu_wq]   0.0  0.0
-root      730299 [kworker/2:0-cgroup_free]    0.0  0.0
-root          80 [kcompactd0]                 0.0  0.0
+USER         PID %MEM %CPU COMMAND
+101         1273  1.6  0.5 urbackupsrv
+root         737  0.0  0.5 urbackupclientb
+master      1543  0.6  0.2 gitea
+root         747  0.2  0.1 containerd
+root      920698  0.0  0.1 kworker/u32:1-kvfree_rcu_reclaim
+root         734  0.0  0.0 fail2ban-server
+root         806  0.3  0.0 dockerd
+master    923457  0.0  0.0 systemd
+root        1280  0.0  0.0 shamash
+root          80  0.0  0.0 kcompactd0
+root      919139  0.0  0.0 kworker/7:1-events
+root      922916  0.0  0.0 kworker/6:3-events_power_efficient
+root      890181  0.0  0.0 kworker/3:1-events
+root      914772  0.0  0.0 kworker/1:1-i915-unordered
 

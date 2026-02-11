@@ -76,7 +76,6 @@ mod tests {
     #[test]
     fn parse_simulated() -> NyxResult<()> {
         let path = std::env::current_dir()?.join("./src/gathering/df/df.data");
-        println!("{}", path.display());
         let parsed = parse_df(&std::fs::read_to_string(path)?)?;
         assert!(parsed.is_object());
         let obj = parsed.into_object().unwrap();

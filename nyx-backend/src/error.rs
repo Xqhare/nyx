@@ -11,6 +11,7 @@ pub enum NyxError {
 #[derive(Debug)]
 pub enum GatheringError {
     Df(String),
+    Docker(String),
     
 }
 

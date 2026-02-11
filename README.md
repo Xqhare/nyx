@@ -48,7 +48,7 @@ Right now I believe I will need most of my already written eco-sytem:
 		- uptime
 - check `shamash/shamash-logs` for `network_`, `isp_` and `local_outage_ongoing` files for display of current status
 	- no file == online!
-- run `ps -eo user,pid,cmd,%mem,%cpu --sort=-%cpu | head -n 15`
+- run `ps -eo user,pid,%mem,%cpu,comm --sort=-%cpu | head -n 15`
 	- parse output & Display
 	- cpu and mem usage needs to be divided by number of cores
 - run `uptime`

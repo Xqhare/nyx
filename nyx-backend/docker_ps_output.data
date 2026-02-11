@@ -1,7 +1,0 @@
-CONTAINER ID   IMAGE                          COMMAND                  CREATED       STATUS                PORTS                                                                                           NAMES
-a7ae04faea8c   uroni/urbackup-server:latest   "/usr/bin/entrypoint…"   9 days ago    Up 6 days                                                                                                             urbackup
-bf240f90dcb3   shamash-shamash                "shamash"                10 days ago   Up 6 days                                                                                                             Shamash
-c368260285e5   dperson/samba                  "/sbin/tini -- /usr/…"   2 weeks ago   Up 6 days (healthy)   0.0.0.0:139->139/tcp, [::]:139->139/tcp, 137-138/udp, 0.0.0.0:445->445/tcp, [::]:445->445/tcp   samba
-380a1f5d456a   gitea/gitea:latest             "/usr/bin/entrypoint…"   2 weeks ago   Up 6 days             0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp, 0.0.0.0:2222->22/tcp, [::]:2222->22/tcp            gitea
-9aaa63e5ffc6   rust:latest                    "/bin/bash -c 'apt-g…"   2 weeks ago   Up 6 days                                                                                                             rust-ci-watcher
-
