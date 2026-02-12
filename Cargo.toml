@@ -1,6 +1,6 @@
 [package]
 name = "nyx"
-version = "0.1.0"
+version = "2.0.0"
 edition = "2024"
 
 [dependencies]
@@ -14,3 +14,7 @@ members = [
 	"nyx-backend", 
 	"nyx-builder",
 ]
+
+[[bin]]
+name = "nyx"
+path = "nyx-builder/src/main.rs"

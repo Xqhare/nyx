@@ -1,9 +1,8 @@
 [package]
 name = "nyx-backend"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 
 [dependencies]
-areia = { git = "https://github.com/Xqhare/areia", version = "1.0.0" }
-athena = { git = "https://github.com/Xqhare/athena", version = "0.7.0" }
-hermes = { git = "https://github.com/Xqhare/hermes", version = "1.0.0" }
+areia = { git = "https://github.com/Xqhare/areia"}
+athena = { git = "https://github.com/Xqhare/athena"}

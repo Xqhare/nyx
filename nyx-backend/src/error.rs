@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 
 pub type NyxResult<T> = std::result::Result<T, NyxError>;
 
@@ -6,6 +8,12 @@ pub enum NyxError {
     Gathering(GatheringError),
     StdIO(std::io::Error),
     Generic(String), // Useful for debugging
+}
+
+impl Display for NyxError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }
 
 #[derive(Debug)]
