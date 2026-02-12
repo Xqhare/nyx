@@ -1,3 +1,13 @@
 
 mod df;
+pub use df::gather as df_gatherer;
 mod docker;
+pub use docker::gather as docker_gatherer;
+mod free;
+pub use free::gather as free_gatherer;
+mod ps;
+pub use ps::gather as ps_gatherer;
+mod uptime;
+pub use uptime::gather as uptime_gatherer;
+mod shamash;
+pub use shamash::gather as shamash_gatherer;
