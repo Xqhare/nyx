@@ -6,9 +6,11 @@ edition = "2024"
 [dependencies]
 nyx-backend = { path = "nyx-backend" }
 nyx-tui = { path = "nyx-tui" }
+nyx-builder = { path = "nyx-builder" }
 
 [workspace]
 members = [
 	"nyx-tui",
-	"nyx-backend",
+	"nyx-backend", 
+	"nyx-builder",
 ]

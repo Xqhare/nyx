@@ -12,7 +12,10 @@ pub enum NyxError {
 pub enum GatheringError {
     Df(String),
     Docker(String),
-    
+    Free(String),
+    Ps(String),
+    Uptime(String),
+    Shamash(String),
 }
 
 impl From<std::io::Error> for NyxError {

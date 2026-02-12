@@ -3,6 +3,11 @@
 version = 4
 
 [[package]]
+name = "areia"
+version = "1.0.0"
+source = "git+https://github.com/Xqhare/areia#e3a80da7dd2419ae6f00e71fe37078e03d75905e"
+
+[[package]]
 name = "athena"
 version = "0.7.0"
 source = "git+https://github.com/Xqhare/athena#42223727e3ecbbb8328feb7e482be6edb9934432"
@@ -41,6 +46,7 @@ dependencies = [
 name = "nyx-backend"
 version = "0.1.0"
 dependencies = [
+ "areia",
  "athena",
  "hermes",
 ]
