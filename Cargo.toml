@@ -15,6 +15,12 @@ members = [
 	"nyx-builder",
 ]
 
+[workspace.dependencies]
+athena = { git = "https://github.com/Xqhare/athena" }
+hermes = { git = "https://github.com/Xqhare/hermes" }
+areia = { git = "https://github.com/Xqhare/areia" }
+talos = { git = "https://github.com/Xqhare/talos" }
+
 [[bin]]
 name = "nyx"
 path = "nyx-builder/src/main.rs"

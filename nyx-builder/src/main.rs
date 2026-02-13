@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 use hermes::Hermes;
 use athena::{XffValue, Object};
 use nyx_backend::{error::NyxResult, gathering::{df_gatherer, docker_gatherer, free_gatherer, ps_gatherer, shamash_gatherer, uptime_gatherer}};
@@ -13,6 +15,7 @@ fn setup_gathering_server() {
     std::thread::spawn(move || {
         let con = Hermes::new(".nxy_data/gathering").expect("Failed to create Hermes Server");
         let mut running = true;
+        let mut last_run = Instant::now();
         while running {
             if con.is_request_ready() {
                 let request = con.await_request();
@@ -29,9 +32,16 @@ fn setup_gathering_server() {
                 }
             }
 
+            if !last_run.elapsed().as_millis() > 750 {
+                continue
+            }
+            last_run = Instant::now();
+
             match gather() {
                 Ok(value) => {
-                    if let Err(err) = con.respond(value) {panic!("{:?}", err)};
+                    let mut value = value.into_object().expect("Failed to convert to object");
+                    value.insert("time", last_run.elapsed().as_millis());
+                    if let Err(err) = con.respond(value.into()) {panic!("{:?}", err)};
                 },
                 Err(err) => {
                     let err = XffValue::from(format!("Failed to gather: {:?}", err));

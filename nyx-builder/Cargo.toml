@@ -4,6 +4,6 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-athena = { git = "https://github.com/Xqhare/athena" }
-hermes = { git = "https://github.com/Xqhare/hermes" }
+athena = { workspace = true }
+hermes = { workspace = true }
 nyx-backend = { path = "../nyx-backend" }

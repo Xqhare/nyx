@@ -4,5 +4,5 @@ version = "0.2.0"
 edition = "2024"
 
 [dependencies]
-areia = { git = "https://github.com/Xqhare/areia"}
-athena = { git = "https://github.com/Xqhare/athena"}
+areia = { workspace = true }
+athena = { workspace = true }
