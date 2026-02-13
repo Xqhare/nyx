@@ -1,14 +1,5 @@
-[package]
-name = "nyx"
-version = "2.0.0"
-edition = "2024"
-
-[dependencies]
-nyx-backend = { path = "nyx-backend" }
-nyx-tui = { path = "nyx-tui" }
-nyx-builder = { path = "nyx-builder" }
-
 [workspace]
+resolver = "3"
 members = [
 	"nyx-tui",
 	"nyx-backend", 
@@ -21,6 +12,3 @@ hermes = { git = "https://github.com/Xqhare/hermes" }
 areia = { git = "https://github.com/Xqhare/areia" }
 talos = { git = "https://github.com/Xqhare/talos" }
 
-[[bin]]
-name = "nyx"
-path = "nyx-builder/src/main.rs"

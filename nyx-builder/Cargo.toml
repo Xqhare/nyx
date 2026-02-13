@@ -6,4 +6,9 @@ edition = "2024"
 [dependencies]
 athena = { workspace = true }
 hermes = { workspace = true }
+talos = { workspace = true }
 nyx-backend = { path = "../nyx-backend" }
+
+[[bin]]
+name = "nyx"
+path = "src/main.rs"

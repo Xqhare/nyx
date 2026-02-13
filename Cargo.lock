@@ -22,9 +22,9 @@ dependencies = [
 
 [[package]]
 name = "libc"
-version = "0.2.181"
+version = "0.2.182"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "459427e2af2b9c839b132acb702a1c654d95e10f8c326bfc2ad11310e458b1c5"
+checksum = "6800badb6cb2082ffd7b6a67e6125bb39f18782f793520caee8cb8846be06112"
 
 [[package]]
 name = "nabu"
@@ -32,15 +32,6 @@ version = "2.0.0"
 source = "git+https://github.com/xqhare/nabu#49f9289d5299d5d1b60dd83d87147908b92c03a1"
 dependencies = [
  "athena",
-]
-
-[[package]]
-name = "nyx"
-version = "2.0.0"
-dependencies = [
- "nyx-backend",
- "nyx-builder",
- "nyx-tui",
 ]
 
 [[package]]
@@ -58,6 +49,7 @@ dependencies = [
  "athena",
  "hermes",
  "nyx-backend",
+ "talos",
 ]
 
 [[package]]
