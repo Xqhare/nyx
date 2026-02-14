@@ -6,3 +6,4 @@ edition = "2024"
 [dependencies]
 areia = { workspace = true }
 athena = { workspace = true }
+talos = { workspace = true }

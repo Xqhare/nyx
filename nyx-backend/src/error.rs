@@ -1,11 +1,14 @@
 use std::fmt::Display;
 
+use talos::TalosError;
+
 
 pub type NyxResult<T> = std::result::Result<T, NyxError>;
 
 #[derive(Debug)]
 pub enum NyxError {
     Gathering(GatheringError),
+    TUI(TuiError),
     StdIO(std::io::Error),
     Generic(String), // Useful for debugging
 }
@@ -13,6 +16,17 @@ pub enum NyxError {
 impl Display for NyxError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{:?}", self)
+    }
+}
+
+#[derive(Debug)]
+pub enum TuiError {
+    Talos(TalosError),
+}
+
+impl From<TalosError> for NyxError {
+    fn from(e: TalosError) -> Self {
+        NyxError::TUI(TuiError::Talos(e))
     }
 }
 
