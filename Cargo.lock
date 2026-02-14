@@ -40,6 +40,7 @@ version = "0.2.0"
 dependencies = [
  "areia",
  "athena",
+ "talos",
 ]
 
 [[package]]
@@ -49,6 +50,7 @@ dependencies = [
  "athena",
  "hermes",
  "nyx-backend",
+ "nyx-tui",
  "talos",
 ]
 
@@ -56,13 +58,15 @@ dependencies = [
 name = "nyx-tui"
 version = "0.1.0"
 dependencies = [
+ "athena",
+ "nyx-backend",
  "talos",
 ]
 
 [[package]]
 name = "talos"
 version = "1.0.0"
-source = "git+https://github.com/Xqhare/talos#a63f05702b4ddfb6e5dd2a27964966f7d0480851"
+source = "git+https://github.com/Xqhare/talos#1f20d5e8a7865ea4fca848a2dae03fbcbe294a9d"
 dependencies = [
  "libc",
 ]
