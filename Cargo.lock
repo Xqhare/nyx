@@ -45,7 +45,7 @@ dependencies = [
 
 [[package]]
 name = "nyx-builder"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "athena",
  "hermes",
@@ -56,7 +56,7 @@ dependencies = [
 
 [[package]]
 name = "nyx-tui"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "athena",
  "nyx-backend",
