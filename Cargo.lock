@@ -21,6 +21,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "horae"
+version = "1.0.0"
+source = "git+https://github.com/Xqhare/horae#e6c13d084ee3d06215deb0d18ae3a784945d67ee"
+
+[[package]]
 name = "libc"
 version = "0.2.182"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -59,14 +64,15 @@ name = "nyx-tui"
 version = "0.2.0"
 dependencies = [
  "athena",
+ "horae",
  "nyx-backend",
  "talos",
 ]
 
 [[package]]
 name = "talos"
-version = "1.0.0"
-source = "git+https://github.com/Xqhare/talos#1f20d5e8a7865ea4fca848a2dae03fbcbe294a9d"
+version = "1.1.0"
+source = "git+https://github.com/Xqhare/talos#c70150efb7794fcdca0e6491ee28b8d404d3ac1a"
 dependencies = [
  "libc",
 ]

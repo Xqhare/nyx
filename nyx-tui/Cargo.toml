@@ -6,4 +6,5 @@ edition = "2024"
 [dependencies]
 talos = { workspace = true }
 athena = { workspace = true }
+horae = { workspace = true }
 nyx-backend = { path = "../nyx-backend" }

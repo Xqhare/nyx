@@ -10,5 +10,6 @@ members = [
 athena = { git = "https://github.com/Xqhare/athena" }
 hermes = { git = "https://github.com/Xqhare/hermes" }
 areia = { git = "https://github.com/Xqhare/areia" }
+horae = { git = "https://github.com/Xqhare/horae" }
 talos = { git = "https://github.com/Xqhare/talos" }
 
