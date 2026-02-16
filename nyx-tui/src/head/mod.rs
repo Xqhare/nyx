@@ -27,9 +27,7 @@ pub fn draw_head(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, 
     } else {
         return error_uptime();
     };
-    if let Some(error) = head(uptime_state, time_state, layout, codex, canvas, style_atlas) {
-        return Some(error);
-    };
+    head(uptime_state, time_state, layout, codex, canvas, style_atlas);
     None
 }
 

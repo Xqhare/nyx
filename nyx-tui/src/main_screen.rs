@@ -14,9 +14,7 @@ pub fn draw_main_screen(state: XffValue, layout: &BTreeMap<String, Rect>, codex:
             message: "State must be an object - Internal fatal Error".to_string(),
         });
     };
-    if let Some(error) = draw_head(state, layout, codex, canvas, style_atlas) {
-        return Some(error);
-    };
+    draw_head(state, layout, codex, canvas, style_atlas);
     None
 }
 
