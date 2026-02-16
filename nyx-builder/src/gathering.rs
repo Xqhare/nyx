@@ -41,6 +41,7 @@ pub fn setup_gathering_server() {
                 },
                 Err(err) => {
                     let err = XffValue::from(format!("Failed to gather: {:?}", err));
+                    panic!("{:?}", err);
                 }
             }
 
