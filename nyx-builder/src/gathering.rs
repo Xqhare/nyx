@@ -28,7 +28,7 @@ pub fn setup_gathering_server() {
                 }
             }
 
-            if !last_run.elapsed().as_millis() > GATHER_INTERVAL {
+            if last_run.elapsed().as_millis() < GATHER_INTERVAL {
                 continue
             }
             last_run = Instant::now();
@@ -41,7 +41,6 @@ pub fn setup_gathering_server() {
                 },
                 Err(err) => {
                     let err = XffValue::from(format!("Failed to gather: {:?}", err));
-                    if let Err(err) = con.put_error(err) {panic!("{:?}", err)};
                 }
             }
 
@@ -55,7 +54,18 @@ fn gather() -> NyxResult<XffValue> {
     let free_gathered = free_gatherer()?;
     let ps_gathered = ps_gatherer()?;
     let uptime_gathered = uptime_gatherer()?;
-    let shamash_gathered = shamash_gatherer()?;
+    let shamash_gathered = match shamash_gatherer() {
+        Ok(shamash_gathered) => {
+            if !shamash_gathered.is_null() {
+                shamash_gathered
+            } else {
+                XffValue::from("Shamash not installed!")
+            }
+        },
+        Err(_) => {
+            XffValue::from("Shamash not installed!")
+        }
+    };
 
     let mut obj = Object::new();
     obj.insert("df", df_gathered);

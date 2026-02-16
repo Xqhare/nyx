@@ -12,14 +12,16 @@ pub fn gather() -> NyxResult<XffValue> {
 fn parse_ps(input: &str) -> NyxResult<XffValue> {
     let input = input.trim();
     let lines = input.lines().collect::<Vec<&str>>();
-    // 15 process lines and 1 header - at least 15 processes will always run
-    if lines.len() != 16 {
-        return Err(NyxError::Gathering(GatheringError::Free(format!("Invalid free output. Expected 16 lines, got {}.", lines.len()))));
+    if lines.is_empty() {
+        return Err(NyxError::Gathering(GatheringError::Free("ps output is empty".to_string())));
     }
     let headers = parse_headers(&lines[0])?;
 
     let mut out = Object::new();
     for proc in lines.iter().skip(1) {
+        if proc.trim().is_empty() {
+            continue;
+        }
         let parsed_proc = parse_process(proc, &headers)?;
         #[allow(clippy::unwrap_used)] // All valid as constructed above
         let proc_pid = parsed_proc.into_object().unwrap().get("PID").unwrap().into_string().unwrap();

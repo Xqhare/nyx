@@ -17,6 +17,7 @@ use crate::{error::{ErrorState, render_error}, input::input_handler, main_screen
 pub fn draw_state(state: XffValue, talos: &mut Talos) -> Option<XffValue> {
     if state.is_null() {
         // No state = nothing to draw
+        let _ = talos.present();
         return None;
     };
 
@@ -71,6 +72,8 @@ pub fn draw_state(state: XffValue, talos: &mut Talos) -> Option<XffValue> {
     if let Some(error) = error_state {
         render_error(&error, codex, canvas, &style_atlas);
     }
+
+    let _ = talos.present();
 
     None
 }

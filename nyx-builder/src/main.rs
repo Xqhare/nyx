@@ -28,9 +28,9 @@ fn main() {
                     state = response;
                 },
                 Err(err) => {
-                    // TODO: Handle error
-                    println!("Failed to get response: {:?}", err);
-                    run = false;
+                    drop(talos);
+                    eprintln!("Fatal: Failed to get initial response from gathering server: {:?}", err);
+                    std::process::exit(1);
                 }
             }
             first_iter = false;
@@ -42,15 +42,16 @@ fn main() {
                     state = response;
                 },
                 Err(err) => {
-                    // TODO: Handle error
-                    println!("Failed to get response: {:?}", err);
-                    run = false;
+                    drop(talos);
+                    eprintln!("Fatal: Lost connection or error from gathering server: {:?}", err);
+                    std::process::exit(1);
                 }
             }
         }
         match draw_state(state.clone(), &mut talos) {
             Some(state) => {
                 if state == XffValue::Null {
+                    run = false;
                 } 
             }
             None => {}

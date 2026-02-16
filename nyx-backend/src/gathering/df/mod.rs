@@ -46,7 +46,7 @@ fn parse_df(input: &str) -> NyxResult<XffValue> {
 
 fn parse_head(headers: &[&str]) -> NyxResult<()> {
     if headers.len() != 7 {
-        return Err(NyxError::Gathering(GatheringError::Df(format!("Invalid df output. Expected 7 headers, got {}.", headers.len()))));
+        return Err(NyxError::Gathering(GatheringError::Df(format!("Invalid df output. Expected Failed to gather7 headers, got {}.", headers.len()))));
     }
     for n in 0..headers.len() {
         match n {
