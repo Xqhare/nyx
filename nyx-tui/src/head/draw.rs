@@ -67,7 +67,11 @@ fn draw_top(
     style_atlas: &BTreeMap<String, Style>,
 ) {
     let style = style_atlas.get("head").expect("style atlas must have head");
-    let mut uptime = Text::new(format!("System Uptime: {}", uptime_state), codex);
+    let cell_amount = {
+        let rect = canvas.size_rect();
+        rect.width.saturating_mul(rect.height)
+    };
+    let mut uptime = Text::new(format!("System Uptime: {} | Cell amount: {}", uptime_state, cell_amount), codex);
     uptime.style(*style);
 
 

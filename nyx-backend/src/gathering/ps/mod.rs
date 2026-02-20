@@ -86,7 +86,7 @@ fn run_ps() -> NyxResult<String> {
         .stdout(Stdio::piped())
         .spawn()?;
     let head = std::process::Command::new("head")
-        .args(["-n", "16"])
+        .args(["-n", "30"])
         .stdin(ps.stdout.take().unwrap())
         .stdout(Stdio::piped())
         .spawn()?;

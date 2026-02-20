@@ -29,9 +29,9 @@ pub fn layouter(rect: Rect) -> BTreeMap<String, Rect> {
     let (head_top_left, head_top_middle, head_top_right) = {
         let head_top_layout = LayoutBuilder::new()
             .direction(Direction::Horizontal)
+            .add_constraint(Constraint::Percentage(33))
             .add_constraint(Constraint::Percentage(30))
-            .add_constraint(Constraint::Percentage(30))
-            .add_constraint(Constraint::Percentage(40))
+            .add_constraint(Constraint::Percentage(37))
             .build()
             .split(head_top);
         debug_assert!(head_top_layout.len() == 3);
@@ -72,9 +72,9 @@ pub fn layouter(rect: Rect) -> BTreeMap<String, Rect> {
     };
     let (body_bottom_left, body_bottom_right) = {
         let body_bottom_layout = LayoutBuilder::new()
-            .direction(Direction::Vertical)
-            .add_constraint(Constraint::Percentage(70))
-            .add_constraint(Constraint::Percentage(30))
+            .direction(Direction::Horizontal)
+            .add_constraint(Constraint::Percentage(60))
+            .add_constraint(Constraint::Percentage(40))
             .build()
             .split(body_bottom);
         debug_assert!(body_bottom_layout.len() == 2);
@@ -83,8 +83,8 @@ pub fn layouter(rect: Rect) -> BTreeMap<String, Rect> {
     let (body_bottom_left_top, body_bottom_left_bottom) = {
         let body_bottom_left_layout = LayoutBuilder::new()
             .direction(Direction::Vertical)
-            .add_constraint(Constraint::Percentage(70))
-            .add_constraint(Constraint::Percentage(30))
+            .add_constraint(Constraint::Min(1))
+            .add_constraint(Constraint::Max(1))
             .build()
             .split(body_bottom_left);
         debug_assert!(body_bottom_left_layout.len() == 2);

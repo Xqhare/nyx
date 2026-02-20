@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
 use athena::{Object, XffValue};
-use talos::{codex::Codex, layout::Rect, render::{Canvas, Style}, widgets::{Area, Text, stateful::Table, traits::Widget}};
+use talos::{codex::Codex, layout::Rect, render::{Canvas, Style}, widgets::{Area, Block, Text, stateful::Table, traits::Widget}};
 
 
 // PS, Docker | Df
@@ -11,20 +11,21 @@ pub fn main_body(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, 
     main_right(state, layout, codex, canvas, *style);
 }
 
-// PS, Docker
+// PS
 fn main_left(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style: Style) {
     let ps_state = state.get("ps").expect("Ps state not found").into_object().expect("Ps state must be an object");
-    let docker_state = if let Some(val) = state.get("docker") {
-        val.clone()
-    } else {
-        XffValue::Null
-    };
+    
     left_top(ps_state, layout, codex, canvas, style);
-    left_bottom(docker_state, layout, codex, canvas, style);
 }
 
 fn left_top(ps_state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, _style: Style) {
     let area = layout.get("body_bottom_left_top").expect("Top area must exist");
+
+    let mut block = Block::new().title("Processes", codex, false);
+    block.style(_style);
+    block.render(canvas, *area, codex);
+
+    let area = block.inner(*area);
 
     let mut rows: Vec<Vec<Text>> = Vec::new();
     rows.push(vec![Text::new("User", codex), Text::new("PID", codex), Text::new("MEM%", codex), Text::new("CPU%", codex), Text::new("Name", codex)]);
@@ -43,27 +44,33 @@ fn left_top(ps_state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, ca
         .with_rows(rows.iter_mut().map(|r| r.iter_mut()));
 
     table.style(_style);
-    table.render(canvas, *area, codex);
+    table.render(canvas, area, codex);
 }
 
-fn left_bottom(dockerstate: XffValue, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style: Style)  {
-    let area = layout.get("body_bottom_left_bottom").expect("Top area must exist");
+fn right_bottom(dockerstate: XffValue, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style: Style)  {
+    let area = layout.get("body_bottom_right_bottom").expect("area must exist");
+
+    let mut block = Block::new().title("Docker", codex, false);
+    block.style(style);
+    block.render(canvas, *area, codex);
+
+    let area = block.inner(*area);
 
     if dockerstate == XffValue::Null {
         let mut dock_area = Area::new();
         dock_area.style(style);
-        dock_area.render(canvas, *area, codex);
+        dock_area.render(canvas, area, codex);
         let mut dock_text = Text::new("Docker not running", codex).align_center().align_vertically();
         dock_text.style(style);
-        dock_text.render(canvas, *area, codex);
+        dock_text.render(canvas, area, codex);
         return
     } else if dockerstate.is_string() {
         let mut dock_area = Area::new();
         dock_area.style(style);
-        dock_area.render(canvas, *area, codex);
+        dock_area.render(canvas, area, codex);
         let mut dock_text = Text::new(dockerstate.to_string(), codex).align_center().align_vertically();
         dock_text.style(style);
-        dock_text.render(canvas, *area, codex);
+        dock_text.render(canvas, area, codex);
         return
     }
     
@@ -86,6 +93,12 @@ fn main_right(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, can
     let df_state = state.get("df").expect("Df state not found").into_object().expect("Df state must be an object");
     let area = layout.get("body_bottom_right_top").expect("Top area must exist");
 
+    let mut block = Block::new().title("Disk Usage", codex, false);
+    block.style(style);
+    block.render(canvas, *area, codex);
+
+    let area = block.inner(*area);
+
     let mut rows: Vec<Vec<Text>> = Vec::new();
     rows.push(vec![Text::new("Filesystem", codex), Text::new("Size", codex), Text::new("Used", codex), Text::new("Avail", codex), Text::new("Use%", codex), Text::new("Mounted on", codex)]);
 
@@ -104,5 +117,11 @@ fn main_right(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, can
         .with_rows(rows.iter_mut().map(|r| r.iter_mut()));
 
     table.style(style);
-    table.render(canvas, *area, codex);
+    table.render(canvas, area, codex);
+    let docker_state = if let Some(val) = state.get("docker") {
+        val.clone()
+    } else {
+        XffValue::Null
+    };
+    right_bottom(docker_state, layout, codex, canvas, style);
 }
