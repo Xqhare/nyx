@@ -1,3 +1,5 @@
+use std::time::Instant;
+
 use athena::XffValue;
 use hermes::Hermes;
 use nyx_tui::draw_state;
@@ -21,7 +23,11 @@ fn main() {
     let mut talos = Talos::builder().build().expect("Failed to create Talos");
     eprintln!("Checkpoint 3: Entering loop");
     let mut first_iter = true;
+    let mut last_run = Instant::now();
+    // Not 0 because of the first iteration - would div by 0 otherwise
+    let mut gui_run_dur = 1;
     while run {
+        last_run = Instant::now();
         if first_iter {
             let response = con.await_response();
             match response {
@@ -55,10 +61,10 @@ fn main() {
                 }
             }
         }
-        if let Some(XffValue::Null) = draw_state(state.clone(), &mut talos) {
+        if let Some(XffValue::Null) = draw_state(gui_run_dur.to_string(), state.clone(), &mut talos) {
             run = false;
         }
-        //std::thread::sleep(std::time::Duration::from_millis(16));
+        gui_run_dur = last_run.elapsed().as_micros();
     }
     let _ = con.request(XffValue::Null);
 }

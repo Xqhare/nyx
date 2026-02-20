@@ -5,7 +5,7 @@ version = 4
 [[package]]
 name = "areia"
 version = "1.0.0"
-source = "git+https://github.com/Xqhare/areia#e3a80da7dd2419ae6f00e71fe37078e03d75905e"
+source = "git+https://github.com/Xqhare/areia#bbcfe0bce981739743cf84ea8f693bb05331ebe4"
 
 [[package]]
 name = "athena"
@@ -72,7 +72,7 @@ dependencies = [
 [[package]]
 name = "talos"
 version = "1.1.0"
-source = "git+https://github.com/Xqhare/talos#c70150efb7794fcdca0e6491ee28b8d404d3ac1a"
+source = "git+https://github.com/Xqhare/talos#5afc913c2be75b1fca2c0670181a0fc29e2f29e2"
 dependencies = [
  "libc",
 ]

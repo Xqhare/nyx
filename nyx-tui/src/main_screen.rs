@@ -10,6 +10,7 @@ use talos::{
 use crate::{ErrorState, head::draw_head};
 
 pub fn draw_main_screen(
+    gui_run_dur: String,
     state: XffValue,
     layout: &BTreeMap<String, Rect>,
     codex: &Codex,
@@ -23,6 +24,6 @@ pub fn draw_main_screen(
             message: "State must be an object - Internal fatal Error".to_string(),
         });
     };
-    draw_head(state, layout, codex, canvas, style_atlas);
+    draw_head(gui_run_dur, state, layout, codex, canvas, style_atlas);
     None
 }

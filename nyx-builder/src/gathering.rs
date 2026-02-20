@@ -16,6 +16,7 @@ pub fn setup_gathering_server() {
     std::thread::spawn(move || {
         let con = Hermes::new(GATHER_SERVER).expect("Failed to create Hermes Server");
         let mut running = true;
+        #[allow(unused_assignments)]
         let mut last_run = Instant::now();
         while running {
             if con.is_request_ready() {
@@ -35,10 +36,6 @@ pub fn setup_gathering_server() {
                 }
             }
 
-            if last_run.elapsed().as_millis() < GATHER_INTERVAL {
-                std::thread::sleep(std::time::Duration::from_millis(10));
-                continue;
-            }
             last_run = Instant::now();
 
             match gather() {
@@ -46,7 +43,7 @@ pub fn setup_gathering_server() {
                     let mut value = value.into_object().expect("Failed to convert to object");
                     value.insert(
                         "time",
-                        XffValue::from(last_run.elapsed().as_millis().to_string()),
+                        XffValue::from(last_run.elapsed().as_micros().to_string()),
                     );
                     if let Err(err) = con.respond(value.into()) {
                         panic!("{:?}", err)

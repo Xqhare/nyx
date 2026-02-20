@@ -5,7 +5,7 @@ use talos::{
     codex::Codex,
     layout::Rect,
     render::{Canvas, Style},
-    widgets::{Text, traits::Widget},
+    widgets::{Area, Text, traits::Widget},
 };
 
 // Head is split into top and bottom
@@ -14,18 +14,53 @@ use talos::{
 pub fn head(
     uptime_state: String,
     time_state: String,
+    update_dur: String,
+    gui_run_dir: String,
     layout: &BTreeMap<String, Rect>,
     codex: &Codex,
     canvas: &mut Canvas,
     style_atlas: &BTreeMap<String, Style>,
 ) {
-    draw_top(uptime_state, time_state, layout, codex, canvas, style_atlas);
+    let style = style_atlas.get("head").expect("style atlas must have head");
+    let mut head_area = Area::new();
+
+    head_area.style(*style);
+    head_area.render(canvas, *layout.get("head").expect("layout must have head"), codex);
+
+    draw_top(uptime_state, time_state, update_dur, gui_run_dir, layout, codex, canvas, style_atlas);
     draw_bottom(layout, codex, canvas, style_atlas);
+}
+
+fn calc_fps_ups(gui_run_dir: String, update_dur: String) -> (String, String) {
+    // Both strings should be valid usize
+    let gui_run_usize = if let Ok(value) = gui_run_dir.parse::<usize>() {
+        value
+    } else {
+        return na();
+    };
+    let update_usize = if let Ok(value) = update_dur.parse::<usize>() {
+        value
+    } else {
+        return na();
+    };
+
+    // Both are durations in microseconds - gui for fps, update for ups
+
+    let fps = 1_000_000 / gui_run_usize;
+    let ups = 1_000_000 / update_usize;
+
+    return (fps.to_string(), ups.to_string());
+
+    fn na() -> (String, String) {
+        return (String::from("N/A"), String::from("N/A"));
+    }
 }
 
 fn draw_top(
     uptime_state: String,
     time_state: String,
+    update_dur: String,
+    gui_run_dir: String,
     layout: &BTreeMap<String, Rect>,
     codex: &Codex,
     canvas: &mut Canvas,
@@ -35,7 +70,10 @@ fn draw_top(
     let mut uptime = Text::new(format!("System Uptime: {}", uptime_state), codex);
     uptime.style(*style);
 
-    let mut middle = Text::new(format!("FPS: {} | Update Time: {}", 0, 0), codex).align_center();
+
+    let (fps, ups) = calc_fps_ups(gui_run_dir, update_dur); 
+
+    let mut middle = Text::new(format!("Frames per second: {} | Updates per second: {}", fps, ups), codex).align_center();
     middle.style(*style);
 
     let now = Utc::now();

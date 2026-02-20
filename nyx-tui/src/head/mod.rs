@@ -12,6 +12,7 @@ use crate::{ErrorState, head::draw::head};
 mod draw;
 
 pub fn draw_head(
+    gui_run_dur: String,
     state: Object,
     layout: &BTreeMap<String, Rect>,
     codex: &Codex,
@@ -37,7 +38,12 @@ pub fn draw_head(
     } else {
         return error_uptime();
     };
-    head(uptime_state, time_state, layout, codex, canvas, style_atlas);
+    let update_dur = if let Some(value) = state.get("time") {
+        value.to_string()
+    } else {
+        "Can't get update duration".to_string()
+    };
+    head(uptime_state, time_state, update_dur, gui_run_dur, layout, codex, canvas, style_atlas);
     None
 }
 

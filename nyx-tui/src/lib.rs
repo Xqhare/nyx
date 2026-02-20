@@ -19,7 +19,7 @@ use talos::Talos;
 /// Will return `None` if the program should continue
 ///
 /// Will not error
-pub fn draw_state(state: XffValue, talos: &mut Talos) -> Option<XffValue> {
+pub fn draw_state(gui_run_dur: String, state: XffValue, talos: &mut Talos) -> Option<XffValue> {
     if state.is_null() {
         // No state = nothing to draw
         let _ = talos.present();
@@ -68,7 +68,7 @@ pub fn draw_state(state: XffValue, talos: &mut Talos) -> Option<XffValue> {
 
     let layout = layouter(canvas.size_rect());
 
-    if let Some(error_st) = draw_main_screen(state, &layout, codex, canvas, &style_atlas) {
+    if let Some(error_st) = draw_main_screen(gui_run_dur, state, &layout, codex, canvas, &style_atlas) {
         error_state = Some(error_st);
     }
 
