@@ -21,7 +21,7 @@ pub fn draw_body(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, 
 }
 
 /// Shamash - Ram - Cpu load avg
-fn top_bar(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style: Style, ok_style: Style, error_style: Style) { {
+fn top_bar(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style: Style, ok_style: Style, error_style: Style) {
     let shamash_area = layout.get("body_top_left").expect("Top area must exist");
     let (shamash_area_left, shamash_area_right) = {
         let tmp = LayoutBuilder::new().direction(Direction::Horizontal).add_constraint(Constraint::Percentage(50)).add_constraint(Constraint::Percentage(50)).build().split(*shamash_area);
@@ -60,7 +60,7 @@ fn top_bar(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas
         "CPU state not found".to_string()
     };
 
-    let mut shamash = Text::new(shamash_state, codex);
+    let mut shamash = Text::new(shamash_state.clone(), codex);
     let mut shamash_text = Text::new("Current Network Status: ", codex);
     let mut ram = Text::new(ram_state, codex);
     let mut cpu = Text::new(cpu_state, codex);
