@@ -17,6 +17,7 @@ pub fn setup_gathering_server() {
         let mut con = Hermes::new(GATHER_SERVER).expect("Failed to create Hermes Server");
         con.set_garbage_collection(true);
         let mut running = true;
+        let mut last_run = Instant::now();
         while running {
             let last_run = Instant::now();
             if con.is_request_ready() {
@@ -34,6 +35,10 @@ pub fn setup_gathering_server() {
                         };
                     }
                 }
+            }
+
+            if last_run.elapsed().as_millis() <= 200 {
+                continue;
             }
 
             match gather() {

@@ -24,6 +24,7 @@ fn main() {
     let mut first_iter = true;
     // Not 0 because of the first iteration - would div by 0 otherwise
     let mut gui_run_dur = 1;
+    let mut last_run = Instant::now();
     while run {
         let current_run = Instant::now();
         if first_iter {
@@ -59,6 +60,10 @@ fn main() {
                 }
             }
         }
+        if last_run.elapsed().as_millis() <= 200 {
+            continue;
+        }
+        last_run = Instant::now();
         if let Some(XffValue::Null) = draw_state(gui_run_dur.to_string(), state.clone(), &mut talos) {
             run = false;
         }
