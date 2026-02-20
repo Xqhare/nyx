@@ -1,4 +1,4 @@
-use std::time::Instant;
+use std::{thread, time::{Duration, Instant}};
 
 use athena::{Object, XffValue};
 use hermes::Hermes;
@@ -11,12 +11,15 @@ use nyx_backend::{
 
 use crate::GATHER_SERVER;
 
+const TARGET_UPS: u64 = 5;
+
 /// All setup code that can panic or fail
 pub fn setup_gathering_server() {
     std::thread::spawn(move || {
         let mut con = Hermes::new(GATHER_SERVER).expect("Failed to create Hermes Server");
         con.set_garbage_collection(true);
         let mut running = true;
+        let ups_duration = Duration::from_nanos(1_000_000_000 / TARGET_UPS);
         while running {
             let last_run = Instant::now();
             if con.is_request_ready() {
@@ -51,6 +54,11 @@ pub fn setup_gathering_server() {
                     let err_val = XffValue::from(format!("Failed to gather: {:?}", err));
                     panic!("Gathering thread panicked: {:?}", err_val);
                 }
+            }
+
+            let elapsed = last_run.elapsed();
+            if elapsed < ups_duration {
+                thread::sleep(ups_duration - elapsed);
             }
         }
     });

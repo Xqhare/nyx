@@ -1,4 +1,4 @@
-use std::time::Instant;
+use std::{thread, time::{Duration, Instant}};
 
 use athena::XffValue;
 use hermes::Hermes;
@@ -12,6 +12,8 @@ mod gathering;
 const GATHER_SERVER: &str = ".nxy_data/gathering";
 const DATA: &str = ".nxy_data";
 
+const TARGET_FPS: u64 = 500;
+
 fn main() {
     let _ = std::fs::remove_dir_all(DATA);
     setup_gathering_server();
@@ -24,6 +26,9 @@ fn main() {
     let mut first_iter = true;
     // Not 0 because of the first iteration - would div by 0 otherwise
     let mut gui_run_dur = 1;
+
+    let fps_duration = Duration::from_nanos(1_000_000_000 / TARGET_FPS);
+
     while run {
         let current_run = Instant::now();
         if first_iter {
@@ -64,6 +69,11 @@ fn main() {
         }
 
         gui_run_dur = current_run.elapsed().as_micros();
+
+        let elapsed = current_run.elapsed();
+        if elapsed < fps_duration {
+            thread::sleep(fps_duration - elapsed);
+        }
     }
     // SHUTDOWN CODE
     let _ = con.request(XffValue::Null);
