@@ -37,10 +37,6 @@ pub fn setup_gathering_server() {
                 }
             }
 
-            if last_run.elapsed().as_millis() <= 200 {
-                continue;
-            }
-
             match gather() {
                 Ok(value) => {
                     let mut value = value.into_object().expect("Failed to convert to object");
