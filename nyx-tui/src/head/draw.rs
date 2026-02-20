@@ -78,7 +78,7 @@ fn draw_bottom(
     style_atlas: &BTreeMap<String, Style>,
 ) {
     let style = style_atlas.get("head").expect("style atlas must have head");
-    let mut name = Text::new(APP_NAME, codex).align_center().align_vertically();
+    let mut name = Text::new(APP_NAME, codex).align_center();
     name.style(*style);
 
     let mut help = Text::new(HELP_TEXT, codex);

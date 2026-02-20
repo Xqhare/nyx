@@ -9,16 +9,16 @@ use std::collections::BTreeMap;
 pub fn layouter(rect: Rect) -> BTreeMap<String, Rect> {
     let canvas = rect;
     let main_layout = LayoutBuilder::new()
-        .direction(Direction::Horizontal)
-        .add_constraint(Constraint::Percentage(75))
+        .direction(Direction::Vertical)
         .add_constraint(Constraint::Percentage(25))
+        .add_constraint(Constraint::Percentage(75))
         .build()
         .split(canvas);
     debug_assert!(main_layout.len() == 2);
     let head = main_layout[0];
     let (head_top, head_bottom) = {
         let head_layout = LayoutBuilder::new()
-            .direction(Direction::Horizontal)
+            .direction(Direction::Vertical)
             .add_constraint(Constraint::Percentage(50))
             .add_constraint(Constraint::Percentage(50))
             .build()
@@ -28,7 +28,7 @@ pub fn layouter(rect: Rect) -> BTreeMap<String, Rect> {
     };
     let (head_top_left, head_top_middle, head_top_right) = {
         let head_top_layout = LayoutBuilder::new()
-            .direction(Direction::Vertical)
+            .direction(Direction::Horizontal)
             .add_constraint(Constraint::Percentage(30))
             .add_constraint(Constraint::Percentage(30))
             .add_constraint(Constraint::Percentage(40))
@@ -39,7 +39,7 @@ pub fn layouter(rect: Rect) -> BTreeMap<String, Rect> {
     };
     let (head_bottom_help_text, head_bottom_rest) = {
         let head_bottom_layout = LayoutBuilder::new()
-            .direction(Direction::Vertical)
+            .direction(Direction::Horizontal)
             .add_constraint(Constraint::Percentage(50))
             .add_constraint(Constraint::Percentage(50))
             .build()

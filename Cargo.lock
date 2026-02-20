@@ -10,7 +10,7 @@ source = "git+https://github.com/Xqhare/areia#e3a80da7dd2419ae6f00e71fe37078e03d
 [[package]]
 name = "athena"
 version = "0.7.0"
-source = "git+https://github.com/Xqhare/athena#42223727e3ecbbb8328feb7e482be6edb9934432"
+source = "git+https://github.com/Xqhare/athena#8fd104734401337c4219e154798d470aeb92c264"
 
 [[package]]
 name = "hermes"
@@ -34,7 +34,7 @@ checksum = "6800badb6cb2082ffd7b6a67e6125bb39f18782f793520caee8cb8846be06112"
 [[package]]
 name = "nabu"
 version = "2.0.0"
-source = "git+https://github.com/xqhare/nabu#49f9289d5299d5d1b60dd83d87147908b92c03a1"
+source = "git+https://github.com/xqhare/nabu#378d6be650c10555c2a4a64fa831f40f66f4fd2f"
 dependencies = [
  "athena",
 ]
