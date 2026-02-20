@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use areia::BaseDirs;
 use athena::XffValue;
@@ -26,7 +26,9 @@ fn make_shamash_path() -> NyxResult<PathBuf> {
     let home = match BaseDirs::new() {
         Ok(dirs) => dirs.home_dir().clone(),
         Err(err) => {
-            return Err(NyxError::Gathering(GatheringError::Shamash(err.to_string())));
+            return Err(NyxError::Gathering(GatheringError::Shamash(
+                err.to_string(),
+            )));
         }
     };
     let base_path = home.join("docker/shamash/shamash-logs/");
@@ -38,18 +40,18 @@ fn make_shamash_path() -> NyxResult<PathBuf> {
     Ok(base_path)
 }
 
-fn make_complete_network_outage_path(base_path: &PathBuf) -> PathBuf {
+fn make_complete_network_outage_path(base_path: &Path) -> PathBuf {
     base_path.join("complete_network_outage_ongoing")
 }
 
-fn make_diagnosing_path(base_path: &PathBuf) -> PathBuf {
+fn make_diagnosing_path(base_path: &Path) -> PathBuf {
     base_path.join("diagnosing")
 }
 
-fn make_isp_outage_path(base_path: &PathBuf) -> PathBuf {
+fn make_isp_outage_path(base_path: &Path) -> PathBuf {
     base_path.join("isp_outage_ongoing")
 }
 
-fn make_local_outage_path(base_path: &PathBuf) -> PathBuf {
+fn make_local_outage_path(base_path: &Path) -> PathBuf {
     base_path.join("local_outage_ongoing")
 }

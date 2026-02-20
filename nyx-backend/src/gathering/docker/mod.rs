@@ -14,11 +14,14 @@ fn parse_docker_ps(input: &str) -> NyxResult<XffValue> {
 
     for line in lines.iter() {
         let split = line.split_whitespace().collect::<Vec<&str>>();
-        if split.len() == 0 {
-            continue
+        if split.is_empty() {
+            continue;
         }
         if split.len() != 4 {
-            return Err(NyxError::Gathering(GatheringError::Docker(format!("Invalid docker ps output. Expected 4 columns, got {}.", split.len()))));
+            return Err(NyxError::Gathering(GatheringError::Docker(format!(
+                "Invalid docker ps output. Expected 4 columns, got {}.",
+                split.len()
+            ))));
         }
         let mut tmp = Object::new();
         tmp.insert(headers[0].clone(), split[0]);
@@ -42,7 +45,11 @@ fn make_headers() -> [String; 4] {
 // For future reference, just run this command
 // docker ps --format "table {{.ID}}\t{{.Names}}\t{{.State}}\t{{.Image}}"
 fn run_docker_ps() -> NyxResult<String> {
-    let output = std::process::Command::new("docker").arg("ps").arg("--format").arg("{{.ID}}\t{{.Names}}\t{{.State}}\t{{.Image}}").output()?;
+    let output = std::process::Command::new("docker")
+        .arg("ps")
+        .arg("--format")
+        .arg("{{.ID}}\t{{.Names}}\t{{.State}}\t{{.Image}}")
+        .output()?;
 
     Ok(String::from_utf8_lossy(&output.stdout).to_string())
 }
@@ -51,7 +58,9 @@ fn run_docker_ps() -> NyxResult<String> {
 mod tests {
     #[test]
     fn parse_simulated() {
-        let path = std::env::current_dir().unwrap().join("./src/gathering/docker/docker_ps_output.data");
+        let path = std::env::current_dir()
+            .unwrap()
+            .join("./src/gathering/docker/docker_ps_output.data");
         let parsed = super::parse_docker_ps(&std::fs::read_to_string(path).unwrap()).unwrap();
         assert!(parsed.is_object());
         let obj = parsed.into_object().unwrap();
@@ -61,9 +70,15 @@ mod tests {
         assert!(val.is_object());
         let obj = val.into_object().unwrap();
         assert!(obj.len() == 4);
-        assert_eq!(obj.get("ID").unwrap().into_string().unwrap(), "bf240f90dcb3");
+        assert_eq!(
+            obj.get("ID").unwrap().into_string().unwrap(),
+            "bf240f90dcb3"
+        );
         assert_eq!(obj.get("Names").unwrap().into_string().unwrap(), "Shamash");
         assert_eq!(obj.get("State").unwrap().into_string().unwrap(), "running");
-        assert_eq!(obj.get("Image").unwrap().into_string().unwrap(), "shamash-shamash");
+        assert_eq!(
+            obj.get("Image").unwrap().into_string().unwrap(),
+            "shamash-shamash"
+        );
     }
 }
