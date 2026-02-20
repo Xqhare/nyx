@@ -30,12 +30,16 @@ fn parse_uptime(input: &str) -> NyxResult<XffValue> {
     // Uptime can span multiple comma-separated parts (e.g., "up 6 days, 10:45")
     // We'll collect everything until we hit the part with "user(s)"
     let mut up_parts = vec![first_part[1..].join(" ")];
+    up_parts = up_parts.iter().map(|x| x.trim().to_string()).collect();
     let mut user_index = 1;
     while user_index < split_comma.len() && !split_comma[user_index].contains("user") {
         up_parts.push(split_comma[user_index].trim().to_string());
         user_index += 1;
     }
-    let up = up_parts.join(", ");
+    let mut up = up_parts.join(", ");
+    if let Some(rest) = up.strip_prefix("up ") {
+        up = rest.to_string();
+    };
 
     let load_avg = {
         let mut index = 0;
