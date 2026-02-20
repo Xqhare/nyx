@@ -9,3 +9,10 @@ talos = { workspace = true }
 athena = { workspace = true }
 horae = { workspace = true }
 nyx-backend = { path = "../nyx-backend" }
+
+[profile.release]
+codegen-units = 1
+lto = "fat"
+opt-level = "s"
+panic = "abort"
+strip = "symbols"
