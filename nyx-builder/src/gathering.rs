@@ -9,16 +9,16 @@ use nyx_backend::{
     },
 };
 
-use crate::{GATHER_INTERVAL, GATHER_SERVER};
+use crate::GATHER_SERVER;
 
 /// All setup code that can panic or fail
 pub fn setup_gathering_server() {
     std::thread::spawn(move || {
-        let con = Hermes::new(GATHER_SERVER).expect("Failed to create Hermes Server");
+        let mut con = Hermes::new(GATHER_SERVER).expect("Failed to create Hermes Server");
+        con.set_garbage_collection(true);
         let mut running = true;
-        #[allow(unused_assignments)]
-        let mut last_run = Instant::now();
         while running {
+            let last_run = Instant::now();
             if con.is_request_ready() {
                 let request = con.await_request();
                 match request {
@@ -35,8 +35,6 @@ pub fn setup_gathering_server() {
                     }
                 }
             }
-
-            last_run = Instant::now();
 
             match gather() {
                 Ok(value) => {
