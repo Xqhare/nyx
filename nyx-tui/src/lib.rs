@@ -3,6 +3,7 @@ mod head;
 mod input;
 mod main_screen;
 mod util;
+mod body;
 
 use crate::{
     error::{ErrorState, render_error},

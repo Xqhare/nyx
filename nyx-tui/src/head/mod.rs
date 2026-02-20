@@ -36,6 +36,8 @@ pub fn draw_head(
     let time_state = if let Some(value) = uptime.get("time") {
         value.to_string()
     } else {
+        // should be unreachable?
+        debug_assert!(false);
         return error_uptime();
     };
     let update_dur = if let Some(value) = state.get("time") {
