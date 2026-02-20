@@ -7,7 +7,7 @@ use talos::{
     render::{Canvas, Style},
 };
 
-use crate::{ErrorState, head::draw_head};
+use crate::{ErrorState, body::draw_body, head::draw_head};
 
 pub fn draw_main_screen(
     gui_run_dur: String,
@@ -24,6 +24,7 @@ pub fn draw_main_screen(
             message: "State must be an object - Internal fatal Error".to_string(),
         });
     };
-    draw_head(gui_run_dur, state, layout, codex, canvas, style_atlas);
+    draw_head(gui_run_dur, state.clone(), layout, codex, canvas, style_atlas);
+    draw_body(state, layout, codex, canvas, style_atlas);
     None
 }

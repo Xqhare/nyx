@@ -1,4 +1,4 @@
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 use athena::XffValue;
 use hermes::Hermes;
@@ -20,9 +20,7 @@ fn main() {
     let mut con = Hermes::new(GATHER_SERVER).expect("Failed to create Hermes Server");
     con.set_garbage_collection(true);
     let mut state: XffValue = XffValue::Null;
-    eprintln!("Checkpoint 2: Building Talos");
     let mut talos = Talos::builder().build().expect("Failed to create Talos");
-    eprintln!("Checkpoint 3: Entering loop");
     let mut first_iter = true;
     // Not 0 because of the first iteration - would div by 0 otherwise
     let mut gui_run_dur = 1;

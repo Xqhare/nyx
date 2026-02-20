@@ -45,9 +45,9 @@ fn parse_swap(input: &str, headers: &[String; 6]) -> NyxResult<XffValue> {
 
     let mut out = Object::new();
 
-    out.insert(headers[0].clone(), values[1]);
-    out.insert(headers[1].clone(), values[2]);
-    out.insert(headers[2].clone(), values[3]);
+    out.insert(headers[0].clone().trim(), values[1].trim());
+    out.insert(headers[1].clone().trim(), values[2].trim());
+    out.insert(headers[2].clone().trim(), values[3].trim());
 
     Ok(out.into())
 }
@@ -71,12 +71,12 @@ fn parse_mem(input: &str, headers: &[String; 6]) -> NyxResult<XffValue> {
 
     let mut out = Object::new();
 
-    out.insert(headers[0].clone(), values[1]);
-    out.insert(headers[1].clone(), values[2]);
-    out.insert(headers[2].clone(), values[3]);
-    out.insert(headers[3].clone(), values[4]);
-    out.insert(headers[4].clone(), values[5]);
-    out.insert(headers[5].clone(), values[6]);
+    out.insert(headers[0].clone().trim(), values[1].trim());
+    out.insert(headers[1].clone().trim(), values[2].trim());
+    out.insert(headers[2].clone().trim(), values[3].trim());
+    out.insert(headers[3].clone().trim(), values[4].trim());
+    out.insert(headers[4].clone().trim(), values[5].trim());
+    out.insert(headers[5].clone().trim(), values[6].trim());
 
     Ok(out.into())
 }
