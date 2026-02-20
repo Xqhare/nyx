@@ -10,8 +10,8 @@ pub fn layouter(rect: Rect) -> BTreeMap<String, Rect> {
     let canvas = rect;
     let main_layout = LayoutBuilder::new()
         .direction(Direction::Vertical)
-        .add_constraint(Constraint::Percentage(25))
-        .add_constraint(Constraint::Percentage(75))
+        .add_constraint(Constraint::Percentage(20))
+        .add_constraint(Constraint::Percentage(80))
         .build()
         .split(canvas);
     debug_assert!(main_layout.len() == 2);
@@ -155,8 +155,10 @@ pub fn make_style_atlas() -> BTreeMap<String, Style> {
         (
             "highlight".to_string(),
             Style::builder()
-                .set_fg(Colour::Bright(Bright::Green))
-                .set_bg(Colour::Normal(Normal::Black))
+                .set_fg(Colour::Bright(Bright::Yellow))
+                .set_bg(Colour::Extended(Extended::TrueColour(TrueColour::RGB(
+                    0, 0, 0,
+                ))))
                 .build(),
         ),
         (

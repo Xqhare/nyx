@@ -10,12 +10,12 @@ source = "git+https://github.com/Xqhare/areia#bbcfe0bce981739743cf84ea8f693bb053
 [[package]]
 name = "athena"
 version = "0.7.0"
-source = "git+https://github.com/Xqhare/athena#8fd104734401337c4219e154798d470aeb92c264"
+source = "git+https://github.com/Xqhare/athena#2b292f1a438f1dbd29957bc185963a4a55ffb97b"
 
 [[package]]
 name = "hermes"
 version = "1.0.0"
-source = "git+https://github.com/Xqhare/hermes#76982ab45b0c6df1848a8447307b5fc519b69af8"
+source = "git+https://github.com/Xqhare/hermes#a1b1248eba88cb45bdc46050f73ba9269848148f"
 dependencies = [
  "nabu",
 ]
@@ -23,7 +23,7 @@ dependencies = [
 [[package]]
 name = "horae"
 version = "1.0.0"
-source = "git+https://github.com/Xqhare/horae#e6c13d084ee3d06215deb0d18ae3a784945d67ee"
+source = "git+https://github.com/Xqhare/horae#033709e7f958911eead778c6d5bce44a156fbeff"
 
 [[package]]
 name = "libc"
@@ -34,7 +34,7 @@ checksum = "6800badb6cb2082ffd7b6a67e6125bb39f18782f793520caee8cb8846be06112"
 [[package]]
 name = "nabu"
 version = "2.0.0"
-source = "git+https://github.com/xqhare/nabu#378d6be650c10555c2a4a64fa831f40f66f4fd2f"
+source = "git+https://github.com/xqhare/nabu#e790a4cd534d4464b65effe3710945348373cd70"
 dependencies = [
  "athena",
 ]
@@ -72,7 +72,7 @@ dependencies = [
 [[package]]
 name = "talos"
 version = "1.1.0"
-source = "git+https://github.com/Xqhare/talos#5afc913c2be75b1fca2c0670181a0fc29e2f29e2"
+source = "git+https://github.com/Xqhare/talos#c35fafb784f97f996037d29ad8e91923f3e7ea9b"
 dependencies = [
  "libc",
 ]

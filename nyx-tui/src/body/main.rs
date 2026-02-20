@@ -7,22 +7,23 @@ use talos::{codex::Codex, layout::Rect, render::{Canvas, Style}, widgets::{Area,
 // PS, Docker | Df
 pub fn main_body(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style_atlas: &BTreeMap<String, Style>)  {
     let style = style_atlas.get("default").expect("Default Style must exist");
-    main_left(state.clone(), layout, codex, canvas, *style);
-    main_right(state, layout, codex, canvas, *style);
+    let header_style = style_atlas.get("highlight").expect("Header style must exist");
+    main_left(state.clone(), layout, codex, canvas, *style, *header_style);
+    main_right(state, layout, codex, canvas, *style, *header_style);
 }
 
 // PS
-fn main_left(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style: Style) {
+fn main_left(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style: Style, header_style: Style) {
     let ps_state = state.get("ps").expect("Ps state not found").into_object().expect("Ps state must be an object");
     
-    left_top(ps_state, layout, codex, canvas, style);
+    left_top(ps_state, layout, codex, canvas, style, header_style);
 }
 
-fn left_top(ps_state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, _style: Style) {
+fn left_top(ps_state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style: Style, header_style: Style) {
     let area = layout.get("body_bottom_left_top").expect("Top area must exist");
 
     let mut block = Block::new().title("Processes", codex, false);
-    block.style(_style);
+    block.style(style);
     block.render(canvas, *area, codex);
 
     let area = block.inner(*area);
@@ -41,13 +42,15 @@ fn left_top(ps_state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, ca
     }
 
     let mut table = Table::new()
+        .with_header_style(header_style)
+        .with_header_row(0)
         .with_rows(rows.iter_mut().map(|r| r.iter_mut()));
 
-    table.style(_style);
+    table.style(style);
     table.render(canvas, area, codex);
 }
 
-fn right_bottom(dockerstate: XffValue, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style: Style)  {
+fn right_bottom(dockerstate: XffValue, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style: Style, header_style: Style)  {
     let area = layout.get("body_bottom_right_bottom").expect("area must exist");
 
     let mut block = Block::new().title("Docker", codex, false);
@@ -86,10 +89,18 @@ fn right_bottom(dockerstate: XffValue, layout: &BTreeMap<String, Rect>, codex: &
         let image = value.get("Image").expect("Image must exist").to_string();
         rows.push(vec![Text::new(id, codex), Text::new(name, codex), Text::new(state, codex), Text::new(image, codex)]);
     }
+
+    let mut table = Table::new()
+        .with_rows(rows.iter_mut().map(|r| r.iter_mut()))
+        .with_header_row(0)
+        .with_header_style(header_style);
+
+    table.style(style);
+    table.render(canvas, area, codex);
 }
 
 // Df
-fn main_right(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style: Style) {
+fn main_right(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style: Style, header_style: Style) {
     let df_state = state.get("df").expect("Df state not found").into_object().expect("Df state must be an object");
     let area = layout.get("body_bottom_right_top").expect("Top area must exist");
 
@@ -114,6 +125,8 @@ fn main_right(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, can
     }
 
     let mut table = Table::new()
+        .with_header_row(0)
+        .with_header_style(header_style)
         .with_rows(rows.iter_mut().map(|r| r.iter_mut()));
 
     table.style(style);
@@ -123,5 +136,5 @@ fn main_right(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, can
     } else {
         XffValue::Null
     };
-    right_bottom(docker_state, layout, codex, canvas, style);
+    right_bottom(docker_state, layout, codex, canvas, style, header_style);
 }
