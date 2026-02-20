@@ -1,8 +1,13 @@
 use std::time::Instant;
 
-use hermes::Hermes;
 use athena::{Object, XffValue};
-use nyx_backend::{error::NyxResult, gathering::{df_gatherer, docker_gatherer, free_gatherer, ps_gatherer, shamash_gatherer, uptime_gatherer}};
+use hermes::Hermes;
+use nyx_backend::{
+    error::NyxResult,
+    gathering::{
+        df_gatherer, docker_gatherer, free_gatherer, ps_gatherer, shamash_gatherer, uptime_gatherer,
+    },
+};
 
 use crate::{GATHER_INTERVAL, GATHER_SERVER};
 
@@ -20,38 +25,48 @@ pub fn setup_gathering_server() {
                         if request.is_null() {
                             running = false;
                         }
-                    },
+                    }
                     Err(err) => {
                         let err = XffValue::from(format!("Failed to get request: {:?}", err));
-                        if let Err(err) = con.put_error(err) {panic!("{:?}", err)};
+                        if let Err(err) = con.put_error(err) {
+                            panic!("{:?}", err)
+                        };
                     }
                 }
             }
 
             if last_run.elapsed().as_millis() < GATHER_INTERVAL {
-                continue
+                std::thread::sleep(std::time::Duration::from_millis(10));
+                continue;
             }
             last_run = Instant::now();
 
             match gather() {
                 Ok(value) => {
                     let mut value = value.into_object().expect("Failed to convert to object");
-                    value.insert("time", XffValue::from(last_run.elapsed().as_millis().to_string()));
-                    if let Err(err) = con.respond(value.into()) {panic!("{:?}", err)};
-                },
+                    value.insert(
+                        "time",
+                        XffValue::from(last_run.elapsed().as_millis().to_string()),
+                    );
+                    if let Err(err) = con.respond(value.into()) {
+                        panic!("{:?}", err)
+                    };
+                }
                 Err(err) => {
-                    let err = XffValue::from(format!("Failed to gather: {:?}", err));
-                    panic!("{:?}", err);
+                    let err_val = XffValue::from(format!("Failed to gather: {:?}", err));
+                    panic!("Gathering thread panicked: {:?}", err_val);
                 }
             }
-
         }
     });
 }
 
 fn gather() -> NyxResult<XffValue> {
     let df_gathered = df_gatherer()?;
-    let docker_gathered = docker_gatherer()?;
+    let docker_gathered = match docker_gatherer() {
+        Ok(docker_gathered) => docker_gathered,
+        Err(err) => XffValue::from(format!("Failed to gather docker: {}", err)),
+    };
     let free_gathered = free_gatherer()?;
     let ps_gathered = ps_gatherer()?;
     let uptime_gathered = uptime_gatherer()?;
@@ -62,10 +77,8 @@ fn gather() -> NyxResult<XffValue> {
             } else {
                 XffValue::from("Shamash not installed!")
             }
-        },
-        Err(_) => {
-            XffValue::from("Shamash not installed!")
         }
+        Err(_) => XffValue::from("Shamash not installed!"),
     };
 
     let mut obj = Object::new();

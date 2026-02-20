@@ -20,11 +20,15 @@ fn parse_df(input: &str) -> NyxResult<XffValue> {
             parse_head(&headers)?;
         } else {
             let split = line.split_whitespace().collect::<Vec<&str>>();
-            if split.len() == 0 {
-                continue
+            if split.is_empty() {
+                continue;
             }
             if split.len() < 6 {
-                return Err(NyxError::Gathering(GatheringError::Df(format!("Invalid df output. Expected at least 6 columns, got {}.", split.len()))));
+                return Err(NyxError::Gathering(GatheringError::Df(format!(
+                    "Invalid df output. Expected at least 6 columns, got {}. Line: {}",
+                    split.len(),
+                    line
+                ))));
             }
             // Ignore all non devices
             if !split[0].starts_with("/dev") {
@@ -36,7 +40,7 @@ fn parse_df(input: &str) -> NyxResult<XffValue> {
             tmp.insert("Used", split[2]);
             tmp.insert("Avail", split[3]);
             tmp.insert("Use%", split[4]);
-            tmp.insert("Mounted on", split[5]);
+            tmp.insert("Mounted on", split[5..].join(" "));
             // Lets hope the filesystem name is unique
             out.insert(split[0], tmp);
         }
@@ -46,18 +50,75 @@ fn parse_df(input: &str) -> NyxResult<XffValue> {
 
 fn parse_head(headers: &[&str]) -> NyxResult<()> {
     if headers.len() != 7 {
-        return Err(NyxError::Gathering(GatheringError::Df(format!("Invalid df output. Expected Failed to gather7 headers, got {}.", headers.len()))));
+        return Err(NyxError::Gathering(GatheringError::Df(format!(
+            "Invalid df output. Expected Failed to gather7 headers, got {}.",
+            headers.len()
+        ))));
     }
-    for n in 0..headers.len() {
+    for (n, header) in headers.iter().enumerate() {
         match n {
-            0 => if headers[n] != "Filesystem" { return Err(NyxError::Gathering(GatheringError::Df(format!("Expected 'Filesystem' header, got: {}", headers[n])))); },
-            1 => if headers[n] != "Size" { return Err(NyxError::Gathering(GatheringError::Df(format!("Expected 'Size' header, got: {}", headers[n])))); },
-            2 => if headers[n] != "Used" { return Err(NyxError::Gathering(GatheringError::Df(format!("Expected 'Used' header, got: {}", headers[n])))); },
-            3 => if headers[n] != "Avail" { return Err(NyxError::Gathering(GatheringError::Df(format!("Expected 'Available' header, got: {}", headers[n])))); },
-            4 => if headers[n] != "Use%" { return Err(NyxError::Gathering(GatheringError::Df(format!("Expected 'Use%' header, got: {}", headers[n])))); },
-            5 => if headers[n] != "Mounted" { return Err(NyxError::Gathering(GatheringError::Df(format!("Expected 'Mounted on' header, got: {}", headers[n])))); },
-            6 => if headers[n] != "on" { return Err(NyxError::Gathering(GatheringError::Df(format!("Expected 'Mounted on' header, got: {}", headers[n])))); },
-            _ => return Err(NyxError::Gathering(GatheringError::Df(format!("Unexpected header: {}", headers[n])))),
+            0 => {
+                if *header != "Filesystem" {
+                    return Err(NyxError::Gathering(GatheringError::Df(format!(
+                        "Expected 'Filesystem' header, got: {}",
+                        header
+                    ))));
+                }
+            }
+            1 => {
+                if *header != "Size" {
+                    return Err(NyxError::Gathering(GatheringError::Df(format!(
+                        "Expected 'Size' header, got: {}",
+                        header
+                    ))));
+                }
+            }
+            2 => {
+                if *header != "Used" {
+                    return Err(NyxError::Gathering(GatheringError::Df(format!(
+                        "Expected 'Used' header, got: {}",
+                        header
+                    ))));
+                }
+            }
+            3 => {
+                if *header != "Avail" {
+                    return Err(NyxError::Gathering(GatheringError::Df(format!(
+                        "Expected 'Available' header, got: {}",
+                        header
+                    ))));
+                }
+            }
+            4 => {
+                if *header != "Use%" {
+                    return Err(NyxError::Gathering(GatheringError::Df(format!(
+                        "Expected 'Use%' header, got: {}",
+                        header
+                    ))));
+                }
+            }
+            5 => {
+                if *header != "Mounted" {
+                    return Err(NyxError::Gathering(GatheringError::Df(format!(
+                        "Expected 'Mounted on' header, got: {}",
+                        header
+                    ))));
+                }
+            }
+            6 => {
+                if *header != "on" {
+                    return Err(NyxError::Gathering(GatheringError::Df(format!(
+                        "Expected 'Mounted on' header, got: {}",
+                        header
+                    ))));
+                }
+            }
+            _ => {
+                return Err(NyxError::Gathering(GatheringError::Df(format!(
+                    "Unexpected header: {}",
+                    header
+                ))));
+            }
         }
     }
 
@@ -85,12 +146,18 @@ mod tests {
         assert!(val.is_object());
         let obj = val.into_object().unwrap();
         assert!(obj.len() == 6);
-        assert_eq!(obj.get("Filesystem").unwrap().into_string().unwrap(), "/dev/sda1");
+        assert_eq!(
+            obj.get("Filesystem").unwrap().into_string().unwrap(),
+            "/dev/sda1"
+        );
         assert_eq!(obj.get("Size").unwrap().into_string().unwrap(), "1.8T");
         assert_eq!(obj.get("Used").unwrap().into_string().unwrap(), "361G");
         assert_eq!(obj.get("Avail").unwrap().into_string().unwrap(), "1.4T");
         assert_eq!(obj.get("Use%").unwrap().into_string().unwrap(), "21%");
-        assert_eq!(obj.get("Mounted on").unwrap().into_string().unwrap(), "/home/master/backup-usb-disk");
+        assert_eq!(
+            obj.get("Mounted on").unwrap().into_string().unwrap(),
+            "/home/master/backup-usb-disk"
+        );
         Ok(())
     }
 
@@ -99,7 +166,7 @@ mod tests {
         let gatered = gather()?;
         assert!(gatered.is_object());
         let obj = gatered.into_object().unwrap();
-        assert!(obj.len() > 0);
+        assert!(!obj.is_empty());
         Ok(())
     }
 }

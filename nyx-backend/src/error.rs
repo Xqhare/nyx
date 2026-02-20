@@ -2,7 +2,6 @@ use std::fmt::Display;
 
 use talos::TalosError;
 
-
 pub type NyxResult<T> = std::result::Result<T, NyxError>;
 
 #[derive(Debug)]

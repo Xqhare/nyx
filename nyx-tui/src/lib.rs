@@ -1,12 +1,17 @@
-mod input;
+mod error;
 mod head;
+mod input;
 mod main_screen;
 mod util;
-mod error;
 
+use crate::{
+    error::{ErrorState, render_error},
+    input::input_handler,
+    main_screen::draw_main_screen,
+    util::{layouter, make_style_atlas},
+};
 use athena::XffValue;
 use talos::Talos;
-use crate::{error::{ErrorState, render_error}, input::input_handler, main_screen::draw_main_screen, util::{layouter, make_style_atlas}};
 
 /// Entry function for TUI
 ///
@@ -26,22 +31,20 @@ pub fn draw_state(state: XffValue, talos: &mut Talos) -> Option<XffValue> {
         Ok(Some(cmd)) => match cmd {
             XffValue::Null => {
                 return Some(XffValue::Null);
-            },
-            XffValue::String(cmd) => {
-                match cmd.as_str() {
-                    "q" => {
-                        return Some(XffValue::Null);
-                    },
-                    "c" => {
-                        error_state = None;
-                    },
-                    _ => {
-                        error_state = Some(ErrorState {
-                            message: format!("Command: {}", cmd),
-                        });
-                    }
-                }
             }
+            XffValue::String(cmd) => match cmd.as_str() {
+                "q" => {
+                    return Some(XffValue::Null);
+                }
+                "c" => {
+                    error_state = None;
+                }
+                _ => {
+                    error_state = Some(ErrorState {
+                        message: format!("Command: {}", cmd),
+                    });
+                }
+            },
             _ => {
                 error_state = Some(ErrorState {
                     message: format!("Command: {}", cmd),
@@ -52,10 +55,10 @@ pub fn draw_state(state: XffValue, talos: &mut Talos) -> Option<XffValue> {
             error_state = Some(ErrorState {
                 message: format!("Error: {}", e),
             });
-        },
-        _ => { 
-            //No input 
-        },
+        }
+        _ => {
+            //No input
+        }
     }
 
     let style_atlas = make_style_atlas();
@@ -77,4 +80,3 @@ pub fn draw_state(state: XffValue, talos: &mut Talos) -> Option<XffValue> {
 
     None
 }
-
