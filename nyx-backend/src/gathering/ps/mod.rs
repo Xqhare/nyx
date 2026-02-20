@@ -12,7 +12,7 @@ fn parse_ps(input: &str) -> NyxResult<XffValue> {
     let input = input.trim();
     let lines = input.lines().collect::<Vec<&str>>();
     if lines.is_empty() {
-        return Err(NyxError::Gathering(GatheringError::Free(
+        return Err(NyxError::Gathering(GatheringError::Ps(
             "ps output is empty".to_string(),
         )));
     }
@@ -41,8 +41,8 @@ fn parse_process(input: &str, headers: &[String; 5]) -> NyxResult<XffValue> {
     let values = input.split_whitespace().collect::<Vec<&str>>();
 
     if values.len() < 5 {
-        return Err(NyxError::Gathering(GatheringError::Free(format!(
-            "Invalid free output. Expected at least 5 columns, got {}.",
+        return Err(NyxError::Gathering(GatheringError::Ps(format!(
+            "Invalid ps output. Expected at least 5 columns, got {}.",
             values.len()
         ))));
     }
@@ -73,25 +73,26 @@ fn parse_headers(input: &str) -> NyxResult<[String; 5]> {
             split[4].to_string(),
         ])
     } else {
-        Err(NyxError::Gathering(GatheringError::Free(format!(
-            "Invalid free output. Expected 5 header columns, got {}.",
+        Err(NyxError::Gathering(GatheringError::Ps(format!(
+            "Invalid ps output. Expected 5 header columns, got {}.",
             split.len()
         ))))
     }
 }
 
 fn run_ps() -> NyxResult<String> {
-    let ps = std::process::Command::new("ps")
+    let mut ps = std::process::Command::new("ps")
         .args(["-eo", "user,pid,%mem,%cpu,comm", "--sort=-%cpu"])
         .stdout(Stdio::piped())
         .spawn()?;
     let head = std::process::Command::new("head")
         .args(["-n", "16"])
-        .stdin(ps.stdout.unwrap())
+        .stdin(ps.stdout.take().unwrap())
         .stdout(Stdio::piped())
         .spawn()?;
 
     let output = head.wait_with_output()?;
+    let _ = ps.wait();
 
     Ok(String::from_utf8_lossy(&output.stdout).to_string())
 }
