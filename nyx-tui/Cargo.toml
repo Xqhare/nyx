@@ -2,6 +2,7 @@
 name = "nyx-tui"
 version = "0.2.0"
 edition = "2024"
+rust-version = "1.93.0"
 
 [dependencies]
 talos = { workspace = true }
