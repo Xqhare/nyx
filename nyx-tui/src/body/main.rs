@@ -84,7 +84,7 @@ fn right_bottom(dockerstate: XffValue, layout: &BTreeMap<String, Rect>, codex: &
     for (_, value) in docker_state.iter() {
         let value = value.into_object().expect("Value must be an object");
         let id = value.get("ID").expect("Id must exist").to_string();
-        let name = value.get("Name").expect("Name must exist").to_string();
+        let name = value.get("Names").expect("Name must exist").to_string();
         let state = value.get("State").expect("State must exist").to_string();
         let image = value.get("Image").expect("Image must exist").to_string();
         rows.push(vec![Text::new(id, codex), Text::new(name, codex), Text::new(state, codex), Text::new(image, codex)]);
