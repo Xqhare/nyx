@@ -5,7 +5,7 @@ version = 4
 [[package]]
 name = "areia"
 version = "1.0.0"
-source = "git+https://github.com/Xqhare/areia#bbcfe0bce981739743cf84ea8f693bb05331ebe4"
+source = "git+https://github.com/Xqhare/areia#32f0ab3f7adc21b69590f8692c3b79197706e961"
 
 [[package]]
 name = "athena"
