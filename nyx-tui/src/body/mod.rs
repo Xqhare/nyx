@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
 use athena::Object;
-use talos::{LayoutBuilder, codex::Codex, layout::{Constraint, Direction, Layout, Rect}, render::{Canvas, Style}, widgets::{Block, Text, traits::Widget}};
+use talos::{LayoutBuilder, codex::Codex, layout::{Constraint, Direction, Rect}, render::{Canvas, Style}, widgets::{Block, Text, traits::Widget}};
 
 use crate::body::main::main_body;
 
