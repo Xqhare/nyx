@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
 use athena::Object;
-use talos::{codex::Codex, layout::Rect, render::{Canvas, Style}, widgets::{Area, Text, traits::Widget}};
+use talos::{codex::Codex, layout::Rect, render::{Canvas, Style}, widgets::{Block, Text, traits::Widget}};
 
 use crate::body::main::main_body;
 
@@ -10,9 +10,9 @@ mod main;
 pub fn draw_body(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style_atlas: &BTreeMap<String, Style>)  {
     let style = style_atlas.get("default").expect("Default Style must exist");
     let body_area = layout.get("body").expect("Top area must exist");
-    let mut area = Area::new();
-    area.style(style.clone());
-    area.render(canvas, *body_area, codex);
+    let mut block = Block::new().with_bg_fill();
+    block.style(style.clone());
+    block.render(canvas, *body_area, codex);
 
     top_bar(state.clone(), layout, codex, canvas, *style);
     main_body(state, layout, codex, canvas, style_atlas);

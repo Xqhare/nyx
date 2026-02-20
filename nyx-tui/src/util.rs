@@ -50,7 +50,7 @@ pub fn layouter(rect: Rect) -> BTreeMap<String, Rect> {
     let body = main_layout[1];
     let (body_top, body_bottom) = {
         let body_layout = LayoutBuilder::new()
-            .direction(Direction::Horizontal)
+            .direction(Direction::Vertical)
             .add_constraint(Constraint::Percentage(10))
             .add_constraint(Constraint::Percentage(90))
             .margin(1)
@@ -61,7 +61,7 @@ pub fn layouter(rect: Rect) -> BTreeMap<String, Rect> {
     };
     let (body_top_left, body_top_middle, body_top_right) = {
         let body_top_layout = LayoutBuilder::new()
-            .direction(Direction::Vertical)
+            .direction(Direction::Horizontal)
             .add_constraint(Constraint::Min(1))
             .add_constraint(Constraint::Min(1))
             .add_constraint(Constraint::Min(1))
@@ -72,7 +72,7 @@ pub fn layouter(rect: Rect) -> BTreeMap<String, Rect> {
     };
     let (body_bottom_left, body_bottom_right) = {
         let body_bottom_layout = LayoutBuilder::new()
-            .direction(Direction::Horizontal)
+            .direction(Direction::Vertical)
             .add_constraint(Constraint::Percentage(70))
             .add_constraint(Constraint::Percentage(30))
             .build()
@@ -82,7 +82,7 @@ pub fn layouter(rect: Rect) -> BTreeMap<String, Rect> {
     };
     let (body_bottom_left_top, body_bottom_left_bottom) = {
         let body_bottom_left_layout = LayoutBuilder::new()
-            .direction(Direction::Horizontal)
+            .direction(Direction::Vertical)
             .add_constraint(Constraint::Percentage(70))
             .add_constraint(Constraint::Percentage(30))
             .build()
@@ -92,7 +92,7 @@ pub fn layouter(rect: Rect) -> BTreeMap<String, Rect> {
     };
     let (body_bottom_right_top, body_bottom_right_bottom) = {
         let body_bottom_right_layout = LayoutBuilder::new()
-            .direction(Direction::Horizontal)
+            .direction(Direction::Vertical)
             .add_constraint(Constraint::Percentage(30))
             .add_constraint(Constraint::Percentage(70))
             .build()
@@ -137,8 +137,10 @@ pub fn make_style_atlas() -> BTreeMap<String, Style> {
         (
             "default".to_string(),
             Style::builder()
-                .set_fg(Colour::Bright(Bright::Yellow))
-                .set_bg(Colour::Normal(Normal::Black))
+                .set_fg(Colour::Normal(Normal::Yellow))
+                .set_bg(Colour::Extended(Extended::TrueColour(TrueColour::RGB(
+                    0, 0, 0,
+                ))))
                 .build(),
         ),
         (
@@ -154,13 +156,13 @@ pub fn make_style_atlas() -> BTreeMap<String, Style> {
             "highlight".to_string(),
             Style::builder()
                 .set_fg(Colour::Bright(Bright::Green))
-                .set_bg(Colour::Bright(Bright::Black))
+                .set_bg(Colour::Normal(Normal::Black))
                 .build(),
         ),
         (
             "error".to_string(),
             Style::builder()
-                .set_bg(Colour::Bright(Bright::Red))
+                .set_bg(Colour::Normal(Normal::Red))
                 .set_fg(Colour::Bright(Bright::Black))
                 .set_bold(true)
                 .set_underline(true)
