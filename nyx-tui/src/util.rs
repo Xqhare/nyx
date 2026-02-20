@@ -133,14 +133,13 @@ pub fn layouter(rect: Rect) -> BTreeMap<String, Rect> {
 }
 
 pub fn make_style_atlas() -> BTreeMap<String, Style> {
+    let deep_black = Colour::Extended(Extended::TrueColour(TrueColour::RGB(0, 0, 0)));
     BTreeMap::from([
         (
             "default".to_string(),
             Style::builder()
                 .set_fg(Colour::Normal(Normal::Yellow))
-                .set_bg(Colour::Extended(Extended::TrueColour(TrueColour::RGB(
-                    0, 0, 0,
-                ))))
+                .set_bg(deep_black)
                 .build(),
         ),
         (
@@ -149,23 +148,30 @@ pub fn make_style_atlas() -> BTreeMap<String, Style> {
                 .set_fg(Colour::Extended(Extended::TrueColour(TrueColour::RGB(
                     200, 200, 200,
                 ))))
-                .set_bg(Colour::Normal(Normal::Black))
+                .set_bg(deep_black)
                 .build(),
         ),
         (
             "highlight".to_string(),
             Style::builder()
                 .set_fg(Colour::Bright(Bright::Yellow))
-                .set_bg(Colour::Extended(Extended::TrueColour(TrueColour::RGB(
-                    0, 0, 0,
-                ))))
+                .set_bg(deep_black)
+                .build(),
+        ),
+        (
+            "ok".to_string(),
+            Style::builder()
+                .set_fg(Colour::Normal(Normal::Green))
+                .set_bg(deep_black)
+                .set_bold(true)
+                .set_underline(true)
                 .build(),
         ),
         (
             "error".to_string(),
             Style::builder()
-                .set_bg(Colour::Normal(Normal::Red))
-                .set_fg(Colour::Bright(Bright::Black))
+                .set_fg(Colour::Normal(Normal::Red))
+                .set_bg(deep_black)
                 .set_bold(true)
                 .set_underline(true)
                 .build(),

@@ -31,11 +31,12 @@ fn parse_df(input: &str) -> NyxResult<XffValue> {
                 ))));
             }
             // Ignore all non devices
-            if !split[0].starts_with("/dev") {
+            if !split[0].starts_with("/dev/") {
                 continue;
             }
+            let fs = split[0].strip_prefix("/dev/").unwrap();
             let mut tmp = Object::new();
-            tmp.insert("Filesystem", split[0]);
+            tmp.insert("Filesystem", fs);
             tmp.insert("Size", split[1]);
             tmp.insert("Used", split[2]);
             tmp.insert("Avail", split[3]);

@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
 use athena::Object;
-use talos::{codex::Codex, layout::Rect, render::{Canvas, Style}, widgets::{Block, Text, traits::Widget}};
+use talos::{LayoutBuilder, codex::Codex, layout::{Constraint, Direction, Layout, Rect}, render::{Canvas, Style}, widgets::{Block, Text, traits::Widget}};
 
 use crate::body::main::main_body;
 
@@ -9,18 +9,25 @@ mod main;
 
 pub fn draw_body(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style_atlas: &BTreeMap<String, Style>)  {
     let style = style_atlas.get("default").expect("Default Style must exist");
+    let ok_style = style_atlas.get("ok").expect("Ok style must exist");
+    let error_style = style_atlas.get("error").expect("Error style must exist");
     let body_area = layout.get("body").expect("Top area must exist");
     let mut block = Block::new().with_bg_fill();
     block.style(style.clone());
     block.render(canvas, *body_area, codex);
 
-    top_bar(state.clone(), layout, codex, canvas, *style);
+    top_bar(state.clone(), layout, codex, canvas, *style, *ok_style, *error_style);
     main_body(state, layout, codex, canvas, style_atlas);
 }
 
 /// Shamash - Ram - Cpu load avg
-fn top_bar(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style: Style)  {
+fn top_bar(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas: &mut Canvas, style: Style, ok_style: Style, error_style: Style) { {
     let shamash_area = layout.get("body_top_left").expect("Top area must exist");
+    let (shamash_area_left, shamash_area_right) = {
+        let tmp = LayoutBuilder::new().direction(Direction::Horizontal).add_constraint(Constraint::Percentage(50)).add_constraint(Constraint::Percentage(50)).build().split(*shamash_area);
+        debug_assert!(tmp.len() == 2);
+        (tmp[0], tmp[1])
+    };
     let ram_area = layout.get("body_top_middle").expect("Top area must exist");
     let cpu_area = layout.get("body_top_right").expect("Top area must exist");
 
@@ -54,14 +61,22 @@ fn top_bar(state: Object, layout: &BTreeMap<String, Rect>, codex: &Codex, canvas
     };
 
     let mut shamash = Text::new(shamash_state, codex);
+    let mut shamash_text = Text::new("Current Network Status: ", codex);
     let mut ram = Text::new(ram_state, codex);
     let mut cpu = Text::new(cpu_state, codex);
 
-    shamash.style(style.clone());
+    if shamash_state == "Online" {
+        shamash.style(ok_style);
+    } else {
+        shamash.style(error_style);
+    }
+
+    shamash_text.style(style.clone());
     ram.style(style.clone());
     cpu.style(style.clone());
 
-    shamash.render(canvas, *shamash_area, codex);
+    shamash.render(canvas, shamash_area_right, codex);
+    shamash_text.render(canvas, shamash_area_left, codex);
     ram.render(canvas, *ram_area, codex);
     cpu.render(canvas, *cpu_area, codex);
 }
