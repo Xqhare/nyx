@@ -1,0 +1,12 @@
+[package]
+name = "nyx-tui"
+version = "1.0.0"
+edition = "2024"
+rust-version = "1.93.0"
+
+[dependencies]
+talos = { workspace = true }
+athena = { workspace = true }
+horae = { workspace = true }
+nyx-backend = { path = "../nyx-backend" }
+

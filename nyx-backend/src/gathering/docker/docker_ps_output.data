@@ -1,0 +1,6 @@
+a7ae04faea8c	urbackup	running	uroni/urbackup-server:latest
+bf240f90dcb3	Shamash	running	shamash-shamash
+c368260285e5	samba	running	dperson/samba
+380a1f5d456a	gitea	running	gitea/gitea:latest
+9aaa63e5ffc6	rust-ci-watcher	running	rust:latest
+

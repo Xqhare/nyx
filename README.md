@@ -1,8 +1,87 @@
 # nyx: Nyx Ystem Xplorer
 Nyx is a system monitor written in Rust. It provides real-time monitoring of CPU usage, memory consumption, disk I/O, network traffic, and other essential system metrics.
 
-> [!NOTE]
-> Perfomance of the gui may be lacking, but it is clearly made up by all the features nyx has!
+Nyx truly is, one of the sYstem eXplorer's ever made!
+
+## Naming
+
+Nyx was the ancient Greek goddess of the night, one of the primordial gods (protogenoi) who emerged as the dawn of creation.
+
+## Rework
+
+This project was abandoned after running into massive performance issues and eventually gave up on it.
+Now, with the addition of my home-lab, I have the need for a custom system monitor once again.
+As with all my other projects its mainly educational as I restrict myself to only self-written code and the standard library.
+
+To improve the horrible performance of the previous iteration, the project design has been completely reworked:
+
+- Split the project into a back- and frontend.
+- The backend will be almost entirely separated from the frontend.
+- This will allow the frontend to focus solely on displaying the current system state (as determined by the backend).
+	- 60 fps - I mean it's a TUI, it's gonna need all the frames!
+- The backend will focus on collecting data from the system, processing and structuring it and sending it to the frontend.
+
+Instead of actually using (and learning) actual `async` programming, I will use my IPC framework [hermes](https://github.com/xqhare/hermes) to create a multi-process system. This way, the biggest bottleneck is disk I/O, which should still allow for second to maybe even half second update times.
+
+Right now I believe I will need most of my already written eco-sytem:
+
+- [hermes](https://github.com/xqhare/hermes) for IPC
+- [athena](https://github.com/xqhare/athena) for working with `XffValues`
+- [horae](https://github.com/xqhare/horae) for Time and Date
+- [talos](https://github.com/xqhare/talos) for TUI
+
+- proc/meminfo OR `free -h`
+	- first 3 lines:
+		- MemTotal (kb)
+		- MemFree (kb)
+		- MemAvailable (kb)
+- proc/mounts OR `df -h`
+	- first entry (whitespace separated):
+		- /dev/DEVICE (except loop devices)
+
+(Having to use `sudo` is solved by adding the executing user to the docker group - as I have done on the home-lab)
+- run `sudo docker ps -a`
+	- parse output
+	- display table:
+		- Name
+		- Status
+		- uptime
+- check `shamash/shamash-logs` for `network_`, `isp_` and `local_outage_ongoing` files for display of current status
+	- no file == online!
+- run `ps -eo user,pid,%mem,%cpu,comm --sort=-%cpu | head -n 15`
+	- parse output & Display
+	- cpu and mem usage needs to be divided by number of cores
+- run `uptime`
+	- parse output & Display
+		- Uptime
+		- Load average
+			- 1, 5, 15 minutes. Numbers need to be divided by number of cores
+
+
+### Things to keep from previous iteration
+
+- Only supports my systems specifically (Other systems could maybe, sometimes, work too!)
+- Time and date display
+	- Timezone support (Maybe?? - this would really benefit from again having a config file - And settings menu!)
+- Success and error display
+- Intuitive and classic design
+- Real-time monitoring of system metrics
+
+### Things to add
+
+- FPS counter & Backend Update time (because funny)
+
+## Note on testing
+
+As this project uses workspaces, use:
+
+```bash
+cargo test -p nyx-backend
+```
+
+Tests for the frontend, if any are actually written, can also be run this way, just replace `nyx-backend` with `nyx-frontend`.
+
+## OLD README - use for inspiration
 
 ## Roadmap
 
@@ -23,76 +102,11 @@ Nyx is a system monitor written in Rust. It provides real-time monitoring of CPU
 
 ## Features
 
-- Real-time monitoring of system metrics
 - Advanced chart colour technology - Use any colour you want!
 - Extreme precision
-- Timezone support
-- Time and date display
 - Settable settings
 - Advanced settings
 - A logo
-- Success and error display
-- Intuitive and classic design
 - Choice between light and dark mode
-- Currently only supports my systems specifically (Other systems could maybe, sometimes, work too!)
 - A minimied view, perfect for monitoring the system on a second monitor using minimal space
 
-
-## Why Use Nyx?
-
-Nyx is a powerful and versatile system monitor that provides comprehensive insights into your system's health. It is lightweight and efficient, making it an ideal choice for both casual users and experienced system administrators.
-
-With Nyx, you can:
-
-- Keep an eye on your system's performance
-- Identify potential bottlenecks
-- Optimize resource usage
-
-## How to use Nyx?
-
-Nyx is easily installed, as the install wizard is the person present using the computer!
-
-1. Compile from soucre as executables are not provided, get better scrub
-	- If any are provided they will probably not work anyways!
-2. Put the logo.jpeg into you pictures folder.
-	- No logo no Nyx! It took me several minutes to generate and cost me almost a halfcent in electricity, so I will force it on everyone!
-3. Pray it works.
-4. ???
-5. Use Nyx like the aplha human you clearly are!
-
-## Nyx: A Fitting Name for a System Monitor
-
-Nyx, the ancient Greek goddess of night, is a fitting name for a system monitor. This powerful deity embodies the duality of night, both its darkness and its tranquility. Just as Nyx is both feared and respected, a system monitor can be both a source of anxiety and a tool for understanding and optimizing your system's health.
-
-Night's Duality
-
-Nyx is a primordial goddess, born from Chaos, the void from which all existence emerged. She is the mother of many powerful deities, including Aether, the personification of light, and Hemera, the personification of day. Yet, Nyx herself is associated with darkness and the shadows.
-
-This duality is reflected in the role of a system monitor. On the one hand, it can expose the darker aspects of your system's health, such as high CPU usage, memory leaks, or potential security vulnerabilities. This can be unsettling, as it highlights the potential problems that could be lurking within your system.
-
-Nyx is not merely a force of darkness; she is also associated with wisdom and foresight. She is said to be the mother of Moros, the personification of fate, and Nemesis, the goddess of retribution. This connection to fate and retribution suggests that Nyx understands the consequences of our actions, both good and bad.
-
-In the same way, a system monitor can help you understand the reasons of your system's behavior.
-
-### Nyx, a recurxive acronym?
-Yes, Nyx is, as all good names, a recursice acronym:
-
-- Nyx
-- Ystem
-- Xplorer
-
-As Nyx truly is, one of the sYstem eXplorer's ever made!
-
-## Acknowledgments
-Thanks to the open-source community for providing invaluable tools and libraries.
-Used in this project:
-- [chrono](https://crates.io/crates/chrono)
-- [chrono-tz](https://crates.io/crates/chrono-tz)
-- [eframe](https://crates.io/crates/eframe)
-- [sysinfo](https://crates.io/crates/sysinfo)
-- [dirs](https://crates.io/crates/dirs)
-- [mexprp](https://crates.io/crates/mexprp)
-- [procfs](https://crates.io/crates/procfs)
-- [rand](https://crates.io/crates/rand)
-- [image](https://crates.io/crates/image)
-- [json](https://crates.io/crates/json)

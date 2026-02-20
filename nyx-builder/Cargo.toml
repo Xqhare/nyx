@@ -1,0 +1,16 @@
+[package]
+name = "nyx-builder"
+version = "1.0.0"
+edition = "2024"
+rust-version = "1.93.0"
+
+[dependencies]
+athena = { workspace = true }
+hermes = { workspace = true }
+talos = { workspace = true }
+nyx-backend = { path = "../nyx-backend" }
+nyx-tui = { path = "../nyx-tui" }
+
+[[bin]]
+name = "nyx"
+path = "src/main.rs"
