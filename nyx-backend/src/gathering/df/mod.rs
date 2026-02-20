@@ -149,7 +149,7 @@ mod tests {
         assert!(obj.len() == 6);
         assert_eq!(
             obj.get("Filesystem").unwrap().into_string().unwrap(),
-            "/dev/sda1"
+            "sda1"
         );
         assert_eq!(obj.get("Size").unwrap().into_string().unwrap(), "1.8T");
         assert_eq!(obj.get("Used").unwrap().into_string().unwrap(), "361G");

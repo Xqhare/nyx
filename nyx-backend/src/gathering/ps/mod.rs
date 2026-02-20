@@ -127,6 +127,6 @@ mod tests {
         let gatered = gather().unwrap();
         assert!(gatered.is_object());
         let obj = gatered.into_object().unwrap();
-        assert!(obj.len() == 15);
+        assert!(obj.len() == 29);
     }
 }
