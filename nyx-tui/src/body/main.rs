@@ -1,6 +1,6 @@
 use std::collections::BTreeMap;
 
-use athena::{Object, XffValue};
+use athena::{Object, OrderedObject, XffValue};
 use talos::{
     codex::Codex,
     layout::Rect,
@@ -38,14 +38,14 @@ fn main_left(
     let ps_state = state
         .get("ps")
         .expect("Ps state not found")
-        .as_object()
+        .as_ordered_object()
         .expect("Ps state must be an object");
 
     left_top(ps_state, layout, codex, canvas, style, header_style);
 }
 
 fn left_top(
-    ps_state: &Object,
+    ps_state: &OrderedObject,
     layout: &BTreeMap<String, Rect>,
     codex: &Codex,
     canvas: &mut Canvas,
