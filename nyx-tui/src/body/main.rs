@@ -22,8 +22,8 @@ pub fn main_body(
     let header_style = style_atlas
         .get("highlight")
         .expect("Header style must exist");
-    main_left(&state, layout, codex, canvas, *style, *header_style);
-    main_right(&state, layout, codex, canvas, *style, *header_style);
+    main_left(state, layout, codex, canvas, *style, *header_style);
+    main_right(state, layout, codex, canvas, *style, *header_style);
 }
 
 // PS

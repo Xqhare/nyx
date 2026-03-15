@@ -65,7 +65,7 @@ fn calc_fps_ups(gui_run_dir: String, update_dur: String) -> (String, String) {
     return (fps.to_string(), ups.to_string());
 
     fn na() -> (String, String) {
-        return (String::from("N/A"), String::from("N/A"));
+        (String::from("N/A"), String::from("N/A"))
     }
 }
 
