@@ -130,7 +130,7 @@ fn top_bar(
         if let Some(value) = state.get("lasa") {
             let lasa_state = value.as_object().expect("Lasa must be an object");
             let percentage_alltime = lasa_state
-                .get("alltime")
+                .get("all_time")
                 .expect("Alltime must be a key")
                 .as_object()
                 .unwrap()
