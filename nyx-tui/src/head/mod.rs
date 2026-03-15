@@ -13,14 +13,14 @@ mod draw;
 
 pub fn draw_head(
     gui_run_dur: String,
-    state: Object,
+    state: &Object,
     layout: &BTreeMap<String, Rect>,
     codex: &Codex,
     canvas: &mut Canvas,
     style_atlas: &BTreeMap<String, Style>,
 ) -> Option<ErrorState> {
     let uptime = if let Some(value) = state.get("uptime") {
-        if let Some(inner_value) = value.into_object() {
+        if let Some(inner_value) = value.as_object() {
             inner_value
         } else {
             return error_uptime();

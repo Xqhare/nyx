@@ -59,14 +59,35 @@ pub fn layouter(rect: Rect) -> BTreeMap<String, Rect> {
         debug_assert!(body_layout.len() == 2);
         (body_layout[0], body_layout[1])
     };
-    let (body_top_left, body_top_middle, body_top_right) = {
+    let (body_top_top, body_top_bottom) = {
+        let body_top_layout = LayoutBuilder::new()
+            .direction(Direction::Vertical)
+            .add_constraint(Constraint::Percentage(50))
+            .add_constraint(Constraint::Percentage(50))
+            .build()
+            .split(body_top);
+        debug_assert!(body_top_layout.len() == 2);
+        (body_top_layout[0], body_top_layout[1])
+    };
+    let (body_top_top_left, body_top_top_middle, body_top_top_right) = {
         let body_top_layout = LayoutBuilder::new()
             .direction(Direction::Horizontal)
             .add_constraint(Constraint::Min(1))
             .add_constraint(Constraint::Min(1))
             .add_constraint(Constraint::Min(1))
             .build()
-            .split(body_top);
+            .split(body_top_top);
+        debug_assert!(body_top_layout.len() == 3);
+        (body_top_layout[0], body_top_layout[1], body_top_layout[2])
+    };
+    let (body_top_bottom_left, body_top_bottom_middle, body_top_bottom_right) = {
+        let body_top_layout = LayoutBuilder::new()
+            .direction(Direction::Horizontal)
+            .add_constraint(Constraint::Min(1))
+            .add_constraint(Constraint::Min(1))
+            .add_constraint(Constraint::Min(1))
+            .build()
+            .split(body_top_bottom);
         debug_assert!(body_top_layout.len() == 3);
         (body_top_layout[0], body_top_layout[1], body_top_layout[2])
     };
@@ -113,9 +134,12 @@ pub fn layouter(rect: Rect) -> BTreeMap<String, Rect> {
         ("head_bottom_rest".to_string(), head_bottom_rest),
         ("body".to_string(), body),
         ("body_top".to_string(), body_top),
-        ("body_top_left".to_string(), body_top_left),
-        ("body_top_middle".to_string(), body_top_middle),
-        ("body_top_right".to_string(), body_top_right),
+        ("body_top_top_left".to_string(), body_top_top_left),
+        ("body_top_top_middle".to_string(), body_top_top_middle),
+        ("body_top_top_right".to_string(), body_top_top_right),
+        ("body_top_bottom_left".to_string(), body_top_bottom_left),
+        ("body_top_bottom_middle".to_string(), body_top_bottom_middle),
+        ("body_top_bottom_right".to_string(), body_top_bottom_right),
         ("body_bottom".to_string(), body_bottom),
         ("body_bottom_left".to_string(), body_bottom_left),
         ("body_bottom_left_top".to_string(), body_bottom_left_top),
