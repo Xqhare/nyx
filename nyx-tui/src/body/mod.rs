@@ -80,8 +80,8 @@ fn top_bar(
     let (lasa_alltime_left, lasa_alltime_right) = {
         let tmp = LayoutBuilder::new()
             .direction(Direction::Horizontal)
-            .add_constraint(Constraint::Percentage(70))
-            .add_constraint(Constraint::Percentage(30))
+            .add_constraint(Constraint::Percentage(50))
+            .add_constraint(Constraint::Percentage(50))
             .build()
             .split(*lasa_alltime_area);
         debug_assert!(tmp.len() == 2);
@@ -93,8 +93,8 @@ fn top_bar(
     let (lasa_year_left, lasa_year_right) = {
         let tmp = LayoutBuilder::new()
             .direction(Direction::Horizontal)
-            .add_constraint(Constraint::Percentage(70))
-            .add_constraint(Constraint::Percentage(30))
+            .add_constraint(Constraint::Percentage(50))
+            .add_constraint(Constraint::Percentage(50))
             .build()
             .split(*lasa_current_year_area);
         debug_assert!(tmp.len() == 2);
@@ -106,8 +106,8 @@ fn top_bar(
     let (lasa_month_left, lasa_month_right) = {
         let tmp = LayoutBuilder::new()
             .direction(Direction::Horizontal)
-            .add_constraint(Constraint::Percentage(70))
-            .add_constraint(Constraint::Percentage(30))
+            .add_constraint(Constraint::Percentage(50))
+            .add_constraint(Constraint::Percentage(50))
             .build()
             .split(*lasa_current_month_area);
         debug_assert!(tmp.len() == 2);
