@@ -25,9 +25,22 @@ pub fn head(
     let mut head_area = Area::new();
 
     head_area.style(*style);
-    head_area.render(canvas, *layout.get("head").expect("layout must have head"), codex);
+    head_area.render(
+        canvas,
+        *layout.get("head").expect("layout must have head"),
+        codex,
+    );
 
-    draw_top(uptime_state, time_state, update_dur, gui_run_dir, layout, codex, canvas, style_atlas);
+    draw_top(
+        uptime_state,
+        time_state,
+        update_dur,
+        gui_run_dir,
+        layout,
+        codex,
+        canvas,
+        style_atlas,
+    );
     draw_bottom(layout, codex, canvas, style_atlas);
 }
 
@@ -71,13 +84,22 @@ fn draw_top(
         let rect = canvas.size_rect();
         rect.width.saturating_mul(rect.height)
     };
-    let mut uptime = Text::new(format!("System Uptime: {} | Cell amount: {}", uptime_state, cell_amount), codex);
+    let mut uptime = Text::new(
+        format!(
+            "System Uptime: {} | Cell amount: {}",
+            uptime_state, cell_amount
+        ),
+        codex,
+    );
     uptime.style(*style);
 
+    let (fps, ups) = calc_fps_ups(gui_run_dir, update_dur);
 
-    let (fps, ups) = calc_fps_ups(gui_run_dir, update_dur); 
-
-    let mut middle = Text::new(format!("Frames per second: {} | Updates per second: {}", fps, ups), codex).align_center();
+    let mut middle = Text::new(
+        format!("Frames per second: {} | Updates per second: {}", fps, ups),
+        codex,
+    )
+    .align_center();
     middle.style(*style);
 
     let now = Utc::now();

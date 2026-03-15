@@ -1,9 +1,9 @@
+mod body;
 mod error;
 mod head;
 mod input;
 mod main_screen;
 mod util;
-mod body;
 
 use crate::{
     error::{ErrorState, render_error},
@@ -69,7 +69,9 @@ pub fn draw_state(gui_run_dur: String, state: XffValue, talos: &mut Talos) -> Op
 
     let layout = layouter(canvas.size_rect());
 
-    if let Some(error_st) = draw_main_screen(gui_run_dur, &state, &layout, codex, canvas, &style_atlas) {
+    if let Some(error_st) =
+        draw_main_screen(gui_run_dur, &state, &layout, codex, canvas, &style_atlas)
+    {
         error_state = Some(error_st);
     }
 

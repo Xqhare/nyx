@@ -45,7 +45,16 @@ pub fn draw_head(
     } else {
         "Can't get update duration".to_string()
     };
-    head(uptime_state, time_state, update_dur, gui_run_dur, layout, codex, canvas, style_atlas);
+    head(
+        uptime_state,
+        time_state,
+        update_dur,
+        gui_run_dur,
+        layout,
+        codex,
+        canvas,
+        style_atlas,
+    );
     None
 }
 

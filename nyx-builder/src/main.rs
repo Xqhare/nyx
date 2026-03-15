@@ -1,4 +1,7 @@
-use std::{thread, time::{Duration, Instant}};
+use std::{
+    thread,
+    time::{Duration, Instant},
+};
 
 use athena::XffValue;
 use hermes::Hermes;
@@ -64,7 +67,8 @@ fn main() {
                 }
             }
         }
-        if let Some(XffValue::Null) = draw_state(gui_run_dur.to_string(), state.clone(), &mut talos) {
+        if let Some(XffValue::Null) = draw_state(gui_run_dur.to_string(), state.clone(), &mut talos)
+        {
             run = false;
         }
 
