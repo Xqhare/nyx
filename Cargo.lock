@@ -9,8 +9,11 @@ source = "git+https://github.com/Xqhare/areia#32f0ab3f7adc21b69590f8692c3b791977
 
 [[package]]
 name = "athena"
-version = "1.0.0"
-source = "git+https://github.com/Xqhare/athena#d19b7f1b6316e3fff5cf27f5623d9a8d0d4781e2"
+version = "1.2.0"
+source = "git+https://github.com/Xqhare/athena#7c4b140d7d5f25a892935e6a1947e48b63ce1d67"
+dependencies = [
+ "libc",
+]
 
 [[package]]
 name = "hermes"
@@ -22,8 +25,8 @@ dependencies = [
 
 [[package]]
 name = "horae"
-version = "1.0.0"
-source = "git+https://github.com/Xqhare/horae#033709e7f958911eead778c6d5bce44a156fbeff"
+version = "1.1.1"
+source = "git+https://github.com/Xqhare/horae#3e45c62686111087a380f891d41310f210abbd87"
 
 [[package]]
 name = "libc"
@@ -34,7 +37,7 @@ checksum = "b5b646652bf6661599e1da8901b3b9522896f01e736bad5f723fe7a3a27f899d"
 [[package]]
 name = "nabu"
 version = "3.0.0"
-source = "git+https://github.com/Xqhare/nabu#6b081279e79fb8dc2527c29f8225dc8b0e301630"
+source = "git+https://github.com/Xqhare/nabu#7d7e642772ab9492d4a10fe8c84f122cb0ba4600"
 dependencies = [
  "athena",
 ]
