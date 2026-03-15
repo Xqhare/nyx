@@ -235,9 +235,6 @@ fn top_bar(
     shamash_text.style(style);
     ram.style(style);
     cpu.style(style);
-    lasa_alltime_text.style(style);
-    lasa_current_year_text.style(style);
-    lasa_current_month_text.style(style);
 
     shamash.render(canvas, shamash_area_right, codex);
     shamash_text.render(canvas, shamash_area_left, codex);
