@@ -1,6 +1,6 @@
 use std::process::Stdio;
 
-use athena::{Object, XffValue};
+use athena::{Object, OrderedObject, XffValue};
 
 use crate::error::{GatheringError, NyxError, NyxResult};
 
@@ -18,7 +18,7 @@ fn parse_ps(input: &str) -> NyxResult<XffValue> {
     }
     let headers = parse_headers(lines[0])?;
 
-    let mut out = Object::new();
+    let mut out = OrderedObject::new();
     for proc in lines.iter().skip(1) {
         if proc.trim().is_empty() {
             continue;
