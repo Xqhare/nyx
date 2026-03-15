@@ -29,7 +29,7 @@ pub fn draw_body(
     let error_style = style_atlas.get("error").expect("Error style must exist");
     let body_area = layout.get("body").expect("Top area must exist");
     let mut block = Block::new().with_bg_fill();
-    block.style(style.clone());
+    block.style(*style);
     block.render(canvas, *body_area, codex);
 
     top_bar(
@@ -232,12 +232,12 @@ fn top_bar(
         shamash.style(error_style);
     }
 
-    shamash_text.style(style.clone());
-    ram.style(style.clone());
-    cpu.style(style.clone());
-    lasa_alltime_text.style(style.clone());
-    lasa_current_year_text.style(style.clone());
-    lasa_current_month_text.style(style.clone());
+    shamash_text.style(style);
+    ram.style(style);
+    cpu.style(style);
+    lasa_alltime_text.style(style);
+    lasa_current_year_text.style(style);
+    lasa_current_month_text.style(style);
 
     shamash.render(canvas, shamash_area_right, codex);
     shamash_text.render(canvas, shamash_area_left, codex);
