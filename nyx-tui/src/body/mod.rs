@@ -77,12 +77,42 @@ fn top_bar(
     let lasa_alltime_area = layout
         .get("body_top_bottom_left")
         .expect("Top area must exist");
+    let (lasa_alltime_left, lasa_alltime_right) = {
+        let tmp = LayoutBuilder::new()
+            .direction(Direction::Horizontal)
+            .add_constraint(Constraint::Percentage(70))
+            .add_constraint(Constraint::Percentage(30))
+            .build()
+            .split(*lasa_alltime_area);
+        debug_assert!(tmp.len() == 2);
+        (tmp[0], tmp[1])
+    };
     let lasa_current_year_area = layout
         .get("body_top_bottom_middle")
         .expect("Top area must exist");
+    let (lasa_year_left, lasa_year_right) = {
+        let tmp = LayoutBuilder::new()
+            .direction(Direction::Horizontal)
+            .add_constraint(Constraint::Percentage(70))
+            .add_constraint(Constraint::Percentage(30))
+            .build()
+            .split(*lasa_current_year_area);
+        debug_assert!(tmp.len() == 2);
+        (tmp[0], tmp[1])
+    };
     let lasa_current_month_area = layout
         .get("body_top_bottom_right")
         .expect("Top area must exist");
+    let (lasa_month_left, lasa_month_right) = {
+        let tmp = LayoutBuilder::new()
+            .direction(Direction::Horizontal)
+            .add_constraint(Constraint::Percentage(70))
+            .add_constraint(Constraint::Percentage(30))
+            .build()
+            .split(*lasa_current_month_area);
+        debug_assert!(tmp.len() == 2);
+        (tmp[0], tmp[1])
+    };
 
     let shamash_state = if let Some(value) = state.get("shamash") {
         value.to_string()
@@ -126,104 +156,119 @@ fn top_bar(
     let mut all_time_critical = false;
     let mut current_year_critical = false;
     let mut current_month_critical = false;
-    let (lasa_alltime, lasa_current_year, lasa_current_month) =
-        if let Some(value) = state.get("lasa") {
-            let lasa_state = value.as_object().expect("Lasa must be an object");
-            let percentage_alltime = lasa_state
-                .get("all_time")
-                .expect("Alltime must be a key")
-                .as_object()
-                .unwrap()
-                .get("uptime_percent")
-                .expect("uptime_percent must be a key")
-                .into_number()
-                .expect("uptime percent must be printable")
-                .into_f64()
-                .expect("uptime percent must be printable");
-            let year = lasa_state
-                .get("current_year")
-                .expect("Year must be a key")
-                .as_object()
-                .unwrap()
-                .get("year")
-                .expect("year must be a key")
-                .into_string()
-                .expect("year must be printable");
-            let percentage_year = lasa_state
-                .get("current_year")
-                .expect("Year must be a key")
-                .as_object()
-                .unwrap()
-                .get("uptime_percent")
-                .expect("uptime_percent must be a key")
-                .into_number()
-                .expect("uptime percent must be printable")
-                .into_f64()
-                .expect("uptime percent must be printable");
-            let month = lasa_state
-                .get("current_month")
-                .expect("Month must be a key")
-                .as_object()
-                .unwrap()
-                .get("month")
-                .expect("month must be a key")
-                .into_string()
-                .expect("month must be printable");
-            let percentage_month = lasa_state
-                .get("current_month")
-                .expect("Month must be a key")
-                .as_object()
-                .unwrap()
-                .get("uptime_percent")
-                .expect("uptime_percent must be a key")
-                .into_number()
-                .expect("uptime percent must be printable")
-                .into_f64()
-                .expect("uptime percent must be printable");
-            if percentage_alltime < CRITICAL_UPTIME_THRESHOLD {
-                all_time_critical = true;
-            }
-            if percentage_year < CRITICAL_UPTIME_THRESHOLD {
-                current_year_critical = true;
-            }
-            if percentage_month < CRITICAL_UPTIME_THRESHOLD {
-                current_month_critical = true;
-            }
-            (
-                format!("Lasa uptime monitor - All time: {}%", percentage_alltime),
-                format!("Year {}: {}%", year, percentage_year),
-                format!("Month {}: {}%", month, percentage_month),
-            )
-        } else {
-            (
-                "Lasa not installed".to_string(),
-                "".to_string(),
-                "".to_string(),
-            )
-        };
+    let (
+        lasa_alltime_label,
+        lasa_alltime_val,
+        lasa_year_label,
+        lasa_year_val,
+        lasa_month_label,
+        lasa_month_val,
+    ) = if let Some(value) = state.get("lasa") {
+        let lasa_state = value.as_object().expect("Lasa must be an object");
+        let percentage_alltime = lasa_state
+            .get("all_time")
+            .expect("Alltime must be a key")
+            .as_object()
+            .unwrap()
+            .get("uptime_percent")
+            .expect("uptime_percent must be a key")
+            .into_number()
+            .expect("uptime percent must be printable")
+            .into_f64()
+            .expect("uptime percent must be printable");
+        let year = lasa_state
+            .get("current_year")
+            .expect("Year must be a key")
+            .as_object()
+            .unwrap()
+            .get("year")
+            .expect("year must be a key")
+            .into_string()
+            .expect("year must be printable");
+        let percentage_year = lasa_state
+            .get("current_year")
+            .expect("Year must be a key")
+            .as_object()
+            .unwrap()
+            .get("uptime_percent")
+            .expect("uptime_percent must be a key")
+            .into_number()
+            .expect("uptime percent must be printable")
+            .into_f64()
+            .expect("uptime percent must be printable");
+        let month = lasa_state
+            .get("current_month")
+            .expect("Month must be a key")
+            .as_object()
+            .unwrap()
+            .get("month")
+            .expect("month must be a key")
+            .into_string()
+            .expect("month must be printable");
+        let percentage_month = lasa_state
+            .get("current_month")
+            .expect("Month must be a key")
+            .as_object()
+            .unwrap()
+            .get("uptime_percent")
+            .expect("uptime_percent must be a key")
+            .into_number()
+            .expect("uptime percent must be printable")
+            .into_f64()
+            .expect("uptime percent must be printable");
+        if percentage_alltime < CRITICAL_UPTIME_THRESHOLD {
+            all_time_critical = true;
+        }
+        if percentage_year < CRITICAL_UPTIME_THRESHOLD {
+            current_year_critical = true;
+        }
+        if percentage_month < CRITICAL_UPTIME_THRESHOLD {
+            current_month_critical = true;
+        }
+        (
+            "Lasa alltime: ".to_string(),
+            format!("{}%", percentage_alltime),
+            format!("Year {}: ", year),
+            format!("{}%", percentage_year),
+            format!("Month {}: ", month),
+            format!("{}%", percentage_month),
+        )
+    } else {
+        (
+            "Lasa not installed".to_string(),
+            "".to_string(),
+            "".to_string(),
+            "".to_string(),
+            "".to_string(),
+            "".to_string(),
+        )
+    };
 
     let mut shamash = Text::new(shamash_state.clone(), codex);
     let mut shamash_text = Text::new("Current Network Status: ", codex);
     let mut ram = Text::new(ram_state, codex);
     let mut cpu = Text::new(cpu_state, codex);
-    let mut lasa_alltime_text = Text::new(lasa_alltime, codex);
-    let mut lasa_current_year_text = Text::new(lasa_current_year, codex);
-    let mut lasa_current_month_text = Text::new(lasa_current_month, codex);
+    let mut lasa_alltime_label_text = Text::new(lasa_alltime_label, codex);
+    let mut lasa_alltime_val_text = Text::new(lasa_alltime_val, codex);
+    let mut lasa_year_label_text = Text::new(lasa_year_label, codex);
+    let mut lasa_year_val_text = Text::new(lasa_year_val, codex);
+    let mut lasa_month_label_text = Text::new(lasa_month_label, codex);
+    let mut lasa_month_val_text = Text::new(lasa_month_val, codex);
 
     if all_time_critical {
-        lasa_alltime_text.style(error_style);
+        lasa_alltime_val_text.style(error_style);
     } else {
-        lasa_alltime_text.style(ok_style);
+        lasa_alltime_val_text.style(ok_style);
     }
     if current_year_critical {
-        lasa_current_year_text.style(error_style);
+        lasa_year_val_text.style(error_style);
     } else {
-        lasa_current_year_text.style(ok_style);
+        lasa_year_val_text.style(ok_style);
     }
     if current_month_critical {
-        lasa_current_month_text.style(error_style);
+        lasa_month_val_text.style(error_style);
     } else {
-        lasa_current_month_text.style(ok_style);
+        lasa_month_val_text.style(ok_style);
     }
 
     if shamash_state == "Online" {
@@ -235,12 +280,18 @@ fn top_bar(
     shamash_text.style(style);
     ram.style(style);
     cpu.style(style);
+    lasa_alltime_label_text.style(style);
+    lasa_year_label_text.style(style);
+    lasa_month_label_text.style(style);
 
     shamash.render(canvas, shamash_area_right, codex);
     shamash_text.render(canvas, shamash_area_left, codex);
     ram.render(canvas, *ram_area, codex);
     cpu.render(canvas, *cpu_area, codex);
-    lasa_alltime_text.render(canvas, *lasa_alltime_area, codex);
-    lasa_current_year_text.render(canvas, *lasa_current_year_area, codex);
-    lasa_current_month_text.render(canvas, *lasa_current_month_area, codex);
+    lasa_alltime_label_text.render(canvas, lasa_alltime_left, codex);
+    lasa_alltime_val_text.render(canvas, lasa_alltime_right, codex);
+    lasa_year_label_text.render(canvas, lasa_year_left, codex);
+    lasa_year_val_text.render(canvas, lasa_year_right, codex);
+    lasa_month_label_text.render(canvas, lasa_month_left, codex);
+    lasa_month_val_text.render(canvas, lasa_month_right, codex);
 }
