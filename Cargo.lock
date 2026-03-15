@@ -10,7 +10,7 @@ source = "git+https://github.com/Xqhare/areia#32f0ab3f7adc21b69590f8692c3b791977
 [[package]]
 name = "athena"
 version = "1.0.0"
-source = "git+https://github.com/Xqhare/athena#9a9cfaa4349a479ec0b6c31f299aca85444729f3"
+source = "git+https://github.com/Xqhare/athena#d19b7f1b6316e3fff5cf27f5623d9a8d0d4781e2"
 
 [[package]]
 name = "hermes"
@@ -33,24 +33,25 @@ checksum = "b5b646652bf6661599e1da8901b3b9522896f01e736bad5f723fe7a3a27f899d"
 
 [[package]]
 name = "nabu"
-version = "2.0.0"
-source = "git+https://github.com/xqhare/nabu#8ab7f54b07dbb81758fced311e7069ddedb338ad"
+version = "3.0.0"
+source = "git+https://github.com/Xqhare/nabu#6b081279e79fb8dc2527c29f8225dc8b0e301630"
 dependencies = [
  "athena",
 ]
 
 [[package]]
 name = "nyx-backend"
-version = "1.0.0"
+version = "1.2.0"
 dependencies = [
  "areia",
  "athena",
+ "nabu",
  "talos",
 ]
 
 [[package]]
 name = "nyx-builder"
-version = "1.0.0"
+version = "1.2.0"
 dependencies = [
  "athena",
  "hermes",
@@ -61,7 +62,7 @@ dependencies = [
 
 [[package]]
 name = "nyx-tui"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "athena",
  "horae",
@@ -72,7 +73,7 @@ dependencies = [
 [[package]]
 name = "talos"
 version = "1.1.0"
-source = "git+https://github.com/Xqhare/talos#2aa483f58f5af7da13492bd582581c5bc9e8f0f0"
+source = "git+https://github.com/Xqhare/talos#27de493e575351666c1f1c9c7a84317a7ca43472"
 dependencies = [
  "libc",
 ]

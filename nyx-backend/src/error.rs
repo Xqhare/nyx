@@ -37,6 +37,7 @@ pub enum GatheringError {
     Ps(String),
     Uptime(String),
     Shamash(String),
+    Lasa(String),
 }
 
 impl From<std::io::Error> for NyxError {

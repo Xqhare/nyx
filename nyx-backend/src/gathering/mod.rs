@@ -10,3 +10,5 @@ mod uptime;
 pub use uptime::gather as uptime_gatherer;
 mod shamash;
 pub use shamash::gather as shamash_gatherer;
+mod lasa;
+pub use lasa::gather as lasa_gatherer;

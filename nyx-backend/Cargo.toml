@@ -1,10 +1,11 @@
 [package]
 name = "nyx-backend"
-version = "1.0.0"
+version = "1.2.0" # minor_ver: 1.2.0 - lasa integration
 edition = "2024"
 rust-version = "1.93.0"
 
 [dependencies]
+nabu = { workspace = true }
 areia = { workspace = true }
 athena = { workspace = true }
 talos = { workspace = true }

@@ -1,11 +1,15 @@
-use std::{thread, time::{Duration, Instant}};
+use std::{
+    thread,
+    time::{Duration, Instant},
+};
 
 use athena::{Object, XffValue};
 use hermes::Hermes;
 use nyx_backend::{
     error::NyxResult,
     gathering::{
-        df_gatherer, docker_gatherer, free_gatherer, ps_gatherer, shamash_gatherer, uptime_gatherer,
+        df_gatherer, docker_gatherer, free_gatherer, lasa_gatherer, ps_gatherer, shamash_gatherer,
+        uptime_gatherer,
     },
 };
 
@@ -83,6 +87,10 @@ fn gather() -> NyxResult<XffValue> {
         }
         Err(_) => XffValue::from("Shamash not installed!"),
     };
+    let lasa_gathered = match lasa_gatherer() {
+        Ok(lasa_gathered) => lasa_gathered,
+        Err(_) => XffValue::from("Lasa not installed:"),
+    };
 
     let mut obj = Object::new();
     obj.insert("df", df_gathered);
@@ -91,5 +99,6 @@ fn gather() -> NyxResult<XffValue> {
     obj.insert("ps", ps_gathered);
     obj.insert("uptime", uptime_gathered);
     obj.insert("shamash", shamash_gathered);
+    obj.insert("lasa", lasa_gathered);
     Ok(obj.into())
 }
