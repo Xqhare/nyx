@@ -1,0 +1,6 @@
+{
+  "requires": ["athena", "areia", "horae", "hermes", "nabu", "talos"],
+  "build": {
+    "args": ["-r"]
+  }
+}
