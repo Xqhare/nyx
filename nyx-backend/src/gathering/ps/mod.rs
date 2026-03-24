@@ -106,8 +106,8 @@ mod tests {
             .unwrap()
             .join("./src/gathering/ps/ps.data");
         let parsed = parse_ps(&std::fs::read_to_string(path).unwrap()).unwrap();
-        assert!(parsed.is_object());
-        let obj = parsed.into_object().unwrap();
+        assert!(parsed.is_ordered_object());
+        let obj = parsed.into_ordered_object().unwrap();
         assert!(obj.len() == 15);
         let val = obj.get("1273").unwrap();
         let obj = val.into_object().unwrap();
@@ -125,8 +125,8 @@ mod tests {
     #[test]
     fn parse_real() {
         let gatered = gather().unwrap();
-        assert!(gatered.is_object());
-        let obj = gatered.into_object().unwrap();
+        assert!(gatered.is_ordered_object());
+        let obj = gatered.into_ordered_object().unwrap();
         assert!(obj.len() == 29);
     }
 }

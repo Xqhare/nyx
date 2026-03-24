@@ -1,3 +1,6 @@
+#![warn(clippy::all)]
+#![warn(clippy::pedantic)]
+
 use std::{
     thread,
     time::{Duration, Instant},
@@ -43,8 +46,7 @@ fn main() {
                 Err(err) => {
                     drop(talos);
                     eprintln!(
-                        "Fatal: Failed to get initial response from gathering server: {:?}",
-                        err
+                        "Fatal: Failed to get initial response from gathering server: {err:?}"
                     );
                     std::process::exit(1);
                 }
@@ -60,8 +62,7 @@ fn main() {
                 Err(err) => {
                     drop(talos);
                     eprintln!(
-                        "Fatal: Lost connection or error from gathering server: {:?}",
-                        err
+                        "Fatal: Lost connection or error from gathering server: {err:?}"
                     );
                     std::process::exit(1);
                 }
@@ -76,7 +77,7 @@ fn main() {
 
         let elapsed = current_run.elapsed();
         if elapsed < fps_duration {
-            thread::sleep(fps_duration - elapsed);
+            thread::sleep(fps_duration.checked_sub(elapsed).unwrap());
         }
     }
     // SHUTDOWN CODE

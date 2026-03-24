@@ -8,10 +8,8 @@ use crate::error::{GatheringError, NyxError, NyxResult};
 
 pub fn gather() -> NyxResult<XffValue> {
     let path = make_lasa_path()?;
-    if path.exists() {
-        if let Ok(read) = read(path) {
-            return Ok(read);
-        }
+    if path.exists() && let Ok(read) = read(path) {
+        return Ok(read);
     }
     Err(NyxError::Gathering(GatheringError::Lasa(
         "File does not exist".to_string(),

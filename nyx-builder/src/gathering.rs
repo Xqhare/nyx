@@ -35,10 +35,10 @@ pub fn setup_gathering_server() {
                         }
                     }
                     Err(err) => {
-                        let err = XffValue::from(format!("Failed to get request: {:?}", err));
+                        let err = XffValue::from(format!("Failed to get request: {err:?}"));
                         if let Err(err) = con.put_error(err) {
-                            panic!("{:?}", err)
-                        };
+                            panic!("{err:?}")
+                        }
                     }
                 }
             }
@@ -51,18 +51,18 @@ pub fn setup_gathering_server() {
                         XffValue::from(last_run.elapsed().as_micros().to_string()),
                     );
                     if let Err(err) = con.respond(value.into()) {
-                        panic!("{:?}", err)
-                    };
+                        panic!("{err:?}")
+                    }
                 }
                 Err(err) => {
-                    let err_val = XffValue::from(format!("Failed to gather: {:?}", err));
-                    panic!("Gathering thread panicked: {:?}", err_val);
+                    let err_val = XffValue::from(format!("Failed to gather: {err:?}"));
+                    panic!("Gathering thread panicked: {err_val:?}");
                 }
             }
 
             let elapsed = last_run.elapsed();
             if elapsed < ups_duration {
-                thread::sleep(ups_duration - elapsed);
+                thread::sleep(ups_duration.checked_sub(elapsed).unwrap());
             }
         }
     });
@@ -72,17 +72,17 @@ fn gather() -> NyxResult<XffValue> {
     let df_gathered = df_gatherer()?;
     let docker_gathered = match docker_gatherer() {
         Ok(docker_gathered) => docker_gathered,
-        Err(err) => XffValue::from(format!("Failed to gather docker: {}", err)),
+        Err(err) => XffValue::from(format!("Failed to gather docker: {err}")),
     };
     let free_gathered = free_gatherer()?;
     let ps_gathered = ps_gatherer()?;
     let uptime_gathered = uptime_gatherer()?;
     let shamash_gathered = match shamash_gatherer() {
         Ok(shamash_gathered) => {
-            if !shamash_gathered.is_null() {
-                shamash_gathered
-            } else {
+            if shamash_gathered.is_null() {
                 XffValue::from("Shamash not installed!")
+            } else {
+                shamash_gathered
             }
         }
         Err(_) => XffValue::from("Shamash not installed!"),

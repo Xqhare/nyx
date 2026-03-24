@@ -8,14 +8,18 @@ use talos::{
     widgets::{Area, Text, traits::Widget},
 };
 
+pub struct HeadState {
+    pub uptime_state: String,
+    pub time_state: String,
+    pub update_dur: String,
+    pub gui_run_dur: String,
+}
+
 // Head is split into top and bottom
 // Top: left, middle, right; Left: Uptime, Middle: FPS and update times, Right: Time
 // Bottom: Left: App Name, Right: Help
 pub fn head(
-    uptime_state: String,
-    time_state: String,
-    update_dur: String,
-    gui_run_dir: String,
+    state: HeadState,
     layout: &BTreeMap<String, Rect>,
     codex: &Codex,
     canvas: &mut Canvas,
@@ -32,10 +36,7 @@ pub fn head(
     );
 
     draw_top(
-        uptime_state,
-        time_state,
-        update_dur,
-        gui_run_dir,
+        state,
         layout,
         codex,
         canvas,
@@ -44,9 +45,9 @@ pub fn head(
     draw_bottom(layout, codex, canvas, style_atlas);
 }
 
-fn calc_fps_ups(gui_run_dir: String, update_dur: String) -> (String, String) {
+fn calc_fps_ups(gui_run_dur: String, update_dur: String) -> (String, String) {
     // Both strings should be valid usize
-    let gui_run_usize = if let Ok(value) = gui_run_dir.parse::<usize>() {
+    let gui_run_usize = if let Ok(value) = gui_run_dur.parse::<usize>() {
         value
     } else {
         return na();
@@ -70,10 +71,7 @@ fn calc_fps_ups(gui_run_dir: String, update_dur: String) -> (String, String) {
 }
 
 fn draw_top(
-    uptime_state: String,
-    time_state: String,
-    update_dur: String,
-    gui_run_dir: String,
+    state: HeadState,
     layout: &BTreeMap<String, Rect>,
     codex: &Codex,
     canvas: &mut Canvas,
@@ -87,13 +85,13 @@ fn draw_top(
     let mut uptime = Text::new(
         format!(
             "System Uptime: {} | Cell amount: {}",
-            uptime_state, cell_amount
+            state.uptime_state, cell_amount
         ),
         codex,
     );
     uptime.style(*style);
 
-    let (fps, ups) = calc_fps_ups(gui_run_dir, update_dur);
+    let (fps, ups) = calc_fps_ups(state.gui_run_dur, state.update_dur);
 
     let mut middle = Text::new(
         format!("Frames per second: {} | Updates per second: {}", fps, ups),
@@ -104,10 +102,11 @@ fn draw_top(
 
     let now = Utc::now();
     let mut time = Text::new(
-        format!("Local time: {} | UTC time: {}", time_state, now),
+        format!("Local time: {} | UTC time: {}", state.time_state, now),
         codex,
     );
     time.style(*style);
+
 
     uptime.render(
         canvas,
